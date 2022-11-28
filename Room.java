@@ -15,12 +15,13 @@ import com.jogamp.opengl.util.glsl.*;
 public class Room {
 
     private Model floor, wall, window;
+    private Vec2 cloudPos;
 
     public Room(GL3 gl, Camera camera, Light light, int[] floorTexture, int[] wallTexture,int[] windowTexture) {
 
 
         Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
-        Shader shader = new Shader(gl, "vs_tt_05.txt", "fs_tt_05.txt");
+        Shader shader = new Shader(gl, "shaders/tt_vs.txt", "shaders/tt_fs.txt");
 
         // The floor is going to be sand, this should be pretty matte
         Material floorMaterial = new Material(new Vec3(0.76f, 0.62f, 0.51f), new Vec3(0.84f,  0.71f,  0.59f), new Vec3(0.3f, 0.3f, 0.3f), 1.0f);
@@ -36,24 +37,19 @@ public class Room {
         window = new Model(gl, camera, light, shader, glass, new Mat4(), mesh, windowTexture);
         wall = new Model(gl, camera, light, shader, wallMaterial, new Mat4(), mesh, wallTexture);
 
-
-
     }
 
     public void render(GL3 gl) {
 
         floor.render(gl);
 
-        wall.setModelMatrix(transformWall(0));
-        wall.render(gl);
-
-        window.setModelMatrix(transformWall(1));
+        window.setModelMatrix(transformWall(0));
         window.render(gl);
 
-        wall.setModelMatrix(transformWall(2));
+        wall.setModelMatrix(transformWall(1));
         wall.render(gl);
 
-        wall.setModelMatrix(transformWall(3));
+        wall.setModelMatrix(transformWall(2));
         wall.render(gl);
     }
 
@@ -65,18 +61,18 @@ public class Room {
 
         switch (side){
             // Back Wall (window)
-            case 1:
+            case 0:
                 modelMatrix = Mat4.multiply(Mat4Transform.rotateAroundX(90), modelMatrix);
                 modelMatrix = Mat4.multiply(Mat4Transform.translate(0,size*0.5f,-size*0.5f), modelMatrix);
                 break;
             // Left Wall
-            case 2:
+            case 1:
                 modelMatrix = Mat4.multiply(Mat4Transform.rotateAroundY(90), modelMatrix);
                 modelMatrix = Mat4.multiply(Mat4Transform.rotateAroundZ(-90), modelMatrix);
                 modelMatrix = Mat4.multiply(Mat4Transform.translate(-size*0.5f,size*0.5f,0), modelMatrix);
                 break;
             // Right wall
-            case 3:
+            case 2:
                 modelMatrix = Mat4.multiply(Mat4Transform.rotateAroundY(90), modelMatrix);
                 modelMatrix = Mat4.multiply(Mat4Transform.rotateAroundZ(90), modelMatrix);
                 modelMatrix = Mat4.multiply(Mat4Transform.translate(size*0.5f,size*0.5f,0), modelMatrix);
@@ -87,6 +83,10 @@ public class Room {
         }
 
         return modelMatrix;
+    }
+
+    public void setClouds(Vec2 pos){
+        cloudPos = pos;
     }
 
     public void dispose(GL3 gl) {

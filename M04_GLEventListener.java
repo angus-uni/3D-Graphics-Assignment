@@ -119,7 +119,7 @@ public class M04_GLEventListener implements GLEventListener {
     int[] textureId4 = TextureLibrary.loadTexture(gl, "textures/container2_specular.jpg");
     int[] textureId5 = TextureLibrary.loadTexture(gl, "textures/wattBook.jpg");
     int[] textureId6 = TextureLibrary.loadTexture(gl, "textures/wattBook_specular.jpg");
-    int[] textureId7 = TextureLibrary.loadTexture(gl, "textures/cloud.jpg");
+    int[] textureId7 = TextureLibrary.loadTexture(gl, "textures/outside.jpg");
     int[] textureId8 = TextureLibrary.loadTexture(gl, "textures/wall.jpg");
 
     light = new Light(gl);
@@ -135,8 +135,13 @@ public class M04_GLEventListener implements GLEventListener {
  
   private void render(GL3 gl) {
     gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+
+    //Calculate & Render light position
     light.setPosition(getLightPosition());  // changing light position each frame
     light.render(gl);
+
+    // Render our room
+    room.setClouds(getCloudsPosition());
     room.render(gl);
 
     if (animation) {
@@ -154,6 +159,14 @@ public class M04_GLEventListener implements GLEventListener {
     float z = 5.0f*(float)(Math.cos(Math.toRadians(elapsedTime*50)));
     return new Vec3(x,y,z);   
     //return new Vec3(5f,3.4f,5f);
+  }
+
+  private Vec2 getCloudsPosition() {
+    double elapsedTime = getSeconds()-startTime;
+    double t = elapsedTime*0.1;  // *0.1 slows it down a bit
+    float offsetX = (float)(t - Math.floor(t));
+    float offsetY = 0.0f;
+    return new Vec2(offsetX, offsetY);
   }
 
   

@@ -121,11 +121,12 @@ public class M04_GLEventListener implements GLEventListener {
     int[] textureId6 = TextureLibrary.loadTexture(gl, "textures/wattBook_specular.jpg");
     int[] textureId7 = TextureLibrary.loadTexture(gl, "textures/outside.jpg");
     int[] textureId8 = TextureLibrary.loadTexture(gl, "textures/wall.jpg");
+    int[] textureId9 = TextureLibrary.loadTexture(gl, "textures/cloud.jpg");
 
     light = new Light(gl);
     light.setCamera(camera);
 
-    room = new Room(gl, camera, light, textureId0, textureId8, textureId7);
+    room = new Room(gl, camera, light, textureId0, textureId8, textureId9, textureId7);
     robot = new Robot(gl, camera, light, textureId1,textureId2,textureId3,textureId4,textureId5,textureId6);
 
 

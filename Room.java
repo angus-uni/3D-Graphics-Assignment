@@ -1,6 +1,5 @@
 import gmaths.*;
 
-import java.nio.*;
 import com.jogamp.common.nio.*;
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.util.*;
@@ -16,12 +15,14 @@ public class Room {
 
     private Model floor, wall, window;
     private Vec2 cloudPos;
+    private Shader windowShader;
 
-    public Room(GL3 gl, Camera camera, Light light, int[] floorTexture, int[] wallTexture,int[] windowTexture) {
+    public Room(GL3 gl, Camera camera, Light light, int[] floorTexture, int[] wallTexture,int[] windowTexture, int[] backgroundTexture) {
 
 
         Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
         Shader shader = new Shader(gl, "shaders/tt_vs.txt", "shaders/tt_fs.txt");
+        windowShader = new Shader(gl, "shaders/window_vs.txt", "shaders/window_fs.txt");
 
         // The floor is going to be sand, this should be pretty matte
         Material floorMaterial = new Material(new Vec3(0.76f, 0.62f, 0.51f), new Vec3(0.84f,  0.71f,  0.59f), new Vec3(0.3f, 0.3f, 0.3f), 1.0f);
@@ -34,16 +35,16 @@ public class Room {
 
         // Create models for the floor & wall
         floor = new Model(gl, camera, light, shader, floorMaterial, Mat4Transform.scale(16,1f,16), mesh, floorTexture);
-        window = new Model(gl, camera, light, shader, glass, new Mat4(), mesh, windowTexture);
+        window = new Model(gl, camera, light, windowShader, glass, new Mat4(), mesh, backgroundTexture, windowTexture);
         wall = new Model(gl, camera, light, shader, wallMaterial, new Mat4(), mesh, wallTexture);
 
     }
 
     public void render(GL3 gl) {
 
-        floor.render(gl);
-
         window.setModelMatrix(transformWall(0));
+        windowShader.use(gl);
+        windowShader.setFloat(gl, "offset", cloudPos.x, cloudPos.y);
         window.render(gl);
 
         wall.setModelMatrix(transformWall(1));
@@ -51,6 +52,8 @@ public class Room {
 
         wall.setModelMatrix(transformWall(2));
         wall.render(gl);
+
+        floor.render(gl);
     }
 
     private Mat4 transformWall(int side) {

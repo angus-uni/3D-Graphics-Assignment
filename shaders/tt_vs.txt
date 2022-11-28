@@ -11,8 +11,6 @@ out vec2 aTexCoord;
 uniform mat4 model;
 uniform mat4 mvpMatrix;
 
-
-
 void main() {
   gl_Position = mvpMatrix * vec4(position, 1.0);
   aPos = vec3(model*vec4(position, 1.0f));
@@ -20,6 +18,6 @@ void main() {
   vec3 norm = normalize(normal);
   aNormal = mat3(normalMatrix) * norm;
 
-  //aNormal = vec3((normalMatrix) * vec4(normal,1.0));
+  //aNormal = vec3((normalMatrix) * vec4(normal,1.0));  
   aTexCoord = texCoord;
 }

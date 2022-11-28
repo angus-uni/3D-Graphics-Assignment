@@ -9,7 +9,7 @@ import com.jogamp.opengl.util.glsl.*;
 
 /**
  * Room class to represent the room
- * of the scene
+ * of the scene, i.e. the floor and the walls
  */
 
 public class Room {
@@ -54,22 +54,29 @@ public class Room {
     }
 
     private Mat4 transformWall(int side) {
+
         float size = 16f;
         Mat4 modelMatrix = new Mat4(1);
         modelMatrix = Mat4.multiply(Mat4Transform.scale(size,1f,size), modelMatrix);
 
         switch (side){
+            // Back Wall
             case 1:
                 modelMatrix = Mat4.multiply(Mat4Transform.rotateAroundX(90), modelMatrix);
                 modelMatrix = Mat4.multiply(Mat4Transform.translate(0,size*0.5f,-size*0.5f), modelMatrix);
                 break;
+            // Left Wall
             case 2:
                 modelMatrix = Mat4.multiply(Mat4Transform.rotateAroundY(90), modelMatrix);
                 modelMatrix = Mat4.multiply(Mat4Transform.rotateAroundZ(-90), modelMatrix);
                 modelMatrix = Mat4.multiply(Mat4Transform.translate(-size*0.5f,size*0.5f,0), modelMatrix);
                 break;
+            // Right wall
             case 3:
-
+                modelMatrix = Mat4.multiply(Mat4Transform.rotateAroundY(90), modelMatrix);
+                modelMatrix = Mat4.multiply(Mat4Transform.rotateAroundZ(90), modelMatrix);
+                modelMatrix = Mat4.multiply(Mat4Transform.translate(size*0.5f,size*0.5f,0), modelMatrix);
+                break;
             default:
                 break;
 

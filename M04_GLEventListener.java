@@ -53,8 +53,7 @@ public class M04_GLEventListener implements GLEventListener {
   public void dispose(GLAutoDrawable drawable) {
     GL3 gl = drawable.getGL().getGL3();
     light.dispose(gl);
-    floor.dispose(gl);
-    wall.dispose(gl);
+    room.dispose(gl);
     robot.dispose(gl);
   }
   
@@ -105,12 +104,11 @@ public class M04_GLEventListener implements GLEventListener {
 
   private Camera camera;
   private Mat4 perspective;
-  private Model floor;
-  private Model wall;
   private Light light;
   //private SGNode robotRoot;
   
   private Robot robot;
+  private Room room;
 
   private void initialise(GL3 gl) {
     createRandomNumbers();
@@ -122,22 +120,15 @@ public class M04_GLEventListener implements GLEventListener {
     int[] textureId5 = TextureLibrary.loadTexture(gl, "textures/wattBook.jpg");
     int[] textureId6 = TextureLibrary.loadTexture(gl, "textures/wattBook_specular.jpg");
     int[] textureId7 = TextureLibrary.loadTexture(gl, "textures/cloud.jpg");
-    
+    int[] textureId8 = TextureLibrary.loadTexture(gl, "textures/wall.jpg");
+
     light = new Light(gl);
     light.setCamera(camera);
-    
-    Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
-    Shader shader = new Shader(gl, "vs_tt_05.txt", "fs_tt_05.txt");
 
-    Material material = new Material(new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.3f, 0.3f, 0.3f), 32.0f);
-    Mat4 modelMatrix = Mat4Transform.scale(16,1f,16);
-    floor = new Model(gl, camera, light, shader, material, modelMatrix, mesh, textureId0);
-
-    wall = new Model(gl, camera, light, shader, material, new Mat4(), mesh, textureId7);
-
+    room = new Room(gl, camera, light, textureId0, textureId8, textureId7);
     robot = new Robot(gl, camera, light, textureId1,textureId2,textureId3,textureId4,textureId5,textureId6);
-    
-    
+
+
     //robotRoot.print(0, false);
     //System.exit(0);
   }
@@ -146,19 +137,7 @@ public class M04_GLEventListener implements GLEventListener {
     gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
     light.setPosition(getLightPosition());  // changing light position each frame
     light.render(gl);
-    floor.render(gl);
-
-    wall.setModelMatrix(transformWall(0));
-    wall.render(gl);
-
-    wall.setModelMatrix(transformWall(1));
-    wall.render(gl);
-
-    wall.setModelMatrix(transformWall(2));
-    wall.render(gl);
-
-    wall.setModelMatrix(transformWall(3));
-    wall.render(gl);
+    room.render(gl);
 
     if (animation) {
       double elapsedTime = getSeconds()-startTime;
@@ -166,32 +145,6 @@ public class M04_GLEventListener implements GLEventListener {
     }
     robot.render(gl);
   }
-
-  private Mat4 transformWall(int side) {
-    float size = 16f;
-    Mat4 modelMatrix = new Mat4(1);
-    modelMatrix = Mat4.multiply(Mat4Transform.scale(size,1f,size), modelMatrix);
-
-    switch (side){
-      case 1:
-        modelMatrix = Mat4.multiply(Mat4Transform.rotateAroundX(90), modelMatrix);
-        modelMatrix = Mat4.multiply(Mat4Transform.translate(0,size*0.5f,-size*0.5f), modelMatrix);
-        break;
-      case 2:
-        modelMatrix = Mat4.multiply(Mat4Transform.rotateAroundY(90), modelMatrix);
-        modelMatrix = Mat4.multiply(Mat4Transform.rotateAroundZ(-90), modelMatrix);
-        modelMatrix = Mat4.multiply(Mat4Transform.translate(-size*0.5f,size*0.5f,0), modelMatrix);
-        break;
-      case 3:
-
-      default:
-        break;
-
-    }
-
-    return modelMatrix;
-  }
-
 
   // The light's postion is continually being changed, so needs to be calculated for each frame.
   private Vec3 getLightPosition() {

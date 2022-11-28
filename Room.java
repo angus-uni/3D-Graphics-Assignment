@@ -14,7 +14,7 @@ import com.jogamp.opengl.util.glsl.*;
 
 public class Room {
 
-    private Model floor, wall;
+    private Model floor, wall, window;
 
     public Room(GL3 gl, Camera camera, Light light, int[] floorTexture, int[] wallTexture,int[] windowTexture) {
 
@@ -28,8 +28,12 @@ public class Room {
         // For now the wallMaterial can be the same as the floor
         Material wallMaterial = new Material(new Vec3(0.76f, 0.62f, 0.51f), new Vec3(0.84f,  0.71f,  0.59f), new Vec3(0.3f, 0.3f, 0.3f), 1.0f);
 
+        // The window is glass so it should be shiny
+        Material glass = new Material(new Vec3(0.5f, 0.5f, 0.5f), new Vec3(0.84f,  0.71f,  0.59f), new Vec3(0.5f, 0.5f, 0.5f), 2.0f);
+
         // Create models for the floor & wall
         floor = new Model(gl, camera, light, shader, floorMaterial, Mat4Transform.scale(16,1f,16), mesh, floorTexture);
+        window = new Model(gl, camera, light, shader, glass, new Mat4(), mesh, windowTexture);
         wall = new Model(gl, camera, light, shader, wallMaterial, new Mat4(), mesh, wallTexture);
 
 
@@ -43,8 +47,8 @@ public class Room {
         wall.setModelMatrix(transformWall(0));
         wall.render(gl);
 
-        wall.setModelMatrix(transformWall(1));
-        wall.render(gl);
+        window.setModelMatrix(transformWall(1));
+        window.render(gl);
 
         wall.setModelMatrix(transformWall(2));
         wall.render(gl);
@@ -60,7 +64,7 @@ public class Room {
         modelMatrix = Mat4.multiply(Mat4Transform.scale(size,1f,size), modelMatrix);
 
         switch (side){
-            // Back Wall
+            // Back Wall (window)
             case 1:
                 modelMatrix = Mat4.multiply(Mat4Transform.rotateAroundX(90), modelMatrix);
                 modelMatrix = Mat4.multiply(Mat4Transform.translate(0,size*0.5f,-size*0.5f), modelMatrix);

@@ -35,7 +35,7 @@ public class Room {
 
         // Create models for the floor & wall
         floor = new Model(gl, camera, light, shader, floorMaterial, Mat4Transform.scale(16,1f,16), mesh, floorTexture);
-        window = new Model(gl, camera, light, windowShader, glass, new Mat4(), mesh, backgroundTexture, windowTexture);
+        window = new Model(gl, camera, light, windowShader, glass, new Mat4(), mesh, windowTexture, backgroundTexture);
         wall = new Model(gl, camera, light, shader, wallMaterial, new Mat4(), mesh, wallTexture);
 
     }

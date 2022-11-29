@@ -112,22 +112,22 @@ public class M04_GLEventListener implements GLEventListener {
 
   private void initialise(GL3 gl) {
     createRandomNumbers();
-    int[] textureId0 = TextureLibrary.loadTexture(gl, "textures/floor.jpg");
-    int[] textureId1 = TextureLibrary.loadTexture(gl, "textures/egg.jpg");
-    int[] textureId2 = TextureLibrary.loadTexture(gl, "textures/egg_map.jpg");
+    int[] floorTextureFile = TextureLibrary.loadTexture(gl, "textures/floor.jpg");
+    int[] eggTextureFile = TextureLibrary.loadTexture(gl, "textures/egg.jpg");
+    int[] eggSpecularTextureFile = TextureLibrary.loadTexture(gl, "textures/egg_map.jpg");
     int[] textureId3 = TextureLibrary.loadTexture(gl, "textures/container2.jpg");
     int[] textureId4 = TextureLibrary.loadTexture(gl, "textures/container2_specular.jpg");
     int[] textureId5 = TextureLibrary.loadTexture(gl, "textures/wattBook.jpg");
     int[] textureId6 = TextureLibrary.loadTexture(gl, "textures/wattBook_specular.jpg");
-    int[] textureId7 = TextureLibrary.loadTexture(gl, "textures/outside.jpg");
-    int[] textureId8 = TextureLibrary.loadTexture(gl, "textures/wall.jpg");
-    int[] textureId9 = TextureLibrary.loadTexture(gl, "textures/cloud.jpg");
+    int[] outsideTextureFile = TextureLibrary.loadTexture(gl, "textures/outside.jpg");
+    int[] wallTextureFile = TextureLibrary.loadTexture(gl, "textures/wall.jpg");
+    int[] cloudTextureFile = TextureLibrary.loadTexture(gl, "textures/cloud.jpg");
 
     light = new Light(gl);
     light.setCamera(camera);
 
-    room = new Room(gl, camera, light, textureId0, textureId8, textureId9, textureId7);
-    robot = new Robot(gl, camera, light, textureId1,textureId2,textureId3,textureId4,textureId5,textureId6);
+    room = new Room(gl, camera, light, floorTextureFile, wallTextureFile, outsideTextureFile, cloudTextureFile);
+    robot = new Robot(gl, camera, light, eggTextureFile,eggSpecularTextureFile,textureId3,textureId4,textureId5,textureId6);
 
 
     //robotRoot.print(0, false);

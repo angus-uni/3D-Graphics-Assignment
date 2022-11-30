@@ -54,7 +54,6 @@ public class Hatch_GLEventListener implements GLEventListener {
     GL3 gl = drawable.getGL().getGL3();
     light.dispose(gl);
     room.dispose(gl);
-    robot.dispose(gl);
     table.dispose(gl);
   }
   
@@ -78,24 +77,7 @@ public class Hatch_GLEventListener implements GLEventListener {
     double elapsedTime = getSeconds()-startTime;
     savedTime = elapsedTime;
   }
-   
-  public void incXPosition() {
-    robot.incXPosition();
-  }
-   
-  public void decXPosition() {
-    robot.decXPosition();
-  }
-  
-  public void loweredArms() {
-    stopAnimation();
-    robot.loweredArms();
-  }
-   
-  public void raisedArms() {
-    stopAnimation();
-    robot.raisedArms();
-  }
+
   
   // ***************************************************
   /* THE SCENE
@@ -106,9 +88,7 @@ public class Hatch_GLEventListener implements GLEventListener {
   private Camera camera;
   private Mat4 perspective;
   private Light light;
-  //private SGNode robotRoot;
-  
-  private Robot robot;
+
   private Room room;
   private Table table;
 
@@ -132,11 +112,8 @@ public class Hatch_GLEventListener implements GLEventListener {
     light.setCamera(camera);
 
     room = new Room(gl, camera, light, floorTextureFile, wallTextureFile, outsideTextureFile, cloudTextureFile);
-    robot = new Robot(gl, camera, light, eggTextureFile,eggSpecularTextureFile,textureId3,textureId4,textureId5,textureId6);
-    table  = new Table(gl, camera, light, tableTopTexture, tableLegTexture);
+    table  = new Table(gl, camera, light, tableTopTexture, tableLegTexture, eggTextureFile, eggSpecularTextureFile);
 
-    //robotRoot.print(0, false);
-    //System.exit(0);
   }
  
   private void render(GL3 gl) {
@@ -153,11 +130,6 @@ public class Hatch_GLEventListener implements GLEventListener {
     // Render our table
     table.render(gl);
 
-    if (animation) {
-      double elapsedTime = getSeconds()-startTime;
-      robot.updateLeftArm(elapsedTime);
-    }
-    //robot.render(gl);
   }
 
   // The light's postion is continually being changed, so needs to be calculated for each frame.

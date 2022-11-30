@@ -14,10 +14,11 @@ import gmaths.Vec3;
 
 public class Table {
 
-	private Model tableCube, legCube;
+	private Model tableCube, legCube, eggSphere;
 	private SGNode tableRoot;
 
-	public Table(GL3 gl, Camera camera, Light light, int[] topTexture, int[] legTexture) {
+	public Table(GL3 gl, Camera camera, Light light, int[] topTexture, int[] legTexture,
+	             int[] eggTexture, int[] eggSpecular) {
 
 		// Specify the size of our table
 		float legHeight = 2f;
@@ -28,17 +29,22 @@ public class Table {
 		float topWidth = 3f;
 		float topDepth = 3f;
 
+		float tableHeight = legHeight+topHeight;
+
 		// Define our table info
 		Mesh cubeMesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
 		Shader tableShader = new Shader(gl, "shaders/table_vs.glsl", "shaders/table_fs.glsl");
 		Material tableMaterial = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
 
-		// Generate a matrix of a basic scale & transformation
-		Mat4 tableMatrix = Mat4.multiply(Mat4Transform.scale(4,4,4), Mat4Transform.translate(0,0.5f,0));
+		// Egg info
+		Mesh sphereMesh = new Mesh(gl, Sphere.vertices.clone(), Sphere.indices.clone());
+		Shader eggShader = new Shader(gl, "shaders/egg_vs.glsl", "shaders/egg_fs.glsl");
+		Material eggMaterial = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
 
 		// Create our models
-		tableCube = new Model(gl, camera, light, tableShader, tableMaterial, tableMatrix, cubeMesh, topTexture);
-		legCube = new Model(gl, camera, light, tableShader, tableMaterial, tableMatrix, cubeMesh, legTexture);
+		tableCube = new Model(gl, camera, light, tableShader, tableMaterial, new Mat4(1), cubeMesh, topTexture);
+		legCube = new Model(gl, camera, light, tableShader, tableMaterial, new Mat4(1), cubeMesh, legTexture);
+		eggSphere = new Model(gl, camera, light, eggShader, eggMaterial, new Mat4(1), sphereMesh, eggTexture, eggSpecular);
 
 		// ================== Transformations ====================
 
@@ -58,23 +64,11 @@ public class Table {
 				TransformNode topTransform = new TransformNode("top transform", m);
 				ModelNode topShape = new ModelNode("Cube(top of table)", tableCube);
 
-		// Create the legs of our table
-		NameNode leg1 = new NameNode("leg 1");
-
-			/*
-			 - Translate our cube to the surface
-			 - Scale it into a leg
-			 - Move it to the corner of our table
-			 */
-			m = Mat4.multiply(Mat4Transform.scale(legWidth,legHeight,legDepth), Mat4Transform.translate(0,0.5f,0));
-			m = Mat4.multiply(Mat4Transform.translate(-((topWidth/2)-(legWidth/2)), 0, (topDepth/2)-(legDepth/2)), m);
-				TransformNode leg1Transform = new TransformNode("leg 1 transform", m);
-				ModelNode legShape = new ModelNode("Cube (leg 1)", legCube);
 
 		// Array to store leg nodes
 		NameNode[] legNodes = new NameNode[4];
 
-		// Loop 4 legs
+		// Create 4 legs for the table
 		int counter = 0;
 		for (int x = 0; x < 2; x++) {
 			for (int z = 0; z < 2; z++) {
@@ -85,7 +79,7 @@ public class Table {
 				// For every leg we need to, translate to surface & scale
 				m = Mat4.multiply(Mat4Transform.scale(legWidth, legHeight, legDepth), Mat4Transform.translate(0, 0.5f, 0));
 
-				// Move the leg into position
+				// Translate in positive or negative direction for each leg
 				int xFactor = (x == 0)
 						? 1
 						: -1;
@@ -93,6 +87,7 @@ public class Table {
 						? 1
 						: -1;
 
+				// Move the leg into position
 				m = Mat4.multiply(Mat4Transform.translate(xFactor*((topWidth/2)-(legWidth/2)), 0, zFactor*((topDepth/2)-(legDepth/2))), m);
 
 				// Construct the transformation & model nodes
@@ -109,7 +104,20 @@ public class Table {
 			}
 		}
 
+		// Add egg to top of table
+		NameNode eggNode = new NameNode("egg");
+			/*
+			 - Translate the sphere to surface & scale
+			 - Move the egg to the top of our table
+			 */
+			m = Mat4.multiply(Mat4Transform.scale(2,3,2), Mat4Transform.translate(0,0.5f,0));
+			m = Mat4.multiply(Mat4Transform.translate(0,tableHeight,0), m);
+				TransformNode eggTransform = new TransformNode("egg transform", m);
+				ModelNode eggShape = new ModelNode("Sphere(Egg on top of table)", eggSphere);
 
+
+
+		// Add nodes hierarchy
 		tableRoot.addChild(top);
 				top.addChild(topTransform);
 					topTransform.addChild(topShape);
@@ -117,6 +125,11 @@ public class Table {
 		for (NameNode legNode : legNodes) {
 			top.addChild(legNode);
 		}
+
+		// Add egg
+		top.addChild(eggNode);
+			eggNode.addChild(eggTransform);
+				eggTransform.addChild(eggShape);
 
 		tableRoot.update();  // IMPORTANT - don't forget this
 
@@ -129,5 +142,6 @@ public class Table {
 	public void dispose(GL3 gl) {
 		tableCube.dispose(gl);
 		legCube.dispose(gl);
+		eggSphere.dispose(gl);
 	}
 }

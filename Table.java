@@ -29,7 +29,7 @@ public class Table {
 		float topWidth = 3f;
 		float topDepth = 3f;
 
-		float tableHeight = legHeight+topHeight;
+		float tableHeight = legHeight+(topHeight*2);
 
 		// Define our table info
 		Mesh cubeMesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
@@ -64,6 +64,18 @@ public class Table {
 				TransformNode topTransform = new TransformNode("top transform", m);
 				ModelNode topShape = new ModelNode("Cube(top of table)", tableCube);
 
+
+		// Create the base for the egg (on top of the table)
+		NameNode eggBase = new NameNode("egg base");
+			/*
+			 - Translate the cube to the surface
+			 - Scale it to be right size (1/3 of the table-top surface)
+			 - Move it on top of table (leg height + table width)
+			 */
+			m = Mat4.multiply(Mat4Transform.scale(topWidth/3,topHeight,topDepth/3), Mat4Transform.translate(0,0.5f,0));
+			m = Mat4.multiply(Mat4Transform.translate(0,legHeight+topHeight,0), m);
+				TransformNode baseTransform = new TransformNode("egg transform", m);
+				ModelNode baseShape = new ModelNode("Cube(egg base)", tableCube);
 
 		// Array to store leg nodes
 		NameNode[] legNodes = new NameNode[4];
@@ -125,6 +137,11 @@ public class Table {
 		for (NameNode legNode : legNodes) {
 			top.addChild(legNode);
 		}
+
+		// Add the base for the egg to sit on
+		top.addChild(eggBase);
+			eggBase.addChild(baseTransform);
+			baseTransform.addChild(baseShape);
 
 		// Add egg
 		top.addChild(eggNode);

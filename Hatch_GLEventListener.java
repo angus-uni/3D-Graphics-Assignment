@@ -6,11 +6,11 @@ import com.jogamp.opengl.util.*;
 import com.jogamp.opengl.util.awt.*;
 import com.jogamp.opengl.util.glsl.*;
   
-public class M04_GLEventListener implements GLEventListener {
+public class Hatch_GLEventListener implements GLEventListener {
   
   private static final boolean DISPLAY_SHADERS = false;
     
-  public M04_GLEventListener(Camera camera) {
+  public Hatch_GLEventListener(Camera camera) {
     this.camera = camera;
     this.camera.setPosition(new Vec3(4f,12f,18f));
   }
@@ -55,6 +55,7 @@ public class M04_GLEventListener implements GLEventListener {
     light.dispose(gl);
     room.dispose(gl);
     robot.dispose(gl);
+    table.dispose(gl);
   }
   
   
@@ -109,6 +110,7 @@ public class M04_GLEventListener implements GLEventListener {
   
   private Robot robot;
   private Room room;
+  private Table table;
 
   private void initialise(GL3 gl) {
     createRandomNumbers();
@@ -123,12 +125,15 @@ public class M04_GLEventListener implements GLEventListener {
     int[] wallTextureFile = TextureLibrary.loadTexture(gl, "textures/wall.jpg");
     int[] cloudTextureFile = TextureLibrary.loadTexture(gl, "textures/cloud.jpg");
 
+    int[] tableTopTexture = TextureLibrary.loadTexture(gl, "textures/tabletop.jpg");
+    int[] tableLegTexture = TextureLibrary.loadTexture(gl, "textures/table_legs.jpg");
+
     light = new Light(gl);
     light.setCamera(camera);
 
     room = new Room(gl, camera, light, floorTextureFile, wallTextureFile, outsideTextureFile, cloudTextureFile);
     robot = new Robot(gl, camera, light, eggTextureFile,eggSpecularTextureFile,textureId3,textureId4,textureId5,textureId6);
-
+    table  = new Table(gl, camera, light, tableTopTexture, tableLegTexture);
 
     //robotRoot.print(0, false);
     //System.exit(0);
@@ -145,11 +150,14 @@ public class M04_GLEventListener implements GLEventListener {
     room.setClouds(getCloudsPosition());
     room.render(gl);
 
+    // Render our table
+    table.render(gl);
+
     if (animation) {
       double elapsedTime = getSeconds()-startTime;
       robot.updateLeftArm(elapsedTime);
     }
-    robot.render(gl);
+    //robot.render(gl);
   }
 
   // The light's postion is continually being changed, so needs to be calculated for each frame.

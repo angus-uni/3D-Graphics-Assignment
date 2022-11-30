@@ -21,8 +21,8 @@ public class Room {
 
 
         Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
-        Shader shader = new Shader(gl, "shaders/tt_vs.txt", "shaders/tt_fs.txt");
-        windowShader = new Shader(gl, "shaders/window_vs.txt", "shaders/window_fs.txt");
+        Shader shader = new Shader(gl, "shaders/tt_vs.glsl", "shaders/tt_fs.glsl");
+        windowShader = new Shader(gl, "shaders/window_vs.glsl", "shaders/window_fs.glsl");
 
         // The floor is going to be sand, this should be pretty matte
         Material floorMaterial = new Material(new Vec3(0.76f, 0.62f, 0.51f), new Vec3(0.84f,  0.71f,  0.59f), new Vec3(0.3f, 0.3f, 0.3f), 1.0f);
@@ -35,7 +35,7 @@ public class Room {
 
         // Create models for the floor & wall
         floor = new Model(gl, camera, light, shader, floorMaterial, Mat4Transform.scale(16,1f,16), mesh, floorTexture);
-        window = new Model(gl, camera, light, windowShader, glass, new Mat4(), mesh, windowTexture, backgroundTexture);
+        window = new Model(gl, camera, light, windowShader, glass, new Mat4(), mesh, windowTexture, backgroundTexture  );
         wall = new Model(gl, camera, light, shader, wallMaterial, new Mat4(), mesh, wallTexture);
 
     }

@@ -47,7 +47,12 @@ public class Table {
 
 		// Create the top of our table & move it to the top
 		NameNode top = new NameNode("top");
-			// Move our cube to top then scale to size
+
+			/*
+			 - Translate our cube to the surface
+			 - Scale it into a table-top
+			 - Translate it to above the table legs
+			 */
 			Mat4 m = Mat4.multiply(Mat4Transform.scale(topWidth,topHeight,topDepth), Mat4Transform.translate(0,0.5f,0));
 			m = Mat4.multiply(Mat4Transform.translate(0,legHeight,0), m);
 				TransformNode topTransform = new TransformNode("top transform", m);
@@ -55,8 +60,14 @@ public class Table {
 
 		// Create the legs of our table
 		NameNode leg1 = new NameNode("leg 1");
-			// Move leg to surface of floor and scale
+
+			/*
+			 - Translate our cube to the surface
+			 - Scale it into a leg
+			 - Move it to the corner of our table
+			 */
 			m = Mat4.multiply(Mat4Transform.scale(legWidth,legHeight,legDepth), Mat4Transform.translate(0,0.5f,0));
+			m = Mat4.multiply(Mat4Transform.translate(-((topWidth/2)-(legWidth/2)), 0, (topDepth/2)-(legDepth/2)), m);
 				TransformNode leg1Transform = new TransformNode("leg 1 transform", m);
 				ModelNode legShape = new ModelNode("Cube (leg 1)", legCube);
 

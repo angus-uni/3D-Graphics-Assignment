@@ -71,12 +71,52 @@ public class Table {
 				TransformNode leg1Transform = new TransformNode("leg 1 transform", m);
 				ModelNode legShape = new ModelNode("Cube (leg 1)", legCube);
 
+		// Array to store leg nodes
+		NameNode[] legNodes = new NameNode[4];
+
+		// Loop 4 legs
+		int counter = 0;
+		for (int x = 0; x < 2; x++) {
+			for (int z = 0; z < 2; z++) {
+				counter += 1;
+				String legName = "leg " + counter;
+				NameNode currentLeg = new NameNode(legName);
+
+				// For every leg we need to, translate to surface & scale
+				m = Mat4.multiply(Mat4Transform.scale(legWidth, legHeight, legDepth), Mat4Transform.translate(0, 0.5f, 0));
+
+				// Move the leg into position
+				int xFactor = (x == 0)
+						? 1
+						: -1;
+				int zFactor = (z == 0)
+						? 1
+						: -1;
+
+				m = Mat4.multiply(Mat4Transform.translate(xFactor*((topWidth/2)-(legWidth/2)), 0, zFactor*((topDepth/2)-(legDepth/2))), m);
+
+				// Construct the transformation & model nodes
+				TransformNode currentLegTransform = new TransformNode(legName+" transform", m);
+				ModelNode currentLegShape = new ModelNode("Cube - "+legName, legCube);
+
+				// Apply hierarchy
+				currentLeg.addChild(currentLegTransform);
+				currentLegTransform.addChild(currentLegShape);
+
+				// Store in array
+				legNodes[counter-1] = currentLeg;
+
+			}
+		}
+
+
 		tableRoot.addChild(top);
 				top.addChild(topTransform);
 					topTransform.addChild(topShape);
-		tableRoot.addChild(leg1);
-			leg1.addChild(leg1Transform);
-				leg1Transform.addChild(legShape);
+		// Add each leg from the array
+		for (NameNode legNode : legNodes) {
+			top.addChild(legNode);
+		}
 
 		tableRoot.update();  // IMPORTANT - don't forget this
 

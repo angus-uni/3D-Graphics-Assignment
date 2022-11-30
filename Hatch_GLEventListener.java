@@ -87,7 +87,7 @@ public class Hatch_GLEventListener implements GLEventListener {
 
   private Camera camera;
   private Mat4 perspective;
-  private Light ceilingLight;
+  private Light ceilingLight, sun;
 
   private Room room;
   private Table table;
@@ -97,10 +97,6 @@ public class Hatch_GLEventListener implements GLEventListener {
     int[] floorTextureFile = TextureLibrary.loadTexture(gl, "textures/floor.jpg");
     int[] eggTextureFile = TextureLibrary.loadTexture(gl, "textures/egg.jpg");
     int[] eggSpecularTextureFile = TextureLibrary.loadTexture(gl, "textures/egg_map.jpg");
-    int[] textureId3 = TextureLibrary.loadTexture(gl, "textures/container2.jpg");
-    int[] textureId4 = TextureLibrary.loadTexture(gl, "textures/container2_specular.jpg");
-    int[] textureId5 = TextureLibrary.loadTexture(gl, "textures/wattBook.jpg");
-    int[] textureId6 = TextureLibrary.loadTexture(gl, "textures/wattBook_specular.jpg");
     int[] outsideTextureFile = TextureLibrary.loadTexture(gl, "textures/outside.jpg");
     int[] wallTextureFile = TextureLibrary.loadTexture(gl, "textures/wall.jpg");
     int[] cloudTextureFile = TextureLibrary.loadTexture(gl, "textures/cloud.jpg");
@@ -108,8 +104,12 @@ public class Hatch_GLEventListener implements GLEventListener {
     int[] tableTopTexture = TextureLibrary.loadTexture(gl, "textures/tabletop.jpg");
     int[] tableLegTexture = TextureLibrary.loadTexture(gl, "textures/table_legs.jpg");
 
+
     ceilingLight = new Light(gl);
     ceilingLight.setCamera(camera);
+
+    sun = new Light(gl);
+    sun.setCamera(camera);
 
     room = new Room(gl, camera,ceilingLight, floorTextureFile, wallTextureFile, outsideTextureFile, cloudTextureFile);
     table  = new Table(gl, camera, ceilingLight, tableTopTexture, tableLegTexture, eggTextureFile, eggSpecularTextureFile);
@@ -125,7 +125,7 @@ public class Hatch_GLEventListener implements GLEventListener {
     //ceilingLight.setPosition(getLightPosition());  // changing light position each frame
     ceilingLight.render(gl);
 
-    // Render our room
+    // Render our office room
     room.setClouds(getCloudsPosition());
     room.render(gl);
 

@@ -16,6 +16,7 @@ public class Room {
     private Model floor, wall, window;
     private Vec2 cloudPos;
     private Shader windowShader;
+    public Float wallSize = 16f;
 
     public Room(GL3 gl, Camera camera, Light light, int[] floorTexture, int[] wallTexture,int[] windowTexture, int[] backgroundTexture) {
 
@@ -34,7 +35,7 @@ public class Room {
         Material glass = new Material(new Vec3(0.5f, 0.5f, 0.5f), new Vec3(0.84f,  0.71f,  0.59f), new Vec3(0.5f, 0.5f, 0.5f), 2.0f);
 
         // Create models for the floor & wall
-        floor = new Model(gl, camera, light, shader, floorMaterial, Mat4Transform.scale(16,1f,16), mesh, floorTexture);
+        floor = new Model(gl, camera, light, shader, floorMaterial, Mat4Transform.scale(wallSize,0,wallSize), mesh, floorTexture);
         window = new Model(gl, camera, light, windowShader, glass, new Mat4(), mesh, windowTexture, backgroundTexture  );
         wall = new Model(gl, camera, light, shader, wallMaterial, new Mat4(), mesh, wallTexture);
 

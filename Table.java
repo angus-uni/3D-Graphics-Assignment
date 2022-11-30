@@ -75,7 +75,7 @@ public class Table {
 			m = Mat4.multiply(Mat4Transform.scale(topWidth/3,topHeight,topDepth/3), Mat4Transform.translate(0,0.5f,0));
 			m = Mat4.multiply(Mat4Transform.translate(0,legHeight+topHeight,0), m);
 				TransformNode baseTransform = new TransformNode("egg transform", m);
-				ModelNode baseShape = new ModelNode("Cube(egg base)", tableCube);
+				ModelNode baseShape = new ModelNode("Cube(egg base)", legCube);
 
 		// Array to store leg nodes
 		NameNode[] legNodes = new NameNode[4];

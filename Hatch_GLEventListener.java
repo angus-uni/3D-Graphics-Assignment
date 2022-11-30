@@ -52,7 +52,7 @@ public class Hatch_GLEventListener implements GLEventListener {
   /* Clean up memory, if necessary */
   public void dispose(GLAutoDrawable drawable) {
     GL3 gl = drawable.getGL().getGL3();
-    light.dispose(gl);
+    ceilingLight.dispose(gl);
     room.dispose(gl);
     table.dispose(gl);
   }
@@ -87,7 +87,7 @@ public class Hatch_GLEventListener implements GLEventListener {
 
   private Camera camera;
   private Mat4 perspective;
-  private Light light;
+  private Light ceilingLight;
 
   private Room room;
   private Table table;
@@ -108,20 +108,22 @@ public class Hatch_GLEventListener implements GLEventListener {
     int[] tableTopTexture = TextureLibrary.loadTexture(gl, "textures/tabletop.jpg");
     int[] tableLegTexture = TextureLibrary.loadTexture(gl, "textures/table_legs.jpg");
 
-    light = new Light(gl);
-    light.setCamera(camera);
+    ceilingLight = new Light(gl);
+    ceilingLight.setCamera(camera);
 
-    room = new Room(gl, camera, light, floorTextureFile, wallTextureFile, outsideTextureFile, cloudTextureFile);
-    table  = new Table(gl, camera, light, tableTopTexture, tableLegTexture, eggTextureFile, eggSpecularTextureFile);
+    room = new Room(gl, camera,ceilingLight, floorTextureFile, wallTextureFile, outsideTextureFile, cloudTextureFile);
+    table  = new Table(gl, camera, ceilingLight, tableTopTexture, tableLegTexture, eggTextureFile, eggSpecularTextureFile);
 
+    // Place the ceiling light on top of the room
+    ceilingLight.setPosition(0,room.wallSize,0);
   }
  
   private void render(GL3 gl) {
     gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
     //Calculate & Render light position
-    light.setPosition(getLightPosition());  // changing light position each frame
-    light.render(gl);
+    //ceilingLight.setPosition(getLightPosition());  // changing light position each frame
+    ceilingLight.render(gl);
 
     // Render our room
     room.setClouds(getCloudsPosition());

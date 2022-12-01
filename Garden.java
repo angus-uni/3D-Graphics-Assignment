@@ -14,7 +14,7 @@ class Garden {
     private float wallSize = 25f;
     private Vec2 cloudPos;
 
-    private Texture floorTexture, skyTexture, cloudTexture;
+    private Texture floorTexture, skyTexture, cloudTexture, skybox;
     private Texture[] textures;
     private Model[] walls;
 
@@ -30,6 +30,8 @@ class Garden {
         textures[2] = TextureLibrary.loadTexture(gl, "textures/skybox/left.jpg");
         textures[3] = TextureLibrary.loadTexture(gl, "textures/skybox/right.jpg");
         textures[4] = TextureLibrary.loadTexture(gl, "textures/skybox/bottom.jpg");
+
+        skybox = Cubemap.loadFromStreams(gl, getClass().getClassLoader(),"park_", "jpg", true);
     }
 
     public Garden(GL3 gl, Camera c, Light l) {

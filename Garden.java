@@ -83,9 +83,10 @@ class Garden {
         // Create the right wall node
         NameNode rightWall = new NameNode("Right wall");
             m = Mat4.multiply(Mat4Transform.rotateAroundY(90), mStart);
-            m = Mat4.multiply(Mat4Transform.rotateAroundZ(90), m);
-            m = Mat4.multiply(Mat4Transform.translate(wallSize*0.5f,wallSize*0.5f,0), m);
-                TransformNode rightWallTransform = new TransformNode("Right wall transform", m);
+            m = Mat4.multiply(Mat4Transform.rotateAroundZ(-90), m);
+            m = Mat4.multiply(Mat4Transform.translate(-wallSize*0.5f,wallSize*0.5f,0), m);
+            m = Mat4.multiply(Mat4Transform.rotateAroundY(180), m);
+            TransformNode rightWallTransform = new TransformNode("Right wall transform", m);
                     ModelNode rightWallShape = new ModelNode("Right wall shape", walls[3]);
 
 

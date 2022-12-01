@@ -56,8 +56,8 @@ class Garden {
 
         roomRoot = new NameNode("Room root");
 
-        // Create transform to move the room if we want
-        TransformNode roomMoveTransform = new TransformNode("move room transform", Mat4Transform.translate(0,0,-(Room.wallSize / 2)));
+        // Move our garden back a bit and down a bit to simulate window edge
+        TransformNode roomMoveTransform = new TransformNode("move room transform", Mat4Transform.translate(0,-(Room.wallSize/5),-(Room.wallSize / 2)));
 
 
         // Create the floor node

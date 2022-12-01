@@ -18,9 +18,21 @@ public class Table {
 
 	private Model tableCube, legCube, eggSphere;
 	private SGNode tableRoot;
+	private Texture[] textures;
 
-	public Table(GL3 gl, Camera camera, Light light, Texture topTexture, Texture legTexture,
-	             Texture eggTexture, Texture eggSpecular) {
+	private void loadTextures(GL3 gl) {
+		textures = new Texture[4];
+
+		textures[0] = TextureLibrary.loadTexture(gl, "textures/tabletop.jpg");
+		textures[1] = TextureLibrary.loadTexture(gl, "textures/table_legs.jpg");
+		textures[2] = TextureLibrary.loadTexture(gl, "textures/egg.jpg");
+		textures[3] = TextureLibrary.loadTexture(gl, "textures/egg_map.jpg");
+
+	}
+
+	public Table(GL3 gl, Camera camera, Light light) {
+
+		loadTextures(gl);
 
 		// Specify the size of our table
 		float legHeight = 2f;
@@ -44,9 +56,9 @@ public class Table {
 		Material eggMaterial = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
 
 		// Create our models
-		tableCube = new Model(gl, camera, light, tableShader, tableMaterial, new Mat4(1), cubeMesh, topTexture);
-		legCube = new Model(gl, camera, light, tableShader, tableMaterial, new Mat4(1), cubeMesh, legTexture);
-		eggSphere = new Model(gl, camera, light, eggShader, eggMaterial, new Mat4(1), sphereMesh, eggTexture, eggSpecular);
+		tableCube = new Model(gl, camera, light, tableShader, tableMaterial, new Mat4(1), cubeMesh, textures[0]);
+		legCube = new Model(gl, camera, light, tableShader, tableMaterial, new Mat4(1), cubeMesh, textures[1]);
+		eggSphere = new Model(gl, camera, light, eggShader, eggMaterial, new Mat4(1), sphereMesh, textures[2], textures[3]);
 
 		// ================== Transformations ====================
 

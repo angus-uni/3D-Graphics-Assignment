@@ -89,29 +89,16 @@ public class Hatch_GLEventListener implements GLEventListener {
 
   private Camera camera;
   private Mat4 perspective;
-  private Texture[] texture;   // array of textures
 
   private Room room;
   private Table table;
   private Garden garden;
 
-  private void loadTextures(GL3 gl) {
-    texture = new Texture[9];
-
-    texture[3] = TextureLibrary.loadTexture(gl, "textures/tabletop.jpg");
-    texture[4] = TextureLibrary.loadTexture(gl, "textures/table_legs.jpg");
-    texture[5] = TextureLibrary.loadTexture(gl, "textures/egg.jpg");
-    texture[6] = TextureLibrary.loadTexture(gl, "textures/egg_map.jpg");
-
-  }
-
-
   private void initialise(GL3 gl) {
     createRandomNumbers();
-    loadTextures(gl);
 
     room = new Room(gl, camera);
-    table  = new Table(gl, camera, room.light, texture[3], texture[4], texture[5], texture[6]);
+    table  = new Table(gl, camera, room.light);
     garden = new Garden(gl, camera);
 
   }

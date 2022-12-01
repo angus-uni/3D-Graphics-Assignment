@@ -11,7 +11,7 @@ class Garden {
 
     private Camera camera;
     private Light light;
-    private float wallSize = 16f;
+    private float wallSize = 25f;
     private Vec2 cloudPos;
 
     private Texture floorTexture, skyTexture, cloudTexture;
@@ -50,7 +50,7 @@ class Garden {
         roomRoot = new NameNode("Room root");
 
         // Create transform to move the room if we want
-        TransformNode roomMoveTransform = new TransformNode("move room transform", Mat4Transform.translate(0,0,-wallSize));
+        TransformNode roomMoveTransform = new TransformNode("move room transform", Mat4Transform.translate(0,0,-(Room.wallSize / 2)));
 
 
         // Create the floor node

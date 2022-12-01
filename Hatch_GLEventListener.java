@@ -123,6 +123,7 @@ public class Hatch_GLEventListener implements GLEventListener {
 
     room = new Room(gl, camera,ceilingLight, texture[0], texture[1], texture[2]);
     table  = new Table(gl, camera, ceilingLight, texture[3], texture[4], texture[5], texture[6]);
+
     garden = new Garden(gl, camera,ceilingLight);
 
     // Place the ceiling light on top of the room
@@ -137,7 +138,6 @@ public class Hatch_GLEventListener implements GLEventListener {
     ceilingLight.render(gl);
 
     // Render our office room
-    room.setClouds(getCloudsPosition());
     room.render(gl);
 
     garden.setClouds(getCloudsPosition());
@@ -148,15 +148,6 @@ public class Hatch_GLEventListener implements GLEventListener {
 
   }
 
-  // The light's postion is continually being changed, so needs to be calculated for each frame.
-  private Vec3 getLightPosition() {
-    double elapsedTime = getSeconds()-startTime;
-    float x = 5.0f*(float)(Math.sin(Math.toRadians(elapsedTime*50)));
-    float y = 2.7f;
-    float z = 5.0f*(float)(Math.cos(Math.toRadians(elapsedTime*50)));
-    return new Vec3(x,y,z);   
-    //return new Vec3(5f,3.4f,5f);
-  }
 
   private Vec2 getCloudsPosition() {
     double elapsedTime = getSeconds()-startTime;

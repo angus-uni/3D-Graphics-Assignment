@@ -16,7 +16,7 @@ public class Room {
 
     private Model floor, wall, window;
     private Vec2 cloudPos;
-    public Float wallSize = 16f;
+    public static Float wallSize = 16f;
     private SGNode roomRoot;
 
     public Room(GL3 gl, Camera camera, Light light, Texture floorTexture, Texture wallTexture,Texture windowTexture) {
@@ -104,9 +104,6 @@ public class Room {
 
     }
 
-    public void setClouds(Vec2 pos){
-        cloudPos = pos;
-    }
 
     public void dispose(GL3 gl) {
         floor.dispose(gl);

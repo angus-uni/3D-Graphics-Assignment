@@ -89,6 +89,13 @@ class Garden {
             TransformNode rightWallTransform = new TransformNode("Right wall transform", m);
                     ModelNode rightWallShape = new ModelNode("Right wall shape", walls[3]);
 
+        // Create the right wall node
+        NameNode roof = new NameNode("Roof");
+            m = Mat4.multiply(Mat4Transform.rotateAroundX(180), mStart);
+            m = Mat4.multiply(Mat4Transform.translate(0,wallSize,0), m);
+                TransformNode roofTransform = new TransformNode("Roof transform", m);
+                ModelNode roofShape = new ModelNode("Roof shape", walls[0]);
+
 
         // Create Hierarchy
         roomRoot.addChild(roomMoveTransform);
@@ -104,6 +111,9 @@ class Garden {
             roomMoveTransform.addChild(rightWall);
                 rightWall.addChild(rightWallTransform);
                 rightWallTransform.addChild(rightWallShape);
+            roomMoveTransform.addChild(roof);
+                roof.addChild(roofTransform);
+                    roofTransform.addChild(roofShape);
 
         roomRoot.update();
 

@@ -97,9 +97,6 @@ public class Hatch_GLEventListener implements GLEventListener {
 
   private void loadTextures(GL3 gl) {
     texture = new Texture[9];
-    texture[0] = TextureLibrary.loadTexture(gl, "textures/floor.jpg");
-    texture[1] = TextureLibrary.loadTexture(gl, "textures/wall.jpg");
-    texture[2] = TextureLibrary.loadTexture(gl, "textures/window.png");
 
     texture[3] = TextureLibrary.loadTexture(gl, "textures/tabletop.jpg");
     texture[4] = TextureLibrary.loadTexture(gl, "textures/table_legs.jpg");
@@ -113,7 +110,7 @@ public class Hatch_GLEventListener implements GLEventListener {
     createRandomNumbers();
     loadTextures(gl);
 
-    room = new Room(gl, camera, texture[0], texture[1], texture[2]);
+    room = new Room(gl, camera);
     table  = new Table(gl, camera, room.light, texture[3], texture[4], texture[5], texture[6]);
     garden = new Garden(gl, camera);
 

@@ -18,9 +18,20 @@ public class Room {
     public static Float wallSize = 16f;
     private SGNode roomRoot;
     public Light light;
+    private Texture[] textures;
 
-    public Room(GL3 gl, Camera camera, Texture floorTexture, Texture wallTexture,Texture windowTexture) {
 
+    private void loadTextures(GL3 gl) {
+        textures = new Texture[3];
+        textures[0] = TextureLibrary.loadTexture(gl, "textures/floor.jpg");
+        textures[1] = TextureLibrary.loadTexture(gl, "textures/wall.jpg");
+        textures[2] = TextureLibrary.loadTexture(gl, "textures/window.png");
+
+    }
+
+    public Room(GL3 gl, Camera camera) {
+
+        loadTextures(gl);
 
         Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
         Shader shader = new Shader(gl, "shaders/tt_vs.glsl", "shaders/tt_fs.glsl");
@@ -42,9 +53,9 @@ public class Room {
 
 
         // Create models for the floor & wall
-        floor = new Model(gl, camera, light, shader, floorMaterial, new Mat4(), mesh, floorTexture);
-        window = new Model(gl, camera, light, windowShader, glass, new Mat4(), mesh, windowTexture);
-        wall = new Model(gl, camera, light, shader, wallMaterial, new Mat4(), mesh, wallTexture);
+        floor = new Model(gl, camera, light, shader, floorMaterial, new Mat4(), mesh, textures[0]);
+        window = new Model(gl, camera, light, windowShader, glass, new Mat4(), mesh, textures[2]);
+        wall = new Model(gl, camera, light, shader, wallMaterial, new Mat4(), mesh, textures[1]);
 
 
         // ====================== Create the scene graph for our room =============================

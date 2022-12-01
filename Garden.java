@@ -1,5 +1,3 @@
-import gmaths.*;
-
 import com.jogamp.common.nio.*;
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.util.*;
@@ -7,24 +5,30 @@ import com.jogamp.opengl.util.awt.*;
 import com.jogamp.opengl.util.glsl.*;
 import com.jogamp.opengl.util.texture.*;
 
+import gmaths.Mat4;
+import gmaths.Mat4Transform;
+import gmaths.Vec2;
+import gmaths.Vec3;
+
 /**
  * Room class to represent the room
  * of the scene, i.e. the floor and the walls
  */
 
-public class Room {
+public class Garden {
 
     private Model floor, wall, window;
     private Vec2 cloudPos;
+    private Shader windowShader;
     public Float wallSize = 16f;
     private SGNode roomRoot;
 
-    public Room(GL3 gl, Camera camera, Light light, Texture floorTexture, Texture wallTexture,Texture windowTexture) {
+    public Garden(GL3 gl, Camera camera, Light light, Texture floorTexture, Texture wallTexture, Texture windowTexture, Texture backgroundTexture) {
 
 
         Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
         Shader shader = new Shader(gl, "shaders/tt_vs.glsl", "shaders/tt_fs.glsl");
-        Shader windowShader = new Shader(gl, "shaders/window_vs.glsl", "shaders/window_fs.glsl");
+        windowShader = new Shader(gl, "shaders/dynamic_background_vs.glsl", "shaders/dynamic_background_fs.glsl");
 
         // The floor is going to be wood, this should be pretty matte
         Material floorMaterial = new Material(new Vec3(0.76f, 0.62f, 0.51f), new Vec3(0.84f,  0.71f,  0.59f), new Vec3(0.3f, 0.3f, 0.3f), 1.0f);
@@ -38,7 +42,7 @@ public class Room {
 
         // Create models for the floor & wall
         floor = new Model(gl, camera, light, shader, floorMaterial, new Mat4(), mesh, floorTexture);
-        window = new Model(gl, camera, light, windowShader, glass, new Mat4(), mesh, windowTexture);
+        window = new Model(gl, camera, light, windowShader, glass, new Mat4(), mesh, windowTexture, backgroundTexture  );
         wall = new Model(gl, camera, light, shader, wallMaterial, new Mat4(), mesh, wallTexture);
 
         // ====================== Create the scene graph for our room =============================
@@ -49,7 +53,7 @@ public class Room {
         roomRoot = new NameNode("Room root");
 
         // Create transform to move the room if we want
-        TransformNode roomMoveTransform = new TransformNode("move room transform", new Mat4(1));
+        TransformNode roomMoveTransform = new TransformNode("move room transform", Mat4Transform.translate(0,0,-wallSize));
 
         // Create the floor node
         NameNode floorNode = new NameNode("Floor");
@@ -100,6 +104,8 @@ public class Room {
 
     public void render(GL3 gl) {
 
+        windowShader.use(gl);
+        windowShader.setFloat(gl, "offset", cloudPos.x, cloudPos.y);
         roomRoot.draw(gl);
 
     }

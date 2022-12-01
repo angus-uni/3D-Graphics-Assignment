@@ -1,10 +1,12 @@
 import gmaths.*;
 
+import java.nio.*;
 import com.jogamp.common.nio.*;
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.util.*;
 import com.jogamp.opengl.util.awt.*;
 import com.jogamp.opengl.util.glsl.*;
+import com.jogamp.opengl.util.texture.*;
   
 public class Hatch_GLEventListener implements GLEventListener {
   
@@ -55,6 +57,7 @@ public class Hatch_GLEventListener implements GLEventListener {
     ceilingLight.dispose(gl);
     room.dispose(gl);
     table.dispose(gl);
+    garden.dispose(gl);
   }
   
   
@@ -88,22 +91,32 @@ public class Hatch_GLEventListener implements GLEventListener {
   private Camera camera;
   private Mat4 perspective;
   private Light ceilingLight, sun;
+  private Texture[] texture;   // array of textures
 
   private Room room;
   private Table table;
+  private Garden garden;
+
+  private void loadTextures(GL3 gl) {
+    texture = new Texture[9];
+    texture[0] = TextureLibrary.loadTexture(gl, "textures/floor.jpg");
+    texture[1] = TextureLibrary.loadTexture(gl, "textures/wall.jpg");
+    texture[2] = TextureLibrary.loadTexture(gl, "textures/window.png");
+
+    texture[3] = TextureLibrary.loadTexture(gl, "textures/tabletop.jpg");
+    texture[4] = TextureLibrary.loadTexture(gl, "textures/table_legs.jpg");
+    texture[5] = TextureLibrary.loadTexture(gl, "textures/egg.jpg");
+    texture[6] = TextureLibrary.loadTexture(gl, "textures/egg_map.jpg");
+
+    texture[7] = TextureLibrary.loadTexture(gl, "textures/outside.jpg");
+    texture[8] = TextureLibrary.loadTexture(gl, "textures/cloud.jpg");
+
+  }
+
 
   private void initialise(GL3 gl) {
     createRandomNumbers();
-    int[] floorTextureFile = TextureLibrary.loadTexture(gl, "textures/floor.jpg");
-    int[] eggTextureFile = TextureLibrary.loadTexture(gl, "textures/egg.jpg");
-    int[] eggSpecularTextureFile = TextureLibrary.loadTexture(gl, "textures/egg_map.jpg");
-    int[] outsideTextureFile = TextureLibrary.loadTexture(gl, "textures/outside.jpg");
-    int[] wallTextureFile = TextureLibrary.loadTexture(gl, "textures/wall.jpg");
-    int[] cloudTextureFile = TextureLibrary.loadTexture(gl, "textures/cloud.jpg");
-
-    int[] tableTopTexture = TextureLibrary.loadTexture(gl, "textures/tabletop.jpg");
-    int[] tableLegTexture = TextureLibrary.loadTexture(gl, "textures/table_legs.jpg");
-
+    loadTextures(gl);
 
     ceilingLight = new Light(gl);
     ceilingLight.setCamera(camera);
@@ -111,8 +124,9 @@ public class Hatch_GLEventListener implements GLEventListener {
     sun = new Light(gl);
     sun.setCamera(camera);
 
-    room = new Room(gl, camera,ceilingLight, floorTextureFile, wallTextureFile, outsideTextureFile, cloudTextureFile);
-    table  = new Table(gl, camera, ceilingLight, tableTopTexture, tableLegTexture, eggTextureFile, eggSpecularTextureFile);
+    room = new Room(gl, camera,ceilingLight, texture[0], texture[1], texture[2]);
+    table  = new Table(gl, camera, ceilingLight, texture[3], texture[4], texture[5], texture[6]);
+    garden = new Garden(gl, camera,ceilingLight, texture[0], texture[1], texture[7], texture[8]);
 
     // Place the ceiling light on top of the room
     ceilingLight.setPosition(0,room.wallSize,0);
@@ -128,6 +142,9 @@ public class Hatch_GLEventListener implements GLEventListener {
     // Render our office room
     room.setClouds(getCloudsPosition());
     room.render(gl);
+
+    garden.setClouds(getCloudsPosition());
+    garden.render(gl);
 
     // Render our table
     table.render(gl);

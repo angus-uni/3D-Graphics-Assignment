@@ -3,6 +3,8 @@ import com.jogamp.opengl.*;
 import com.jogamp.opengl.util.*;
 import com.jogamp.opengl.util.awt.*;
 import com.jogamp.opengl.util.glsl.*;
+import com.jogamp.opengl.util.texture.*;
+
 import gmaths.Mat4;
 import gmaths.Mat4Transform;
 import gmaths.Vec3;
@@ -17,8 +19,8 @@ public class Table {
 	private Model tableCube, legCube, eggSphere;
 	private SGNode tableRoot;
 
-	public Table(GL3 gl, Camera camera, Light light, int[] topTexture, int[] legTexture,
-	             int[] eggTexture, int[] eggSpecular) {
+	public Table(GL3 gl, Camera camera, Light light, Texture topTexture, Texture legTexture,
+	             Texture eggTexture, Texture eggSpecular) {
 
 		// Specify the size of our table
 		float legHeight = 2f;

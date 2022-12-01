@@ -55,7 +55,6 @@ public class Hatch_GLEventListener implements GLEventListener {
   public void dispose(GLAutoDrawable drawable) {
     GL3 gl = drawable.getGL().getGL3();
     room.dispose(gl);
-    table.dispose(gl);
     garden.dispose(gl);
   }
   
@@ -91,14 +90,12 @@ public class Hatch_GLEventListener implements GLEventListener {
   private Mat4 perspective;
 
   private Room room;
-  private Table table;
   private Garden garden;
 
   private void initialise(GL3 gl) {
     createRandomNumbers();
 
     room = new Room(gl, camera);
-    table  = new Table(gl, camera, room.light);
     garden = new Garden(gl, camera);
 
   }
@@ -112,8 +109,6 @@ public class Hatch_GLEventListener implements GLEventListener {
     garden.setClouds(getCloudsPosition());
     garden.render(gl);
 
-    // Render our table
-    table.render(gl);
 
   }
 

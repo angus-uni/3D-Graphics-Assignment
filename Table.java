@@ -166,6 +166,10 @@ public class Table {
 
 	}
 
+	public SGNode getRoot(){
+		return tableRoot;
+	}
+
 	public void render(GL3 gl) {
 		tableRoot.draw(gl);
 	}

@@ -17,7 +17,8 @@ public class Room {
     private Model floor, wall, window;
     public static Float wallSize = 16f;
     private SGNode roomRoot;
-    public Light light;
+    private Light light;
+    private Table table;
     private Texture[] textures;
 
 
@@ -51,7 +52,9 @@ public class Room {
         // The window is glass so it should be shiny
         Material glass = new Material(new Vec3(0.5f, 0.5f, 0.5f), new Vec3(0.84f,  0.71f,  0.59f), new Vec3(0.5f, 0.5f, 0.5f), 2.0f);
 
-
+        //Create a table object
+        table  = new Table(gl, camera, light);
+        
         // Create models for the floor & wall
         floor = new Model(gl, camera, light, shader, floorMaterial, new Mat4(), mesh, textures[0]);
         window = new Model(gl, camera, light, windowShader, glass, new Mat4(), mesh, textures[2]);
@@ -72,6 +75,9 @@ public class Room {
         NameNode floorNode = new NameNode("Floor");
             TransformNode floorTransform = new TransformNode("Floor transform", mStart);
             ModelNode floorShape = new ModelNode("floor shape", floor);
+
+        // Attach the table to our scene
+        SGNode tableRoot = table.getRoot();
 
         // Create the back wall node
         NameNode windowNode = new NameNode("Window");
@@ -99,6 +105,7 @@ public class Room {
 
         // Create Hierarchy
         roomRoot.addChild(roomMoveTransform);
+            roomMoveTransform.addChild(tableRoot);
             roomMoveTransform.addChild(floorNode);
                 floorNode.addChild(floorTransform);
                     floorTransform.addChild(floorShape);
@@ -116,7 +123,6 @@ public class Room {
     }
 
     public void render(GL3 gl) {
-
         roomRoot.draw(gl);
         light.render(gl);
 
@@ -127,6 +133,7 @@ public class Room {
         floor.dispose(gl);
         wall.dispose(gl);
         light.dispose(gl);
+        table.dispose(gl);
     }
 
 }

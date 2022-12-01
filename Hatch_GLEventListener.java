@@ -90,7 +90,7 @@ public class Hatch_GLEventListener implements GLEventListener {
 
   private Camera camera;
   private Mat4 perspective;
-  private Light ceilingLight, sun;
+  private Light ceilingLight;
   private Texture[] texture;   // array of textures
 
   private Room room;
@@ -118,16 +118,12 @@ public class Hatch_GLEventListener implements GLEventListener {
     ceilingLight = new Light(gl);
     ceilingLight.setCamera(camera);
 
-    sun = new Light(gl);
-    sun.setCamera(camera);
-
     room = new Room(gl, camera,ceilingLight, texture[0], texture[1], texture[2]);
     table  = new Table(gl, camera, ceilingLight, texture[3], texture[4], texture[5], texture[6]);
-
-    garden = new Garden(gl, camera,ceilingLight);
+    garden = new Garden(gl, camera);
 
     // Place the ceiling light on top of the room
-    ceilingLight.setPosition(0,room.wallSize,0);
+    ceilingLight.setPosition(0,Room.wallSize,0);
   }
  
   private void render(GL3 gl) {

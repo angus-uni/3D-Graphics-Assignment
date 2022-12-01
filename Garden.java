@@ -10,8 +10,10 @@ import com.jogamp.opengl.util.texture.*;
 class Garden {
 
     private Camera camera;
-    private Light light;
+    private Light sun;
     private float wallSize = 25f;
+    private float nudgeBack = 2;
+    private float nudegeDown = 6;
     private Vec2 cloudPos;
 
     private Texture floorTexture, skyTexture, cloudTexture, skybox;
@@ -34,9 +36,10 @@ class Garden {
         skybox = Cubemap.loadFromStreams(gl, getClass().getClassLoader(),"park_", "jpg", true);
     }
 
-    public Garden(GL3 gl, Camera c, Light l) {
+    public Garden(GL3 gl, Camera c) {
         camera = c;
-        light = l;
+
+
 
         // Load our textures
         loadTextures(gl);
@@ -45,6 +48,12 @@ class Garden {
         Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
         Shader shader = new Shader(gl, "shaders/tt_vs.glsl", "shaders/tt_fs.glsl");
         Material wallMaterial = new Material(new Vec3(0.76f, 0.62f, 0.51f), new Vec3(0.84f,  0.71f,  0.59f), new Vec3(0.3f, 0.3f, 0.3f), 1.0f);
+
+        // Create a light in the top left
+        sun = new Light(gl);
+        sun.setCamera(camera);
+        sun.setPosition(0,wallSize-(wallSize/nudegeDown),-(wallSize/2));
+
         dynamicShader = new Shader(gl, "shaders/dynamic_background_vs.glsl", "shaders/dynamic_background_fs.glsl");
 
         // Build each model
@@ -59,7 +68,11 @@ class Garden {
         roomRoot = new NameNode("Room root");
 
         // Move our garden back a bit and down a bit to simulate window edge
-        TransformNode roomMoveTransform = new TransformNode("move room transform", Mat4Transform.translate(0,-(Room.wallSize/5),-(Room.wallSize / 2)));
+        TransformNode roomMoveTransform = new TransformNode("move room transform", Mat4Transform.translate(0,-(Room.wallSize/nudegeDown),-(Room.wallSize / nudgeBack)));
+
+        // Add the light to our scene
+        NameNode lightNode = new NameNode("Light node");
+            SGNode lightNodeTwo = new SGNode("Light SGNode");
 
 
         // Create the floor node
@@ -124,7 +137,7 @@ class Garden {
     private void buildWalls(GL3 gl, Mesh mesh, Shader shader, Material material){
         // Loop through each texture
         for (int i = 0; i < textures.length; i++) {
-            walls[i] = new Model(gl,camera, light, shader, material, new Mat4(),mesh,textures[i]);
+            walls[i] = new Model(gl,camera, sun, shader, material, new Mat4(),mesh,textures[i]);
         }
     }
 
@@ -133,6 +146,7 @@ class Garden {
 //        dynamicShader.use(gl);
 //        dynamicShader.setFloat(gl, "offset", cloudPos.x, cloudPos.y);
 
+        sun.render(gl);
         roomRoot.draw(gl);
     }
 
@@ -145,5 +159,7 @@ class Garden {
         for (int i = 0; i < walls.length; i++) {
             walls[i].dispose(gl);
         }
+        sun.dispose(gl);
+
     }
 }

@@ -15,16 +15,21 @@ import com.jogamp.opengl.util.texture.*;
 public class Room {
 
     private Model floor, wall, window;
-    private Vec2 cloudPos;
     public static Float wallSize = 16f;
     private SGNode roomRoot;
+    public Light light;
 
-    public Room(GL3 gl, Camera camera, Light light, Texture floorTexture, Texture wallTexture,Texture windowTexture) {
+    public Room(GL3 gl, Camera camera, Texture floorTexture, Texture wallTexture,Texture windowTexture) {
 
 
         Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
         Shader shader = new Shader(gl, "shaders/tt_vs.glsl", "shaders/tt_fs.glsl");
         Shader windowShader = new Shader(gl, "shaders/window_vs.glsl", "shaders/window_fs.glsl");
+
+        // Create a light at the top of the room
+        light = new Light(gl);
+        light.setCamera(camera);
+        light.setPosition(0,wallSize,0);
 
         // The floor is going to be wood, this should be pretty matte
         Material floorMaterial = new Material(new Vec3(0.76f, 0.62f, 0.51f), new Vec3(0.84f,  0.71f,  0.59f), new Vec3(0.3f, 0.3f, 0.3f), 1.0f);
@@ -40,6 +45,7 @@ public class Room {
         floor = new Model(gl, camera, light, shader, floorMaterial, new Mat4(), mesh, floorTexture);
         window = new Model(gl, camera, light, windowShader, glass, new Mat4(), mesh, windowTexture);
         wall = new Model(gl, camera, light, shader, wallMaterial, new Mat4(), mesh, wallTexture);
+
 
         // ====================== Create the scene graph for our room =============================
 
@@ -101,6 +107,7 @@ public class Room {
     public void render(GL3 gl) {
 
         roomRoot.draw(gl);
+        light.render(gl);
 
     }
 
@@ -108,6 +115,7 @@ public class Room {
     public void dispose(GL3 gl) {
         floor.dispose(gl);
         wall.dispose(gl);
+        light.dispose(gl);
     }
 
 }

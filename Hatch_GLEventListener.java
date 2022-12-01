@@ -54,7 +54,6 @@ public class Hatch_GLEventListener implements GLEventListener {
   /* Clean up memory, if necessary */
   public void dispose(GLAutoDrawable drawable) {
     GL3 gl = drawable.getGL().getGL3();
-    ceilingLight.dispose(gl);
     room.dispose(gl);
     table.dispose(gl);
     garden.dispose(gl);
@@ -90,7 +89,6 @@ public class Hatch_GLEventListener implements GLEventListener {
 
   private Camera camera;
   private Mat4 perspective;
-  private Light ceilingLight;
   private Texture[] texture;   // array of textures
 
   private Room room;
@@ -115,23 +113,14 @@ public class Hatch_GLEventListener implements GLEventListener {
     createRandomNumbers();
     loadTextures(gl);
 
-    ceilingLight = new Light(gl);
-    ceilingLight.setCamera(camera);
-
-    room = new Room(gl, camera,ceilingLight, texture[0], texture[1], texture[2]);
-    table  = new Table(gl, camera, ceilingLight, texture[3], texture[4], texture[5], texture[6]);
+    room = new Room(gl, camera, texture[0], texture[1], texture[2]);
+    table  = new Table(gl, camera, room.light, texture[3], texture[4], texture[5], texture[6]);
     garden = new Garden(gl, camera);
 
-    // Place the ceiling light on top of the room
-    ceilingLight.setPosition(0,Room.wallSize,0);
   }
  
   private void render(GL3 gl) {
     gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-
-    //Calculate & Render light position
-    //ceilingLight.setPosition(getLightPosition());  // changing light position each frame
-    ceilingLight.render(gl);
 
     // Render our office room
     room.render(gl);

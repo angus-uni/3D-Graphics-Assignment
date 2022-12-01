@@ -1,3 +1,5 @@
+import gmaths.*;
+
 import com.jogamp.common.nio.*;
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.util.*;
@@ -5,45 +7,40 @@ import com.jogamp.opengl.util.awt.*;
 import com.jogamp.opengl.util.glsl.*;
 import com.jogamp.opengl.util.texture.*;
 
-import gmaths.Mat4;
-import gmaths.Mat4Transform;
-import gmaths.Vec2;
-import gmaths.Vec3;
+class Garden {
 
-/**
- * Room class to represent the room
- * of the scene, i.e. the floor and the walls
- */
-
-public class Garden {
-
-    private Model floor, wall, window;
+    private Camera camera;
+    private Light light;
+    private float wallSize = 16f;
     private Vec2 cloudPos;
-    private Shader windowShader;
-    public Float wallSize = 16f;
+
+    private Texture floorTexture, skyTexture, cloudTexture;
+    private Shader dynamicShader;
     private SGNode roomRoot;
+    private Model floorModel, wallModel;
 
-    public Garden(GL3 gl, Camera camera, Light light, Texture floorTexture, Texture wallTexture, Texture windowTexture, Texture backgroundTexture) {
 
+    private void loadTextures(GL3 gl) {
+        floorTexture = TextureLibrary.loadTexture(gl, "textures/soil.jpg");
+        skyTexture = TextureLibrary.loadTexture(gl, "textures/sky.jpg");
+        cloudTexture = TextureLibrary.loadTexture(gl, "textures/cloud.jpg");
+    }
 
+    public Garden(GL3 gl, Camera c, Light l) {
+        camera = c;
+        light = l;
+
+        // Load our textures
+        loadTextures(gl);
+
+        // Setup mesh & shaders
         Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
         Shader shader = new Shader(gl, "shaders/tt_vs.glsl", "shaders/tt_fs.glsl");
-        windowShader = new Shader(gl, "shaders/dynamic_background_vs.glsl", "shaders/dynamic_background_fs.glsl");
+        dynamicShader = new Shader(gl, "shaders/dynamic_background_vs.glsl", "shaders/dynamic_background_fs.glsl");
 
-        // The floor is going to be wood, this should be pretty matte
-        Material floorMaterial = new Material(new Vec3(0.76f, 0.62f, 0.51f), new Vec3(0.84f,  0.71f,  0.59f), new Vec3(0.3f, 0.3f, 0.3f), 1.0f);
-
-        // For now the wallMaterial can be the same as the floor
-        Material wallMaterial = new Material(new Vec3(0.76f, 0.62f, 0.51f), new Vec3(0.84f,  0.71f,  0.59f), new Vec3(0.3f, 0.3f, 0.3f), 1.0f);
-
-        // The window is glass so it should be shiny
-        Material glass = new Material(new Vec3(0.5f, 0.5f, 0.5f), new Vec3(0.84f,  0.71f,  0.59f), new Vec3(0.5f, 0.5f, 0.5f), 2.0f);
-
-
-        // Create models for the floor & wall
-        floor = new Model(gl, camera, light, shader, floorMaterial, new Mat4(), mesh, floorTexture);
-        window = new Model(gl, camera, light, windowShader, glass, new Mat4(), mesh, windowTexture, backgroundTexture  );
-        wall = new Model(gl, camera, light, shader, wallMaterial, new Mat4(), mesh, wallTexture);
+        // Build each model
+        floorModel = buildFloor(gl, mesh, shader);
+        wallModel = buildWall(gl, mesh, dynamicShader);
 
         // ====================== Create the scene graph for our room =============================
 
@@ -55,17 +52,18 @@ public class Garden {
         // Create transform to move the room if we want
         TransformNode roomMoveTransform = new TransformNode("move room transform", Mat4Transform.translate(0,0,-wallSize));
 
+
         // Create the floor node
         NameNode floorNode = new NameNode("Floor");
             TransformNode floorTransform = new TransformNode("Floor transform", mStart);
-            ModelNode floorShape = new ModelNode("floor shape", floor);
+                ModelNode floorShape = new ModelNode("floor shape", floorModel);
 
         // Create the back wall node
         NameNode windowNode = new NameNode("Window");
             Mat4 m = Mat4.multiply(Mat4Transform.rotateAroundX(90), mStart);
             m = Mat4.multiply(Mat4Transform.translate(0,wallSize*0.5f,-wallSize*0.5f), m);
                 TransformNode windowTransform = new TransformNode("Window transform", m);
-                ModelNode windowShape = new ModelNode("Window shape", window);
+                    ModelNode windowShape = new ModelNode("Window shape", wallModel);
 
         // Create the left wall node
         NameNode leftWall = new NameNode("Left wall");
@@ -73,7 +71,7 @@ public class Garden {
             m = Mat4.multiply(Mat4Transform.rotateAroundZ(-90), m);
             m = Mat4.multiply(Mat4Transform.translate(-wallSize*0.5f,wallSize*0.5f,0), m);
                 TransformNode leftWallTransform = new TransformNode("Left wall transform", m);
-                ModelNode leftWallShape = new ModelNode("left wall shape", wall);
+                    ModelNode leftWallShape = new ModelNode("left wall shape", wallModel);
 
         // Create the right wall node
         NameNode rightWall = new NameNode("Right wall");
@@ -81,7 +79,7 @@ public class Garden {
             m = Mat4.multiply(Mat4Transform.rotateAroundZ(90), m);
             m = Mat4.multiply(Mat4Transform.translate(wallSize*0.5f,wallSize*0.5f,0), m);
                 TransformNode rightWallTransform = new TransformNode("Right wall transform", m);
-                ModelNode rightWallShape = new ModelNode("Right wall shape", wall);
+                    ModelNode rightWallShape = new ModelNode("Right wall shape", wallModel);
 
 
         // Create Hierarchy
@@ -94,29 +92,39 @@ public class Garden {
                     leftWallTransform.addChild(leftWallShape);
             roomMoveTransform.addChild(windowNode);
                 windowNode.addChild(windowTransform);
-                    windowTransform.addChild(windowShape);
+                windowTransform.addChild(windowShape);
             roomMoveTransform.addChild(rightWall);
                 rightWall.addChild(rightWallTransform);
-                    rightWallTransform.addChild(rightWallShape);
+                rightWallTransform.addChild(rightWallShape);
 
         roomRoot.update();
+
     }
 
+    private Model buildFloor(GL3 gl, Mesh mesh ,Shader shader){
+        Material floorMaterial = new Material(new Vec3(0.76f, 0.62f, 0.51f), new Vec3(0.84f,  0.71f,  0.59f), new Vec3(0.3f, 0.3f, 0.3f), 1.0f);
+        return new Model(gl, camera, light, shader, floorMaterial, new Mat4(), mesh, floorTexture);
+    }
+
+    private Model buildWall(GL3 gl, Mesh mesh ,Shader shader){
+        Material wallMaterial = new Material(new Vec3(0.76f, 0.62f, 0.51f), new Vec3(0.84f,  0.71f,  0.59f), new Vec3(0.3f, 0.3f, 0.3f), 1.0f);
+        return new Model(gl, camera, light, shader, wallMaterial, new Mat4(), mesh, skyTexture, cloudTexture);
+    }
+
+
     public void render(GL3 gl) {
-
-        windowShader.use(gl);
-        windowShader.setFloat(gl, "offset", cloudPos.x, cloudPos.y);
+        dynamicShader.use(gl);
+        dynamicShader.setFloat(gl, "offset", cloudPos.x, cloudPos.y);
         roomRoot.draw(gl);
-
     }
 
     public void setClouds(Vec2 pos){
         cloudPos = pos;
     }
 
-    public void dispose(GL3 gl) {
-        floor.dispose(gl);
-        wall.dispose(gl);
-    }
 
+    public void dispose(GL3 gl) {
+        floorModel.dispose(gl);
+        wallModel.dispose(gl);
+    }
 }

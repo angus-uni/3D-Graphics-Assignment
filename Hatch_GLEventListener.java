@@ -108,9 +108,6 @@ public class Hatch_GLEventListener implements GLEventListener {
     texture[5] = TextureLibrary.loadTexture(gl, "textures/egg.jpg");
     texture[6] = TextureLibrary.loadTexture(gl, "textures/egg_map.jpg");
 
-    texture[7] = TextureLibrary.loadTexture(gl, "textures/outside.jpg");
-    texture[8] = TextureLibrary.loadTexture(gl, "textures/cloud.jpg");
-
   }
 
 
@@ -126,7 +123,7 @@ public class Hatch_GLEventListener implements GLEventListener {
 
     room = new Room(gl, camera,ceilingLight, texture[0], texture[1], texture[2]);
     table  = new Table(gl, camera, ceilingLight, texture[3], texture[4], texture[5], texture[6]);
-    garden = new Garden(gl, camera,ceilingLight, texture[0], texture[1], texture[7], texture[8]);
+    garden = new Garden(gl, camera,ceilingLight);
 
     // Place the ceiling light on top of the room
     ceilingLight.setPosition(0,room.wallSize,0);

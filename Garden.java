@@ -27,10 +27,10 @@ class Garden {
     private void loadTextures(GL3 gl) {
         textures = new Texture[5];
         textures[0] = TextureLibrary.loadTexture(gl, "textures/skybox/top.jpg");
-        textures[1] = TextureLibrary.loadTexture(gl, "textures/skybox/front.jpg");
-        textures[2] = TextureLibrary.loadTexture(gl, "textures/skybox/left.jpg");
-        textures[3] = TextureLibrary.loadTexture(gl, "textures/skybox/right.jpg");
-        textures[4] = TextureLibrary.loadTexture(gl, "textures/skybox/bottom.jpg");
+        textures[1] = TextureLibrary.loadTexture(gl, "textures/skybox/bottom.jpg");
+        textures[2] = TextureLibrary.loadTexture(gl, "textures/skybox/front.jpg");
+        textures[3] = TextureLibrary.loadTexture(gl, "textures/skybox/left.jpg");
+        textures[4] = TextureLibrary.loadTexture(gl, "textures/skybox/right.jpg");
 
         cloudTexture = TextureLibrary.loadTexture(gl, "textures/cloud.png");
         // TODO
@@ -70,17 +70,24 @@ class Garden {
         TransformNode roomMoveTransform = new TransformNode("move room transform", Mat4Transform.translate(0,-(Room.wallSize/nudegeDown),-(Room.wallSize / nudgeBack)));
 
 
+        // Create the Roof node
+        NameNode roof = new NameNode("Roof");
+            Mat4 m = Mat4.multiply(Mat4Transform.rotateAroundX(180), mStart);
+            m = Mat4.multiply(Mat4Transform.translate(0,wallSize,0), m);
+                TransformNode roofTransform = new TransformNode("Roof transform", m);
+                    ModelNode roofShape = new ModelNode("Roof shape", walls[0]);
+
         // Create the floor node
         NameNode floorNode = new NameNode("Floor");
             TransformNode floorTransform = new TransformNode("Floor transform", mStart);
-                ModelNode floorShape = new ModelNode("floor shape", walls[4]);
+                ModelNode floorShape = new ModelNode("floor shape", walls[1]);
 
         // Create the back wall node
         NameNode windowNode = new NameNode("Window");
-            Mat4 m = Mat4.multiply(Mat4Transform.rotateAroundX(90), mStart);
+            m = Mat4.multiply(Mat4Transform.rotateAroundX(90), mStart);
             m = Mat4.multiply(Mat4Transform.translate(0,wallSize*0.5f,-wallSize*0.5f), m);
                 TransformNode windowTransform = new TransformNode("Window transform", m);
-                    ModelNode windowShape = new ModelNode("Window shape", walls[1]);
+                    ModelNode windowShape = new ModelNode("Window shape", walls[2]);
 
         // Create the left wall node
         NameNode leftWall = new NameNode("Left wall");
@@ -88,7 +95,7 @@ class Garden {
             m = Mat4.multiply(Mat4Transform.rotateAroundZ(-90), m);
             m = Mat4.multiply(Mat4Transform.translate(-wallSize*0.5f,wallSize*0.5f,0), m);
                 TransformNode leftWallTransform = new TransformNode("Left wall transform", m);
-                    ModelNode leftWallShape = new ModelNode("left wall shape", walls[2]);
+                    ModelNode leftWallShape = new ModelNode("left wall shape", walls[3]);
 
         // Create the right wall node
         NameNode rightWall = new NameNode("Right wall");
@@ -97,14 +104,9 @@ class Garden {
             m = Mat4.multiply(Mat4Transform.translate(-wallSize*0.5f,wallSize*0.5f,0), m);
             m = Mat4.multiply(Mat4Transform.rotateAroundY(180), m);
             TransformNode rightWallTransform = new TransformNode("Right wall transform", m);
-                    ModelNode rightWallShape = new ModelNode("Right wall shape", walls[3]);
+                    ModelNode rightWallShape = new ModelNode("Right wall shape", walls[4]);
 
-        // Create the right wall node
-        NameNode roof = new NameNode("Roof");
-            m = Mat4.multiply(Mat4Transform.rotateAroundX(180), mStart);
-            m = Mat4.multiply(Mat4Transform.translate(0,wallSize,0), m);
-                TransformNode roofTransform = new TransformNode("Roof transform", m);
-                ModelNode roofShape = new ModelNode("Roof shape", walls[0]);
+
 
 
         // Create Hierarchy
@@ -132,12 +134,15 @@ class Garden {
     private void buildWalls(GL3 gl, Mesh mesh, Shader shader, Material material){
         // Loop through each texture
         for (int i = 0; i < textures.length; i++) {
-            if (i == 1){
+            // We only want moving clouds on certain walls
+            if (i > 1){
                 walls[i] = new Model(gl,camera, sun, dynamicShader, material, new Mat4(),mesh,textures[i], cloudTexture);
 
             }else{
                 walls[i] = new Model(gl,camera, sun, shader, material, new Mat4(),mesh,textures[i]);
+
             }
+
         }
     }
 

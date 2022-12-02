@@ -145,7 +145,7 @@ class Garden {
 
         dynamicShader.use(gl);
         dynamicShader.setFloat(gl, "offset", cloudPos.x, cloudPos.y);
-
+        System.out.println(cloudPos.x);
         sun.render(gl);
         roomRoot.draw(gl);
     }

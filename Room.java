@@ -54,7 +54,7 @@ public class Room {
 
         //Create a table object
         table  = new Table(gl, camera, light);
-        
+
         // Create models for the floor & wall
         floor = new Model(gl, camera, light, shader, floorMaterial, new Mat4(), mesh, textures[0]);
         window = new Model(gl, camera, light, windowShader, glass, new Mat4(), mesh, textures[2]);
@@ -123,6 +123,7 @@ public class Room {
     }
 
     public void render(GL3 gl) {
+        table.makeEggJump();
         roomRoot.draw(gl);
         light.render(gl);
 

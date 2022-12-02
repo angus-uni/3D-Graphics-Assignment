@@ -19,6 +19,11 @@ public class Table {
 	private Model tableCube, legCube, eggSphere;
 	private SGNode tableRoot;
 	private Texture[] textures;
+	private double startTime;
+	private float eggJumpHeightFactor = 2.5f;
+	private float tableHeight, eggHeight;
+	private TransformNode eggJumpTransform;
+
 
 	private void loadTextures(GL3 gl) {
 		textures = new Texture[4];
@@ -33,6 +38,7 @@ public class Table {
 	public Table(GL3 gl, Camera camera, Light light) {
 
 		loadTextures(gl);
+		startTime = getSeconds();
 
 		// Specify the size of our table
 		float legHeight = 2f;
@@ -43,7 +49,11 @@ public class Table {
 		float topWidth = 3f;
 		float topDepth = 3f;
 
-		float tableHeight = legHeight+(topHeight*2);
+		// Top of base for egg to sit on
+		tableHeight = legHeight+(topHeight*2);
+
+		// How big the egg should be
+		eggHeight = 3;
 
 		// Define our table info
 		Mesh cubeMesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
@@ -136,10 +146,11 @@ public class Table {
 			 - Translate the sphere to surface & scale
 			 - Move the egg to the top of our table
 			 */
-			m = Mat4.multiply(Mat4Transform.scale(2,3,2), Mat4Transform.translate(0,0.5f,0));
-			m = Mat4.multiply(Mat4Transform.translate(0,tableHeight,0), m);
-				TransformNode eggTransform = new TransformNode("egg transform", m);
-				ModelNode eggShape = new ModelNode("Sphere(Egg on top of table)", eggSphere);
+
+			eggJumpTransform = new TransformNode("Egg jump", new Mat4(1));
+			TransformNode eggMoveToTable = new TransformNode("Move egg onto table", Mat4Transform.translate(0,tableHeight,0));
+				TransformNode setupEgg = new TransformNode("Setup egg", Mat4.multiply(Mat4Transform.scale(eggHeight/1.4f,eggHeight,eggHeight/1.4f), Mat4Transform.translate(0,0.5f,0)));
+						ModelNode eggShape = new ModelNode("Sphere(Egg on top of table)", eggSphere);
 
 
 
@@ -159,8 +170,10 @@ public class Table {
 
 		// Add egg
 		top.addChild(eggNode);
-			eggNode.addChild(eggTransform);
-				eggTransform.addChild(eggShape);
+			eggNode.addChild(eggJumpTransform);
+				eggJumpTransform.addChild(eggMoveToTable);
+					eggMoveToTable.addChild(setupEgg);
+		                setupEgg.addChild(eggShape);
 
 		tableRoot.update();  // IMPORTANT - don't forget this
 
@@ -170,8 +183,21 @@ public class Table {
 		return tableRoot;
 	}
 
-	public void render(GL3 gl) {
-		tableRoot.draw(gl);
+	public void makeEggJump() {
+		double elapsedTime = getSeconds()-startTime;
+		// The egg should jump twice it's height
+		float jumpHeight = (float) ((eggHeight*0.75)*Math.abs(Math.sin(elapsedTime)));
+
+		//float rotateAngle = 180f+90f*(float)Math.sin(elapsedTime);
+		//eggJumpTransform.setTransform(Mat4Transform.rotateAroundX(rotateAngle));
+		System.out.println(jumpHeight);
+		eggJumpTransform.setTransform(Mat4Transform.translate(0, jumpHeight,0));
+		eggJumpTransform.update();
+
+	}
+
+	private double getSeconds() {
+		return System.currentTimeMillis()/1000.0;
 	}
 
 	public void dispose(GL3 gl) {

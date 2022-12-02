@@ -16,13 +16,12 @@ class Garden {
     private float nudegeDown = 6;
     private Vec2 cloudPos;
 
-    private Texture skybox;
+    private Texture skybox, cloudTexture;
     private Texture[] textures;
     private Model[] walls;
 
     private Shader dynamicShader;
     private SGNode roomRoot;
-    private Model floorModel, wallModel;
 
 
     private void loadTextures(GL3 gl) {
@@ -33,8 +32,9 @@ class Garden {
         textures[3] = TextureLibrary.loadTexture(gl, "textures/skybox/right.jpg");
         textures[4] = TextureLibrary.loadTexture(gl, "textures/skybox/bottom.jpg");
 
+        cloudTexture = TextureLibrary.loadTexture(gl, "textures/cloud.png");
         // TODO
-        skybox = Cubemap.loadFromStreams(gl, getClass().getClassLoader(),"park_", "jpg", true);
+        //skybox = Cubemap.loadFromStreams(gl, getClass().getClassLoader(),"park_", "jpg", true);
     }
 
     public Garden(GL3 gl, Camera c) {
@@ -68,10 +68,6 @@ class Garden {
 
         // Move our garden back a bit and down a bit to simulate window edge
         TransformNode roomMoveTransform = new TransformNode("move room transform", Mat4Transform.translate(0,-(Room.wallSize/nudegeDown),-(Room.wallSize / nudgeBack)));
-
-        // Add the light to our scene
-        NameNode lightNode = new NameNode("Light node");
-            SGNode lightNodeTwo = new SGNode("Light SGNode");
 
 
         // Create the floor node
@@ -136,14 +132,19 @@ class Garden {
     private void buildWalls(GL3 gl, Mesh mesh, Shader shader, Material material){
         // Loop through each texture
         for (int i = 0; i < textures.length; i++) {
-            walls[i] = new Model(gl,camera, sun, shader, material, new Mat4(),mesh,textures[i]);
+            if (i == 1){
+                walls[i] = new Model(gl,camera, sun, dynamicShader, material, new Mat4(),mesh,textures[i], cloudTexture);
+
+            }else{
+                walls[i] = new Model(gl,camera, sun, shader, material, new Mat4(),mesh,textures[i]);
+            }
         }
     }
 
     public void render(GL3 gl) {
 
-//        dynamicShader.use(gl);
-//        dynamicShader.setFloat(gl, "offset", cloudPos.x, cloudPos.y);
+        dynamicShader.use(gl);
+        dynamicShader.setFloat(gl, "offset", cloudPos.x, cloudPos.y);
 
         sun.render(gl);
         roomRoot.draw(gl);

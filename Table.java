@@ -190,7 +190,6 @@ public class Table {
 
 		//float rotateAngle = 180f+90f*(float)Math.sin(elapsedTime);
 		//eggJumpTransform.setTransform(Mat4Transform.rotateAroundX(rotateAngle));
-		System.out.println(jumpHeight);
 		eggJumpTransform.setTransform(Mat4Transform.translate(0, jumpHeight,0));
 		eggJumpTransform.update();
 

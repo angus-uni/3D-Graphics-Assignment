@@ -29,16 +29,28 @@ struct Material {
 
 uniform Material material;
 
+
 void main() {
 
+  // Because the cloud has transparent background we don't
+  // need to mix the colours
+
+  vec4 cloudTexColor = texture(second_texture, movingTexCoord);
+  vec4 firstMix = texture(first_texture, aTexCoord);
+
+  // Show only the cloud if it's not a transparent texel
+  if(cloudTexColor.a > 0.1){
+    firstMix = cloudTexColor;
+  }
+
   // ambient mixed with
-  vec3 ambient = light.ambient * material.ambient * mix(texture(first_texture, aTexCoord),texture(second_texture, movingTexCoord),0.5f).rgb;
+  vec3 ambient = light.ambient * material.ambient * firstMix.rgb;
 
   // diffuse
   vec3 norm = normalize(aNormal);
   vec3 lightDir = normalize(light.position - aPos);
   float diff = max(dot(norm, lightDir), 0.0);
-  vec3 diffuse = light.diffuse * (diff * material.diffuse) * texture(first_texture, aTexCoord).rgb;
+  vec3 diffuse = light.diffuse * (diff * material.diffuse) * firstMix.rgb;
 
   // specular
   vec3 viewDir = normalize(viewPos - aPos);

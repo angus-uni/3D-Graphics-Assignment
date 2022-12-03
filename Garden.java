@@ -12,8 +12,8 @@ class Garden {
     private Camera camera;
     private Light sun;
     private float wallSize = 25f;
-    private float nudgeBack = 2;
     private float nudegeDown = 6;
+    private float nudgeBack = (wallSize/2)-(Room.wallSize/2);
     private Vec2 cloudPos;
 
     private Texture skybox, cloudTexture;
@@ -51,7 +51,7 @@ class Garden {
         // Create a light in the top left
         sun = new Light(gl);
         sun.setCamera(camera);
-        sun.setPosition(0,wallSize-(wallSize/nudegeDown),-(wallSize/2));
+        sun.setPosition(0,wallSize-(wallSize/nudegeDown),-(Room.wallSize/2));
 
         dynamicShader = new Shader(gl, "shaders/dynamic_background_vs.glsl", "shaders/dynamic_background_fs.glsl");
 
@@ -67,8 +67,7 @@ class Garden {
         roomRoot = new NameNode("Room root");
 
         // Move our garden back a bit and down a bit to simulate window edge
-        TransformNode roomMoveTransform = new TransformNode("move room transform", Mat4Transform.translate(0,-(Room.wallSize/nudegeDown),-(Room.wallSize / nudgeBack)));
-
+        TransformNode roomMoveTransform = new TransformNode("move room transform", Mat4Transform.translate(0,-(Room.wallSize/nudegeDown),-nudgeBack));
 
         // Create the Roof node
         NameNode roof = new NameNode("Roof");

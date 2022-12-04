@@ -19,6 +19,8 @@ public class Room {
     private SGNode roomRoot;
     private Light light;
     private Table table;
+    private Lamp lamp1;
+
     private Texture[] textures;
 
 
@@ -55,6 +57,8 @@ public class Room {
         //Create a table object
         table  = new Table(gl, camera, light);
 
+        lamp1 = new Lamp(gl, camera, light);
+
         // Create models for the floor & wall
         floor = new Model(gl, camera, light, shader, floorMaterial, new Mat4(), mesh, textures[0]);
         window = new Model(gl, camera, light, windowShader, glass, new Mat4(), mesh, textures[2]);
@@ -76,8 +80,6 @@ public class Room {
             TransformNode floorTransform = new TransformNode("Floor transform", mStart);
             ModelNode floorShape = new ModelNode("floor shape", floor);
 
-        // Attach the table to our scene
-        SGNode tableRoot = table.getRoot();
 
         // Create the back wall node
         NameNode windowNode = new NameNode("Window");
@@ -105,7 +107,8 @@ public class Room {
 
         // Create Hierarchy
         roomRoot.addChild(roomMoveTransform);
-            roomMoveTransform.addChild(tableRoot);
+            roomMoveTransform.addChild(table.getRoot());
+            roomMoveTransform.addChild(lamp1.getRoot());
             roomMoveTransform.addChild(floorNode);
                 floorNode.addChild(floorTransform);
                     floorTransform.addChild(floorShape);
@@ -135,6 +138,7 @@ public class Room {
         wall.dispose(gl);
         light.dispose(gl);
         table.dispose(gl);
+        lamp1.dispose(gl);
     }
 
 }

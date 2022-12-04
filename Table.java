@@ -19,7 +19,6 @@ public class Table {
 	private Model tableCube, legCube, eggSphere;
 	private SGNode tableRoot;
 	private Texture[] textures;
-	private double startTime;
 	private float eggJumpHeightFactor = 2.5f;
 	private float tableHeight, eggHeight;
 	private TransformNode eggJumpTransform;
@@ -38,7 +37,6 @@ public class Table {
 	public Table(GL3 gl, Camera camera, Light light) {
 
 		loadTextures(gl);
-		startTime = getSeconds();
 
 		// Specify the size of our table
 		float legHeight = 2f;
@@ -183,8 +181,8 @@ public class Table {
 		return tableRoot;
 	}
 
-	public void makeEggJump() {
-		double elapsedTime = getSeconds()-startTime;
+	public void makeEggJump(double elapsedTime) {
+
 		// The egg should jump twice it's height
 		float jumpHeight = (float) ((eggHeight*0.75)*Math.abs(Math.sin(elapsedTime)));
 
@@ -193,10 +191,6 @@ public class Table {
 		eggJumpTransform.setTransform(Mat4Transform.translate(0, jumpHeight,0));
 		eggJumpTransform.update();
 
-	}
-
-	private double getSeconds() {
-		return System.currentTimeMillis()/1000.0;
 	}
 
 	public void dispose(GL3 gl) {

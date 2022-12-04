@@ -19,7 +19,9 @@ public class Room {
     private SGNode roomRoot;
     private Light light;
     private Table table;
-    private Lamp lamp1;
+            private Lamp lamp1;
+
+    private double startTime;
 
     private Texture[] textures;
 
@@ -35,6 +37,8 @@ public class Room {
     public Room(GL3 gl, Camera camera) {
 
         loadTextures(gl);
+        startTime = getSeconds();
+
 
         Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
         Shader shader = new Shader(gl, "shaders/tt_vs.glsl", "shaders/tt_fs.glsl");
@@ -126,10 +130,16 @@ public class Room {
     }
 
     public void render(GL3 gl) {
-        table.makeEggJump();
+        double elapsedTime = getSeconds()-startTime;
+        table.makeEggJump(elapsedTime);
+        lamp1.move(elapsedTime);
         roomRoot.draw(gl);
         light.render(gl);
 
+    }
+
+    private double getSeconds() {
+        return System.currentTimeMillis()/1000.0;
     }
 
 

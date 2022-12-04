@@ -19,6 +19,7 @@ public class Lamp {
 	private SGNode lampRoot;
 	private Texture[] textures;
 	private double startTime;
+	private TransformNode jointRotate;
 
 
 	private void loadTextures(GL3 gl) {
@@ -83,7 +84,7 @@ public class Lamp {
 			 - move into position
 			 */
 			Mat4 m = Mat4.multiply(Mat4Transform.scale(baseWidth,baseHeight,baseDepth), Mat4Transform.translate(0,0.5f,0));
-				TransformNode baseTransform = new TransformNode("base transform", m);
+				TransformNode makeBase = new TransformNode("make the base for the lamp", m);
 					ModelNode baseShape = new ModelNode("Base of lamp", baseCube);
 
 		// Create the arm of the lamp
@@ -94,22 +95,32 @@ public class Lamp {
 			 - Scale it into an arm
 			 - move into position
 			 */
+
+			m = Mat4Transform.translate(0,baseHeight/2,0);
+			TransformNode positionArm1 = new TransformNode("Move arm 1 into position", m);
+
 			m = Mat4.multiply(Mat4Transform.scale(armWidth,armHeight,armDepth), Mat4Transform.translate(0,0.5f,0));
-				TransformNode arm1Transform = new TransformNode("arm 1 transform", m);
-					ModelNode armShape = new ModelNode("Arm 1 of lamp", armSphere);
+				TransformNode makeArm1 = new TransformNode("Make arm 1", m);
+					ModelNode arm1Shape = new ModelNode("Arm 1 of lamp", armSphere);
 
-		// Create the joint of the lamp
-		NameNode joint1 = new NameNode("Joint 1");
+//		// Create the joint of the lamp
+//		NameNode joint1 = new NameNode("Joint 1");
+//
+//			/*
+//			 - Translate our sphere to the surface
+//			 - Scale it into an arm
+//			 - move into position
+//			 */
+//
+//			m = Mat4Transform.translate(0,armHeight-(jointRadius/2),0);
+//			TransformNode positionJoint = new TransformNode("Move joint 1 into position", m);
+//
+//			m = Mat4.multiply(Mat4Transform.scale(jointRadius,jointRadius,jointRadius), Mat4Transform.translate(0,0.5f,0));
+//				TransformNode makeJoint = new TransformNode("Create joint 1", m);
+//					ModelNode joint1Shape = new ModelNode("Joint 1 of lamp", jointSphere);
 
-			/*
-			 - Translate our sphere to the surface
-			 - Scale it into an arm
-			 - move into position
-			 */
-			m = Mat4.multiply(Mat4Transform.scale(jointRadius,jointRadius,jointRadius), Mat4Transform.translate(0,0.5f,0));
-			m = Mat4.multiply(Mat4Transform.translate(0,armHeight-(jointRadius/2),0), m);
-				TransformNode joint1Transform = new TransformNode("joint 1 transform", m);
-					ModelNode joint1Shape = new ModelNode("Joint 1 of lamp", jointSphere);
+		// Rotate transform
+		jointRotate = new TransformNode("Rotate upper arm",Mat4Transform.rotateAroundZ(90));
 
 		// Create the arm of the lamp
 		NameNode arm2 = new NameNode("arm 2");
@@ -119,13 +130,16 @@ public class Lamp {
 			 - Scale it into an arm
 			 - move into position
 			 */
-			m = Mat4.multiply(Mat4Transform.scale(armWidth,armHeight,armDepth), Mat4Transform.translate(0,0.5f,0));
-			m = Mat4.multiply(Mat4Transform.translate(0,armHeight,0), m);
-			TransformNode arm2Transform = new TransformNode("arm 2 transform", m);
+
+		m = Mat4Transform.translate(0,armHeight,0);
+		TransformNode positionArm2 = new TransformNode("Move arm into position", m);
+
+		m = Mat4.multiply(Mat4Transform.scale(armWidth,armHeight,armDepth), Mat4Transform.translate(0,0.5f,0));
+			TransformNode makeArm2 = new TransformNode("Make arm 2", m);
 				ModelNode arm2Shape = new ModelNode("Arm 2 of lamp", armSphere);
 
 
-		// Create the arm of the lamp
+		// Create the head of the lamp
 		NameNode head = new NameNode("Head");
 
 			/*
@@ -133,32 +147,48 @@ public class Lamp {
 			 - Scale it into an arm
 			 - move into position
 			 */
+
+			m = Mat4Transform.translate(0,armHeight,0);
+			TransformNode positionHead = new TransformNode("Move head into position", m);
+
 			m = Mat4.multiply(Mat4Transform.scale(headWidth,headHeight,headDepth), Mat4Transform.translate(0,0.5f,0));
-			m = Mat4.multiply(Mat4Transform.translate(0,armHeight*2-(jointRadius/2),0), m);
-				TransformNode headTransform = new TransformNode("Head transform", m);
-				ModelNode headShape = new ModelNode("Arm 2 of lamp", headCube);
+				TransformNode makeHead = new TransformNode("Make the head", m);
+				ModelNode headShape = new ModelNode("Head of lamp", headCube);
 
 
 		// Add nodes hierarchy
 		lampRoot.addChild(lampMoveTransform);
 			lampMoveTransform.addChild(base);
-				base.addChild(baseTransform);
-					baseTransform.addChild(baseShape);
-			lampMoveTransform.addChild(arm1);
-				arm1.addChild(arm1Transform);
-					arm1Transform.addChild(armShape);
-				arm1.addChild(joint1);
-					joint1.addChild(joint1Transform);
-							joint1Transform.addChild(joint1Shape);
-					joint1.addChild(arm2);
-						arm2.addChild(arm2Transform);
-							arm2Transform.addChild(arm2Shape);
-						arm2.addChild(head);
-							head.addChild(headTransform);
-								headTransform.addChild(headShape);
+				base.addChild(makeBase);
+					makeBase.addChild(baseShape);
+				base.addChild(positionArm1);
+					positionArm1.addChild(arm1);
+						arm1.addChild(makeArm1);
+							makeArm1.addChild(arm1Shape);
+						arm1.addChild(positionArm2);
+							positionArm2.addChild(jointRotate);
+								jointRotate.addChild(arm2);
+									arm2.addChild(makeArm2);
+										makeArm2.addChild(arm2Shape);
+									arm2.addChild(positionHead);
+										positionHead.addChild(head);
+											head.addChild(makeHead);
+												makeHead.addChild(headShape);
 
 
 
+		/*
+		twoBranchRoot.addChild(translateX);
+      translateX.addChild(rotateAll);
+        rotateAll.addChild(lowerBranch);
+          lowerBranch.addChild(makeLowerBranch);
+            makeLowerBranch.addChild(cube0Node);
+          lowerBranch.addChild(translateToTop);
+            translateToTop.addChild(rotateUpper);
+              rotateUpper.addChild(upperBranch);
+                upperBranch.addChild(makeUpperBranch);
+                  makeUpperBranch.addChild(cube1Node);
+		 */
 
 		lampRoot.update();  // IMPORTANT - don't forget this
 
@@ -168,6 +198,12 @@ public class Lamp {
 		return lampRoot;
 	}
 
+	public void move(double elapsedTime){
+		float rotateAngle = -(float)(Math.sin(elapsedTime)*90);
+		jointRotate.setTransform(Mat4Transform.rotateAroundZ(rotateAngle));
+		System.out.println(rotateAngle);
+		lampRoot.update();
+	}
 
 	private double getSeconds() {
 		return System.currentTimeMillis()/1000.0;

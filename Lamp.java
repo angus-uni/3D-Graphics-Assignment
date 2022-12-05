@@ -15,6 +15,15 @@ import gmaths.Vec3;
 
 public class Lamp {
 
+	enum Size {
+		SMALL(6),
+		MEDIUM(9),
+		LARGE(12);
+
+		Size(int height) {
+		}
+	}
+
 	private Model baseCube, armSphere, jointSphere, headCube;
 	private SGNode lampRoot;
 	private Texture[] textures;
@@ -29,7 +38,7 @@ public class Lamp {
 		textures[2] = TextureLibrary.loadTexture(gl, "textures/soil.jpg");
 	}
 
-	public Lamp(GL3 gl, Camera camera, Light light) {
+	public Lamp(GL3 gl, Camera camera, Light light, Size size) {
 
 		loadTextures(gl);
 		startTime = getSeconds();
@@ -56,6 +65,7 @@ public class Lamp {
 
 		// ================== Transformations ====================
 
+		
 		float baseWidth = 1.2f;
 		float baseHeight = 0.25f;
 		float baseDepth = 0.5f;

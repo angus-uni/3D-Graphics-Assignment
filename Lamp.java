@@ -194,7 +194,7 @@ public class Lamp {
 
 			m = Mat4.multiply(Mat4Transform.scale(lightWidth,lightHeight,lightDepth), Mat4Transform.translate(0,0.5f,0));
 				TransformNode makeLight = new TransformNode("Make the light for the lamp", m);
-				ModelNode lightShape = new ModelNode("Light of lamp", headCube);
+				LightNode lightShape = new LightNode("Light of lamp", headLight);
 
 
 

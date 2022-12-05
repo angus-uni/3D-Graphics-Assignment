@@ -15,6 +15,10 @@ public class Mat4 {   // row column formulation
       values[i][i] = f;
     }
   }
+
+  public Vec3 getPosition(){
+    return new Vec3(values[0][3], values[1][3], values[2][3]);
+  }
   
   public Mat4(Mat4 m) {
     this.values = new float[4][4];

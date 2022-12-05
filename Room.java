@@ -61,7 +61,7 @@ public class Room {
         //Create a table object
         table  = new Table(gl, camera, light);
 
-        lamp1 = new Lamp(gl, camera, light, Lamp.Size.LARGE);
+        lamp1 = new Lamp(gl, camera, light, Lamp.Size.SMALL);
 
         // Create models for the floor & wall
         floor = new Model(gl, camera, light, shader, floorMaterial, new Mat4(), mesh, textures[0]);
@@ -125,7 +125,6 @@ public class Room {
             roomMoveTransform.addChild(rightWall);
                 rightWall.addChild(rightWallTransform);
                     rightWallTransform.addChild(rightWallShape);
-
         roomRoot.update();
     }
 

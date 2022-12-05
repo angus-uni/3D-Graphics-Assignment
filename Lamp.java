@@ -19,7 +19,7 @@ public class Lamp {
 	private SGNode lampRoot;
 	private Texture[] textures;
 	private double startTime;
-	private TransformNode jointRotate;
+	private TransformNode jointRotate, headRotate;
 
 
 	private void loadTextures(GL3 gl) {
@@ -153,6 +153,8 @@ public class Lamp {
 			m = Mat4Transform.translate(0,armHeight,0);
 			TransformNode positionHead = new TransformNode("Move head into position", m);
 
+			headRotate = new TransformNode("Tilt the head of the lamp",Mat4Transform.rotateAroundZ(15));
+
 			m = Mat4.multiply(Mat4Transform.scale(headWidth,headHeight,headDepth), Mat4Transform.translate(0,0.5f,0));
 				TransformNode makeHead = new TransformNode("Make the head", m);
 				ModelNode headShape = new ModelNode("Head of lamp", headCube);
@@ -177,9 +179,10 @@ public class Lamp {
 										arm2.addChild(makeArm2);
 											makeArm2.addChild(arm2Shape);
 										arm2.addChild(positionHead);
-											positionHead.addChild(head);
-												head.addChild(makeHead);
-													makeHead.addChild(headShape);
+											positionHead.addChild(headRotate);
+												headRotate.addChild(head);
+													head.addChild(makeHead);
+														makeHead.addChild(headShape);
 
 		lampRoot.update();  // IMPORTANT - don't forget this
 
@@ -190,8 +193,9 @@ public class Lamp {
 	}
 
 	public void move(double elapsedTime){
-		float rotateAngle = -(float)(Math.sin(elapsedTime)*90);
+		float rotateAngle = -(float)(Math.sin(elapsedTime)*25);
 		jointRotate.setTransform(Mat4Transform.rotateAroundZ(rotateAngle));
+		headRotate.setTransform(Mat4Transform.rotateAroundZ(-rotateAngle));
 		lampRoot.update();
 	}
 

@@ -15,7 +15,7 @@ import gmaths.Vec3;
 
 public class Lamp {
 
-	private Model baseCube, armSphere, jointSphere,headCube;
+	private Model baseCube, armSphere, jointSphere, headCube;
 	private SGNode lampRoot;
 	private Texture[] textures;
 	private double startTime;
@@ -40,6 +40,10 @@ public class Lamp {
 		Shader shader = new Shader(gl, "shaders/table_vs.glsl", "shaders/table_fs.glsl");
 		Material baseMaterial = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
 
+		// Create the light
+		Light headLight = new Light(gl);
+		headLight.setCamera(camera);
+
 		// Define the arms & joints
 		Mesh sphereMesh = new Mesh(gl, Sphere.vertices.clone(), Sphere.indices.clone());
 		Material armMaterial = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
@@ -53,8 +57,8 @@ public class Lamp {
 		// ================== Transformations ====================
 
 		float baseWidth = 1.2f;
-		float baseDepth = 0.5f;
 		float baseHeight = 0.25f;
+		float baseDepth = 0.5f;
 
 		float armWidth = 0.35f;
 		float armHeight = 2.5f;
@@ -63,8 +67,13 @@ public class Lamp {
 		float jointRadius = 0.6f;
 
 		float headWidth = 0.8f;
-		float headDepth = 0.3f;
 		float headHeight = 0.3f;
+		float headDepth = 0.3f;
+
+		float lightWidth = 0.2f;
+		float lightHeight = 0.2f;
+		float lightDepth = 0.2f;
+
 
 
 
@@ -159,6 +168,19 @@ public class Lamp {
 				TransformNode makeHead = new TransformNode("Make the head", m);
 				ModelNode headShape = new ModelNode("Head of lamp", headCube);
 
+		// Create the light for the lamp
+		NameNode lampLight = new NameNode("Lamp light");
+
+			// Move light into position
+			m = Mat4Transform.translate((headWidth/2)+(lightWidth/2),(headHeight/2)-(lightHeight/2),0);
+			TransformNode positionLight = new TransformNode("Move light into position", m);
+
+			m = Mat4.multiply(Mat4Transform.scale(lightWidth,lightHeight,lightDepth), Mat4Transform.translate(0,0.5f,0));
+				TransformNode makeLight = new TransformNode("Make the light for the lamp", m);
+				ModelNode lightShape = new ModelNode("Light of lamp", headCube);
+
+
+
 
 		// Add nodes hierarchy
 		lampRoot.addChild(lampMoveTransform);
@@ -183,6 +205,10 @@ public class Lamp {
 												headRotate.addChild(head);
 													head.addChild(makeHead);
 														makeHead.addChild(headShape);
+													head.addChild(positionLight);
+														positionLight.addChild(lampLight);
+															lampLight.addChild(makeLight);
+																makeLight.addChild(lightShape);
 
 		lampRoot.update();  // IMPORTANT - don't forget this
 

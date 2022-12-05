@@ -22,6 +22,7 @@ public class Table {
 	private float eggJumpHeightFactor = 2.5f;
 	private float tableHeight, eggHeight;
 	private TransformNode eggJumpTransform;
+	private Shader eggShader;
 
 
 	private void loadTextures(GL3 gl) {
@@ -60,7 +61,7 @@ public class Table {
 
 		// Egg info
 		Mesh sphereMesh = new Mesh(gl, Sphere.vertices.clone(), Sphere.indices.clone());
-		Shader eggShader = new Shader(gl, "shaders/egg_vs.glsl", "shaders/egg_fs.glsl");
+		eggShader = new Shader(gl, "shaders/egg_vs.glsl", "shaders/egg_fs.glsl");
 		Material eggMaterial = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
 
 		// Create our models
@@ -179,6 +180,12 @@ public class Table {
 
 	public SGNode getRoot(){
 		return tableRoot;
+	}
+
+	public void setLights(GL3 gl){
+		eggShader.use(gl);
+		eggShader.setFloat(gl, "offset", cloudPos.x, cloudPos.y);
+		eggShader.setFloat(gl, "pointLights[0].constant", 1.0f);
 	}
 
 	public void makeEggJump(double elapsedTime) {

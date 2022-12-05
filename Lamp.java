@@ -20,9 +20,17 @@ public class Lamp {
 		MEDIUM(9),
 		LARGE(12);
 
+		private final int height;
+
 		Size(int height) {
+			this.height = height;
+		}
+
+		public int getHeight() {
+			return height;
 		}
 	}
+
 
 	private Model baseCube, armSphere, jointSphere, headCube;
 	private SGNode lampRoot;
@@ -65,26 +73,25 @@ public class Lamp {
 
 		// ================== Transformations ====================
 
-		
-		float baseWidth = 1.2f;
-		float baseHeight = 0.25f;
-		float baseDepth = 0.5f;
+		int height = size.getHeight();
 
-		float armWidth = 0.35f;
-		float armHeight = 2.5f;
-		float armDepth = 0.35f;
+		float baseWidth = 0.2f*height;
+		float baseHeight = 0.04f*height;
+		float baseDepth = 0.083f*height;
 
-		float jointRadius = 0.6f;
+		float armWidth = 0.058f*height;
+		float armHeight = 0.41f*height;
+		float armDepth = 0.058f*height;
 
-		float headWidth = 0.8f;
-		float headHeight = 0.3f;
-		float headDepth = 0.3f;
+		float jointRadius = 0.1f*height;
 
-		float lightWidth = 0.2f;
-		float lightHeight = 0.2f;
-		float lightDepth = 0.2f;
+		float headWidth = 0.13f*height;
+		float headHeight = 0.05f*height;
+		float headDepth = 0.05f*height;
 
-
+		float lightWidth = 0.033f*height;
+		float lightHeight = 0.033f*height;
+		float lightDepth = 0.033f*height;
 
 
 		// Create root

@@ -22,6 +22,7 @@ public class Table {
 	private float eggJumpHeightFactor = 2.5f;
 	private float tableHeight, eggHeight;
 	private TransformNode eggJumpTransform;
+	private Shader eggShader;
 
 	private void loadTextures(GL3 gl) {
 		textures = new Texture[4];
@@ -33,7 +34,7 @@ public class Table {
 
 	}
 
-	public Table(GL3 gl, Camera camera, Light[] worldLights, Shader multiShader) {
+	public Table(GL3 gl, Camera camera, Light[] worldLights, PointLight[] pointLights, Shader multiShader) {
 
 		loadTextures(gl);
 
@@ -59,11 +60,13 @@ public class Table {
 		// Egg info
 		Mesh sphereMesh = new Mesh(gl, Sphere.vertices.clone(), Sphere.indices.clone());
 		Material eggMaterial = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
+		eggShader = new Shader(gl, "shaders/tt_vs.glsl", "shaders/egg_fs.glsl");
+
 
 		// Create our models
-		tableCube = new Model(gl, camera, worldLights, multiShader, tableMaterial, new Mat4(1), cubeMesh, textures[0]);
-		legCube = new Model(gl, camera, worldLights, multiShader, tableMaterial, new Mat4(1), cubeMesh, textures[1]);
-		eggSphere = new Model(gl, camera, worldLights, multiShader, eggMaterial, new Mat4(1), sphereMesh, textures[2], textures[3]);
+		tableCube = new Model(gl, camera, worldLights,pointLights, multiShader, tableMaterial, new Mat4(1), cubeMesh, textures[0]);
+		legCube = new Model(gl, camera, worldLights,pointLights, multiShader, tableMaterial, new Mat4(1), cubeMesh, textures[1]);
+		eggSphere = new Model(gl, camera, worldLights,pointLights, eggShader, eggMaterial, new Mat4(1), sphereMesh, textures[2], textures[3]);
 
 		// ================== Transformations ====================
 

@@ -20,9 +20,8 @@ public class Room {
     private Model floor, wall, window;
     public static Float wallSize = 16f;
     private SGNode roomRoot;
-    private PointLight[] lampLights;
     private Table table;
-    private Lamp lamp1;
+    private Lamp[] lamps;
 
     private Texture[] textures;
 
@@ -38,7 +37,7 @@ public class Room {
     public Room(GL3 gl, Camera camera, Light[] worldLights ,Shader multiShader) {
 
         loadTextures(gl);
-        lampLights = new PointLight[2];
+        PointLight[] lampLights = new PointLight[2];
 
         Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
         Shader windowShader = new Shader(gl, "shaders/window_vs.glsl", "shaders/window_fs.glsl");
@@ -53,21 +52,30 @@ public class Room {
         // The window is glass so it should be shiny
         Material glass = new Material(new Vec3(0.5f, 0.5f, 0.5f), new Vec3(0.84f,  0.71f,  0.59f), new Vec3(0.5f, 0.5f, 0.5f), 2.0f);
 
-        //Create a table object
-        table  = new Table(gl, camera, worldLights, multiShader);
+        // Create an array to store our lamps
+        lamps = new Lamp[2];
 
-        lamp1 = new Lamp(gl, camera, worldLights, multiShader, Lamp.Size.SMALL);
+        // Lamp 1 (left hand side)
+        Mat4 initialPosition = Mat4Transform.translate(-3,0,0);
+        Lamp lamp1 = new Lamp(gl, camera, worldLights, multiShader, Lamp.Size.SMALL, initialPosition);
         lampLights[0] = lamp1.getPointLight();
-        //TODO remove when added 2 lamps
-        lampLights[1] = lamp1.getPointLight();
+        lamps[0] = lamp1;
 
+        // Lamp 2 (right hand side)
+        initialPosition = Mat4.multiply(Mat4Transform.translate(4,0,0), Mat4Transform.rotateAroundY(180));
+        Lamp lamp2 = new Lamp(gl, camera, worldLights, multiShader, Lamp.Size.MEDIUM, initialPosition);
+        lampLights[1] = lamp2.getPointLight();
+        lamps[1] = lamp2;
 
-        Shader shader = new Shader(gl, "shaders/tt_vs.glsl", "shaders/tt_fs.glsl");
+        //Create a table object
+        table  = new Table(gl, camera, worldLights, lampLights, multiShader);
+
 
 
         // Create models for the floor & wall
         floor = new Model(gl, camera, worldLights, lampLights, multiShader, floorMaterial, new Mat4(), mesh, textures[0]);
-        wall = new Model(gl, camera, worldLights, multiShader, wallMaterial, new Mat4(), mesh, textures[1]);
+        wall = new Model(gl, camera, worldLights, lampLights, multiShader, wallMaterial, new Mat4(), mesh, textures[1]);
+
         // Only render the window with the room light
         window = new Model(gl, camera, worldLights[0], windowShader, glass, new Mat4(), mesh, textures[2]);
 
@@ -117,6 +125,7 @@ public class Room {
         roomRoot.addChild(roomMoveTransform);
             roomMoveTransform.addChild(table.getRoot());
             roomMoveTransform.addChild(lamp1.getRoot());
+            roomMoveTransform.addChild(lamp2.getRoot());
             roomMoveTransform.addChild(floorNode);
                 floorNode.addChild(floorTransform);
                     floorTransform.addChild(floorShape);
@@ -134,9 +143,20 @@ public class Room {
 
 
     public void render(GL3 gl, double elapsedTime) {
-
+        // Activate egg animation
         table.makeEggJump(elapsedTime);
-        lamp1.move(elapsedTime);
+
+        // Move the features on the lamps
+        for (Lamp lamp:lamps) {
+            lamp.move(elapsedTime);
+        }
+
+        // Render the lamp lights
+        for (Lamp lamp : lamps) {
+            lamp.getPointLight().render(gl);
+        }
+
+        // Draw the root
         roomRoot.draw(gl);
 
     }
@@ -145,10 +165,10 @@ public class Room {
         floor.dispose(gl);
         wall.dispose(gl);
         table.dispose(gl);
-        lamp1.dispose(gl);
-    }
 
-    public PointLight[] getLamps() {
-        return lampLights;
+        // Remove all the lamps
+        for (Lamp lamp:lamps) {
+            lamp.dispose(gl);
+        }
     }
 }

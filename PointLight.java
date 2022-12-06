@@ -9,20 +9,21 @@ import java.nio.IntBuffer;
 
 public class PointLight extends Light {
 
-  private float constant, linear, quadratic;
+  private Vec3 equation;
 
-  public PointLight(GL3 gl) {
+  public PointLight(GL3 gl, Vec3 equation) {
     super(gl);
-
-    // TODO parameters
-    constant = 1.0f;
-    linear = 0.5f;
-    quadratic = 0.2f;
+    this.equation = equation;
 
   }
 
-  public Vec3 equation()
+  public PointLight(GL3 gl) {
+    this(gl, new Vec3(1,0.5f,0.2f));
+  }
+
+
+    public Vec3 equation()
   {
-    return new Vec3(quadratic, linear, constant);
+    return equation;
   }
 }

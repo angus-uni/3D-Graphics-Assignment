@@ -7,6 +7,8 @@ in vec2 aTexCoord;
 out vec4 fragColor;
 
 uniform sampler2D first_texture;
+uniform sampler2D second_texture;
+
 uniform vec3 viewPos;
 
 struct Light {
@@ -36,7 +38,8 @@ struct Material {
     float shininess;
 };
 
-uniform Light light;
+int NR_WORLD_LIGHTS = 2;
+uniform Light worldLights[2];
 int NR_POINT_LIGHTS = 2;
 uniform PointLight pointLights[2];
 
@@ -44,6 +47,10 @@ uniform Material material;
 
 vec3 CalcWorldLight(Light worldLight, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
+    /*
+     * Calculate the affect of a world light on this particular fragment
+     */
+
     // ambient
     vec3 ambient = worldLight.ambient * material.ambient * texture(first_texture, aTexCoord).rgb;
 
@@ -55,13 +62,16 @@ vec3 CalcWorldLight(Light worldLight, vec3 normal, vec3 fragPos, vec3 viewDir)
     // specular
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-    vec3 specular = worldLight.specular * (spec * material.specular);
+    vec3 specular = worldLight.specular * (spec * vec3(texture(second_texture, aTexCoord)));
 
     return (ambient + diffuse + specular);
 }
 
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
+    /*
+     * Calculate the affect of a point light on this particular fragment
+     */
     vec3 lightDir = normalize(light.position - fragPos);
     // diffuse shading
     float diff = max(dot(normal, lightDir), 0.0);
@@ -90,12 +100,17 @@ void main() {
 
     vec3 viewDir = normalize(viewPos - aPos);
     vec3 norm = normalize(aNormal);
+    vec3 result = vec3(0,0.0,0);
 
-    vec3 result = CalcWorldLight(light, norm, aPos, viewDir);
+    //Go through each world light
+    for(int i = 0; i < NR_WORLD_LIGHTS; i++){
+        result += CalcWorldLight(worldLights[i], norm, aPos, viewDir);
+    }
 
     // Go though our spot lights
-    for(int i = 0; i < NR_POINT_LIGHTS; i++)
+    for(int i = 0; i < NR_POINT_LIGHTS; i++){
         result += CalcPointLight(pointLights[i], norm, aPos, viewDir);
+    }
 
     fragColor = vec4(result, 1.0);
 }

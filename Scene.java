@@ -17,7 +17,6 @@ import com.jogamp.opengl.util.texture.*;
 public class Scene {
 
 	private Light[] worldLights;
-	private PointLight[] lampLights;
 
 	private Room room;
 	private Garden garden;
@@ -56,8 +55,6 @@ public class Scene {
 
 		// Create the room for the scene (this should be illuminated by the room and the sun
 		room = new Room(gl,camera, worldLights, multiShader);
-		lampLights = room.getLamps();
-
 
 		// Create the garden (the garden should not be illuminated by the room light)
 		garden = new Garden(gl, camera, sun);
@@ -76,11 +73,6 @@ public class Scene {
 			worldLight.render(gl);
 		}
 
-		// Render the lamp lights
-		for (PointLight lampLight : lampLights) {
-			lampLight.render(gl);
-		}
-
 		double elapsedTime = startTime - getSeconds();
 		room.render(gl, elapsedTime);
 		garden.render(gl, elapsedTime);
@@ -95,10 +87,6 @@ public class Scene {
 			worldLight.dispose(gl);
 		}
 
-		// Dispose the lamp lights
-		for (PointLight lampLight : lampLights) {
-			lampLight.dispose(gl);
-		}
 		room.dispose(gl);
 		garden.dispose(gl);
 	}

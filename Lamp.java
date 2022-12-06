@@ -53,7 +53,16 @@ public class Lamp {
 		return headLight;
 	}
 
-	public Lamp(GL3 gl, Camera camera, Light[] worldLights, Shader multiShader, Size size) {
+	/**
+	 * The Lamp class
+	 * @param gl
+	 * @param camera
+	 * @param worldLights
+	 * @param multiShader
+	 * @param size
+	 * @param initialPosition - A matrix that defines the initial position of the lamp
+	 */
+	public Lamp(GL3 gl, Camera camera, Light[] worldLights, Shader multiShader, Size size, Mat4 initialPosition) {
 
 		loadTextures(gl);
 
@@ -109,7 +118,7 @@ public class Lamp {
 		lampRoot = new NameNode("table");
 
 		// Move the lamp into position
-		TransformNode lampMoveTransform = new TransformNode("Move the lamp", Mat4Transform.translate(-3,0,0));
+		TransformNode lampMoveTransform = new TransformNode("Move the lamp", initialPosition);
 
 
 		// Create the base of the lamp
@@ -259,7 +268,7 @@ public class Lamp {
 			NameNode lampLight = new NameNode("Lamp light");
 
 				// Create the light
-				headLight = new PointLight(gl);
+				headLight = new PointLight(gl, new Vec3(1));
 				headLight.setCamera(camera);
 
 				// Move light into position
@@ -343,5 +352,6 @@ public class Lamp {
 		eyeSphere.dispose(gl);
 		eyeStemSphere.dispose(gl);
 		shellSphere.dispose(gl);
+		headLight.dispose(gl);
 	}
 }

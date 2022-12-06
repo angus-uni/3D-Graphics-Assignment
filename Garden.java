@@ -11,8 +11,8 @@ class Garden {
 
     private Camera camera;
     private Light sun;
-    private float wallSize = 25f;
-    private float nudegeDown = 6;
+    public static float wallSize = 25f;
+    public static float nudegeDown = 6;
     private float nudgeBack = (wallSize/2)-(Room.wallSize/2);
     private Vec2 cloudPos;
 
@@ -146,19 +146,21 @@ class Garden {
         }
     }
 
-    public void toggleSun()
-    {
-        System.out.println("Gonna toggle sun");
-        sun.toggle();
-    }
-
-    public void render(GL3 gl) {
-
+    public void render(GL3 gl, double elapsedTime) {
+        Vec2 cloudPos = getCloudsPosition(elapsedTime);
         dynamicShader.use(gl);
         dynamicShader.setFloat(gl, "offset", cloudPos.x, cloudPos.y);
         sun.render(gl);
         roomRoot.draw(gl);
     }
+
+    private Vec2 getCloudsPosition(double elapsedTime) {
+        double t = elapsedTime*0.1;  // *0.1 slows it down a bit
+        float offsetX = (float)(t - Math.floor(t));
+        float offsetY = 0.0f;
+        return new Vec2(offsetX, offsetY);
+    }
+
 
     public void setClouds(Vec2 pos){
         cloudPos = pos;

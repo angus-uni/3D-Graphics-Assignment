@@ -34,7 +34,6 @@ public class Hatch_GLEventListener implements GLEventListener {
     gl.glEnable(GL.GL_CULL_FACE); // default is 'not enabled'
     gl.glCullFace(GL.GL_BACK);   // default is 'back', assuming CCW
     initialise(gl);
-    startTime = getSeconds();
   }
   
   /* Called to indicate the drawing surface has been moved and/or resized  */
@@ -54,8 +53,7 @@ public class Hatch_GLEventListener implements GLEventListener {
   /* Clean up memory, if necessary */
   public void dispose(GLAutoDrawable drawable) {
     GL3 gl = drawable.getGL().getGL3();
-    room.dispose(gl);
-    garden.dispose(gl);
+    scene.dispose(gl);
   }
   
   
@@ -67,19 +65,8 @@ public class Hatch_GLEventListener implements GLEventListener {
    
   private boolean animation = false;
   private double savedTime = 0;
-   
-  public void startAnimation() {
-    animation = true;
-    startTime = getSeconds()-savedTime;
-  }
-   
-  public void stopAnimation() {
-    animation = false;
-    double elapsedTime = getSeconds()-startTime;
-    savedTime = elapsedTime;
-  }
 
-  
+
   // ***************************************************
   /* THE SCENE
    * Now define all the methods to handle the scene.
@@ -89,57 +76,33 @@ public class Hatch_GLEventListener implements GLEventListener {
   private Camera camera;
   private Mat4 perspective;
 
-  private Room room;
-  private Garden garden;
+  private Scene scene;
 
   private void initialise(GL3 gl) {
     createRandomNumbers();
 
-    room = new Room(gl, camera);
-    garden = new Garden(gl, camera);
+    scene = new Scene(gl, camera);
 
   }
 
-  public Room getRoom(){
-    return room;
-  }
-
-  public Garden getGarden()
-  {
-    return garden;
-  }
- 
   private void render(GL3 gl) {
     gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
-    // Render our office room
-    room.render(gl);
+    scene.render(gl);
+  }
 
-    garden.setClouds(getCloudsPosition());
-    garden.render(gl);
-
-
+  public Scene getScene()
+  {
+    return scene;
   }
 
 
-  private Vec2 getCloudsPosition() {
-    double elapsedTime = getSeconds()-startTime;
-    double t = elapsedTime*0.1;  // *0.1 slows it down a bit
-    float offsetX = (float)(t - Math.floor(t));
-    float offsetY = 0.0f;
-    return new Vec2(offsetX, offsetY);
-  }
 
-  
   // ***************************************************
   /* TIME
    */ 
   
-  private double startTime;
-  
-  private double getSeconds() {
-    return System.currentTimeMillis()/1000.0;
-  }
+
 
   // ***************************************************
   /* An array of random numbers

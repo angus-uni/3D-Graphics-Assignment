@@ -1,5 +1,7 @@
 import gmaths.*;
 import java.nio.*;
+import java.util.Arrays;
+
 import com.jogamp.common.nio.*;
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.util.texture.*;
@@ -13,7 +15,6 @@ public class Model {
   private Shader shader;
   private Mat4 modelMatrix;
   private Camera camera;
-  private Light light;
   private Light[] worldLights;
   private PointLight[] pointLights;
 
@@ -53,6 +54,7 @@ public class Model {
   }
 
 
+
   public void setModelMatrix(Mat4 m) {
     modelMatrix = m;
   }
@@ -81,6 +83,7 @@ public class Model {
     // ============ Set the lighting for each world light =================
 
     // Only render a uniform array if we need to so we can reuse this with other shaders
+    // TODO maybe extend shader class to handle more lights?
     if (worldLights.length > 1) {
       for (int i = 0; i < worldLights.length; i++) {
         Light currentLight = worldLights[i];
@@ -91,6 +94,7 @@ public class Model {
 
       }
     }else{
+      Light light = worldLights[0];
       shader.setVec3(gl, "light.position", light.getPosition());
       shader.setVec3(gl, "light.ambient", light.getMaterial().getAmbient());
       shader.setVec3(gl, "light.diffuse", light.getMaterial().getDiffuse());

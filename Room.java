@@ -7,6 +7,8 @@ import com.jogamp.opengl.util.awt.*;
 import com.jogamp.opengl.util.glsl.*;
 import com.jogamp.opengl.util.texture.*;
 
+import java.util.Arrays;
+
 /**
  * Room class to represent the room
  * of the scene, i.e. the floor and the walls
@@ -18,12 +20,9 @@ public class Room {
     private Model floor, wall, window;
     public static Float wallSize = 16f;
     private SGNode roomRoot;
-    private Light light;
     private PointLight[] lampLights;
     private Table table;
     private Lamp lamp1;
-
-    private double startTime;
 
     private Texture[] textures;
 
@@ -36,21 +35,14 @@ public class Room {
 
     }
 
-    public Room(GL3 gl, Camera camera) {
+    public Room(GL3 gl, Camera camera, Light[] worldLights ,Shader multiShader) {
 
         loadTextures(gl);
-        startTime = getSeconds();
         lampLights = new PointLight[2];
 
-
         Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
-        Shader shader = new Shader(gl, "shaders/tt_vs.glsl", "shaders/tt_fs.glsl");
         Shader windowShader = new Shader(gl, "shaders/window_vs.glsl", "shaders/window_fs.glsl");
 
-        // Create a light at the top of the room
-        light = new Light(gl);
-        light.setCamera(camera);
-        light.setPosition(0,wallSize,0);
 
         // The floor is going to be wood, this should be pretty matte
         Material floorMaterial = new Material(new Vec3(0.76f, 0.62f, 0.51f), new Vec3(0.84f,  0.71f,  0.59f), new Vec3(0.3f, 0.3f, 0.3f), 1.0f);
@@ -62,18 +54,23 @@ public class Room {
         Material glass = new Material(new Vec3(0.5f, 0.5f, 0.5f), new Vec3(0.84f,  0.71f,  0.59f), new Vec3(0.5f, 0.5f, 0.5f), 2.0f);
 
         //Create a table object
-        table  = new Table(gl, camera, light);
+        table  = new Table(gl, camera, worldLights[0]); // TODO update these classes to support array
 
-        lamp1 = new Lamp(gl, camera, light, Lamp.Size.SMALL);
+        lamp1 = new Lamp(gl, camera, worldLights[0], Lamp.Size.SMALL);
         lampLights[0] = lamp1.getPointLight();
         //TODO remove
         lampLights[1] = lamp1.getPointLight();
 
 
+        Shader shader = new Shader(gl, "shaders/tt_vs.glsl", "shaders/tt_fs.glsl");
+
+
         // Create models for the floor & wall
-        floor = new Model(gl, camera, light, shader, floorMaterial, new Mat4(), mesh, textures[0]);
-        window = new Model(gl, camera, light, windowShader, glass, new Mat4(), mesh, textures[2]);
-        wall = new Model(gl, camera, light, shader, wallMaterial, new Mat4(), mesh, textures[1]);
+        floor = new Model(gl, camera, worldLights, lampLights, multiShader, floorMaterial, new Mat4(), mesh, textures[0]);
+        wall = new Model(gl, camera, worldLights, multiShader, wallMaterial, new Mat4(), mesh, textures[1]);
+        // Only render the window with the room light
+        window = new Model(gl, camera, worldLights[0], windowShader, glass, new Mat4(), mesh, textures[2]);
+
 
 
         // ====================== Create the scene graph for our room =============================
@@ -135,37 +132,22 @@ public class Room {
         roomRoot.update();
     }
 
-    public void toggleLight(){
-        System.out.println("Gonna turn light off");
-        light.toggle();
-    }
 
-    public void render(GL3 gl) {
-        double elapsedTime = getSeconds()-startTime;
+    public void render(GL3 gl, double elapsedTime) {
+
         table.makeEggJump(elapsedTime);
         lamp1.move(elapsedTime);
 
         table.setPointLights(gl,lampLights);
         roomRoot.draw(gl);
-        light.render(gl);
 
     }
-
-    private double getSeconds() {
-        return System.currentTimeMillis()/1000.0;
-    }
-
 
     public void dispose(GL3 gl) {
         floor.dispose(gl);
         wall.dispose(gl);
-        light.dispose(gl);
         table.dispose(gl);
         lamp1.dispose(gl);
-    }
-
-    public Light getLight() {
-        return light;
     }
 
     public PointLight[] getLamps() {

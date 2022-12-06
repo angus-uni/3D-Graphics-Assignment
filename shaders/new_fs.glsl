@@ -37,9 +37,9 @@ struct Material {
 };
 
 int NR_WORLD_LIGHTS = 2;
-uniform Light worldLights[NR_WORLD_LIGHTS];
+uniform Light worldLights[2];
 int NR_POINT_LIGHTS = 2;
-uniform PointLight pointLights[NR_POINT_LIGHTS];
+uniform PointLight pointLights[2];
 
 uniform Material material;
 
@@ -91,12 +91,18 @@ void main() {
 
     vec3 viewDir = normalize(viewPos - aPos);
     vec3 norm = normalize(aNormal);
+    vec3 result = vec3(0,0.0,0);
 
-    vec3 result = CalcWorldLight(light, norm, aPos, viewDir);
+    //Go through each world light
+    for(int i = 0; i < NR_WORLD_LIGHTS; i++){
+        result += CalcWorldLight(worldLights[i], norm, aPos, viewDir);
+    }
+
 
     // Go though our spot lights
-    for(int i = 0; i < NR_POINT_LIGHTS; i++)
+    for(int i = 0; i < NR_POINT_LIGHTS; i++){
         result += CalcPointLight(pointLights[i], norm, aPos, viewDir);
+    }
 
     fragColor = vec4(result, 1.0);
 }

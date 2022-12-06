@@ -14,7 +14,7 @@ public class Hatch_GLEventListener implements GLEventListener {
     
   public Hatch_GLEventListener(Camera camera) {
     this.camera = camera;
-    this.camera.setPosition(new Vec3(3.1f,16.5f,30.8f));
+    this.camera.setPosition(new Vec3(0,15,30));
   }
   
   // ***************************************************

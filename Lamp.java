@@ -55,13 +55,13 @@ public class Lamp {
 
 		loadTextures(gl);
 
-		// Define our base & head info
-		Mesh cubeMesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
-		Material baseMaterial = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
-
 		// Create the light
 		headLight = new PointLight(gl);
 		headLight.setCamera(camera);
+
+		// Define our base & head info
+		Mesh cubeMesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
+		Material baseMaterial = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
 
 		// Define the arms & joints
 		Mesh sphereMesh = new Mesh(gl, Sphere.vertices.clone(), Sphere.indices.clone());
@@ -197,8 +197,6 @@ public class Lamp {
 			m = Mat4.multiply(Mat4Transform.scale(lightWidth,lightHeight,lightDepth), Mat4Transform.translate(0,0.5f,0));
 				TransformNode makeLight = new TransformNode("Make the light for the lamp", m);
 				LightNode lightShape = new LightNode("Light of lamp", headLight);
-
-
 
 
 		// Add nodes hierarchy

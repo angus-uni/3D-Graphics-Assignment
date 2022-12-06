@@ -35,7 +35,7 @@ public class Scene {
 		Light roomLight = new Light(gl, Vec3.multiply(whiteLight, 0.2f),Vec3.multiply(whiteLight, 0.3f),whiteLight);
 		Vec3 sunColour = new Vec3(1,  0.98f,  0.78f);
 		Light sun = new Light(gl,Vec3.multiply(sunColour, 0.3f),Vec3.multiply(sunColour, 0.6f),whiteLight);
-		
+
 
 		// Position & setup lights
 		roomLight.setCamera(camera);
@@ -78,8 +78,10 @@ public class Scene {
 		for (PointLight lampLight : lampLights) {
 			lampLight.render(gl);
 		}
-		room.render(gl, getSeconds());
-		garden.render(gl, getSeconds());
+
+		double elapsedTime = startTime - getSeconds();
+		room.render(gl, elapsedTime);
+		garden.render(gl, elapsedTime);
 
 
 	}

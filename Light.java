@@ -13,27 +13,16 @@ public class Light {
   private Vec3[] lightValues;
   private boolean on;
 
-    
-  public Light(GL3 gl) {
-    // Set default lighting values
-    lightValues = new Vec3[3];
-    lightValues[0] = new Vec3(0.5f, 0.5f, 0.5f);
-    lightValues[1] = new Vec3(0.8f, 0.8f, 0.8f);
-    lightValues[2] = new Vec3(0.8f, 0.8f, 0.8f);
-
-    initialise(gl);
-  }
-
-  public Light(GL3 gl,Vec3 ambient, Vec3 diffuse, Vec3 specular, float scalar) {
-    lightValues = new Vec3[3];
-    lightValues[0] = Vec3.multiply(ambient, scalar);
-    lightValues[1] = Vec3.multiply(diffuse, scalar);
-    lightValues[2] = Vec3.multiply(specular, scalar);
-    initialise(gl);
-  }
-
   public Light(GL3 gl,Vec3 ambient, Vec3 diffuse, Vec3 specular) {
-    this(gl,ambient,diffuse,specular,1.0f);
+    lightValues = new Vec3[3];
+    lightValues[0] = ambient;
+    lightValues[1] = diffuse;
+    lightValues[2] = specular;
+    initialise(gl);
+  }
+
+  public Light(GL3 gl) {
+    this(gl,new Vec3(0.5f,0.5f,0.5f),new Vec3(0.8f,0.8f,0.8f),new Vec3(0.8f,0.8f,0.8f));
   }
 
   private void initialise(GL3 gl)

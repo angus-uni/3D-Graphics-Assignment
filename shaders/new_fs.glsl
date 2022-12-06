@@ -45,6 +45,10 @@ uniform Material material;
 
 vec3 CalcWorldLight(Light worldLight, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
+    /*
+     * Calculate the affect of a world light on this particular fragment
+     */
+
     // ambient
     vec3 ambient = worldLight.ambient * material.ambient * texture(first_texture, aTexCoord).rgb;
 
@@ -63,6 +67,9 @@ vec3 CalcWorldLight(Light worldLight, vec3 normal, vec3 fragPos, vec3 viewDir)
 
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
+    /*
+     * Calculate the affect of a point light on this particular fragment
+     */
     vec3 lightDir = normalize(light.position - fragPos);
     // diffuse shading
     float diff = max(dot(normal, lightDir), 0.0);

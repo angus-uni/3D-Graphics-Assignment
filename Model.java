@@ -83,6 +83,7 @@ public class Model {
     // ============ Set the lighting for each world light =================
 
     // Only render a uniform array if we need to so we can reuse this with other shaders
+
     // TODO maybe extend shader class to handle more lights?
     if (worldLights.length > 1) {
       for (int i = 0; i < worldLights.length; i++) {

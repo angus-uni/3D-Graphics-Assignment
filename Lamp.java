@@ -33,17 +33,19 @@ public class Lamp {
 	}
 
 
-	private Model baseCube, armSphere, jointSphere, headCube, eyeSphere;
+	private Model baseCube, armSphere, jointSphere, headCube, eyeSphere, eyeStemSphere, shellSphere;
 	private SGNode lampRoot;
 	private Texture[] textures;
 	private PointLight headLight;
-	private TransformNode jointRotate, headRotate;
+	private TransformNode jointRotate, headRotate, eyeRotate1, eyeRotate2;
+	private TransformNode[] eyeRotateNodes;
 
 
 	private void loadTextures(GL3 gl) {
-		textures = new Texture[2];
+		textures = new Texture[3];
 		textures[0] = TextureLibrary.loadTexture(gl, "textures/scales.jpg");
 		textures[1] = TextureLibrary.loadTexture(gl, "textures/table_legs.jpg");
+		textures[2] = TextureLibrary.loadTexture(gl, "textures/shell.jpg");
 	}
 
 	public PointLight getPointLight() {
@@ -56,18 +58,22 @@ public class Lamp {
 
 		// Define our base & head info
 		Mesh cubeMesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
-		Material baseMaterial = new MagicMaterial(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
+		Material baseMaterial = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
 
 		// Define the arms & joints
 		Mesh sphereMesh = new Mesh(gl, Sphere.vertices.clone(), Sphere.indices.clone());
-		Material armMaterial = new MagicMaterial(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
+		Material armMaterial = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
+		Material eyeMaterial = new MagicMaterial(new Vec3(0.2f), new Vec3(1), new Vec3(1), 1);
 
 		// Create our models
 		baseCube = new Model(gl, camera, worldLights, multiShader, baseMaterial, new Mat4(1), cubeMesh, textures[1]);
 		headCube = new Model(gl, camera, worldLights, multiShader, baseMaterial, new Mat4(1), cubeMesh, textures[1]);
 		armSphere = new Model(gl, camera, worldLights, multiShader, armMaterial, new Mat4(1), sphereMesh, textures[0]);
 		jointSphere = new Model(gl, camera, worldLights, multiShader, armMaterial, new Mat4(1), sphereMesh, textures[0]);
-		eyeSphere = new Model(gl, camera, worldLights, multiShader, armMaterial, new Mat4(1), sphereMesh, textures[0]); // TODO change this
+
+		eyeSphere = new Model(gl, camera, worldLights, multiShader, eyeMaterial, new Mat4(1), sphereMesh, textures[0]); // TODO change this
+		eyeStemSphere = new Model(gl, camera, worldLights, multiShader, armMaterial, new Mat4(1), sphereMesh, textures[0]); // TODO change this
+		shellSphere = new Model(gl, camera, worldLights, multiShader, armMaterial, new Mat4(1), sphereMesh, textures[2]); // TODO change this
 
 		// ================== Transformations ====================
 
@@ -92,7 +98,11 @@ public class Lamp {
 		float lightDepth = 0.033f*height;
 
 		float eyeRadius = headDepth;
+		float eyeStemWidth = armWidth*0.2f;
+		float eyeStemHeight = armHeight*0.1f;
+		float eyeStemDepth = armDepth*0.2f;
 
+		float shellRadius = 3*jointRadius;
 
 		// Create root
 		lampRoot = new NameNode("table");
@@ -148,6 +158,15 @@ public class Lamp {
 				TransformNode makeJoint = new TransformNode("Create joint 1", m);
 					ModelNode joint1Shape = new ModelNode("Joint 1 of lamp", jointSphere);
 
+		// Create the shell of the snail
+		NameNode shell = new NameNode("Shell");
+
+			m = Mat4Transform.translate(-shellRadius/2,0,0);
+			TransformNode positionShell = new TransformNode("Move shell into position", m);
+
+			m = Mat4.multiply(Mat4Transform.scale(shellRadius, shellRadius, shellRadius), Mat4Transform.translate(0,0.5f,0));
+				TransformNode makeShell = new TransformNode("Make the shell", m);
+				ModelNode shellShape = new ModelNode("Shell of the lamp", shellSphere);
 
 
 		// Create the arm of the lamp
@@ -165,6 +184,8 @@ public class Lamp {
 		m = Mat4.multiply(Mat4Transform.scale(armWidth,armHeight,armDepth), Mat4Transform.translate(0,0.5f,0));
 			TransformNode makeArm2 = new TransformNode("Make arm 2", m);
 				ModelNode arm2Shape = new ModelNode("Arm 2 of lamp", armSphere);
+
+
 
 
 		// Create the head of the lamp
@@ -185,17 +206,43 @@ public class Lamp {
 				TransformNode makeHead = new TransformNode("Make the head", m);
 				ModelNode headShape = new ModelNode("Head of lamp", headCube);
 
+			// Create two snail eyes attatched to the head
+//			for (int i = 0; i < 2; i++) {
+//				TransformNode eyeRotate new TransformNode("Rotate the eyes of the lamp",Mat4Transform.rotateAroundZ(15));
+//			}
+
+			eyeRotate1 = new TransformNode("Rotate the eyes of the lamp",Mat4Transform.rotateAroundZ(15));
+
+			NameNode eyeStem1 = new NameNode("Eye stem 1");
+				m = Mat4Transform.translate(-headWidth/2+(eyeRadius/2),headHeight,headDepth/2-(eyeStemDepth/2));
+				TransformNode positionEyeStem1 = new TransformNode("Move stem for eye 1 into position", m);
+
+				m = Mat4.multiply(Mat4Transform.scale(eyeStemWidth,eyeStemHeight,eyeStemDepth), Mat4Transform.translate(0,0.5f,0));
+				TransformNode makeEyeStem1 = new TransformNode("Make the stem for eye 1", m);
+				ModelNode eyeStem1Shape = new ModelNode("Stem for eye 1 of lamp", eyeStemSphere);
 
 			NameNode eye1 = new NameNode("Eyeball 1");
-				m = Mat4Transform.translate(-headWidth/2+(eyeRadius/2),headHeight,headDepth/2);
+				m = Mat4Transform.translate(0, eyeStemHeight,0);
 				TransformNode positionEye1 = new TransformNode("Move eyeball 1 into position", m);
 
 				m = Mat4.multiply(Mat4Transform.scale(eyeRadius,eyeRadius,eyeRadius), Mat4Transform.translate(0,0.5f,0));
 				TransformNode makeEye = new TransformNode("Make the eyeball", m);
 				ModelNode eyeShape = new ModelNode("Eye of lamp", eyeSphere);
 
-			NameNode eye2 = new NameNode("Eyeball 1");
-				m = Mat4Transform.translate(-headWidth/2+(eyeRadius/2),headHeight,-headDepth/2);
+			eyeRotate2 = new TransformNode("Rotate the eye 2 of the lamp",Mat4Transform.rotateAroundZ(15));
+
+
+			NameNode eyeStem2 = new NameNode("Eye stem 2");
+				m = Mat4Transform.translate(-headWidth/2+(eyeRadius/2),headHeight,-(headDepth/2-(eyeStemDepth/2)));
+				TransformNode positionEyeStem2 = new TransformNode("Move stem for eye 2 into position", m);
+
+				m = Mat4.multiply(Mat4Transform.scale(eyeStemWidth,eyeStemHeight,eyeStemDepth), Mat4Transform.translate(0,0.5f,0));
+				TransformNode makeEyeStem2 = new TransformNode("Make the stem for eye 2", m);
+				ModelNode eyeStem2Shape = new ModelNode("Stem for eye 2 of lamp", eyeStemSphere);
+
+
+			NameNode eye2 = new NameNode("Eyeball 2");
+				m = Mat4Transform.translate(0, eyeStemHeight,0);
 				TransformNode positionEye2 = new TransformNode("Move eyeball 2 into position", m);
 
 				m = Mat4.multiply(Mat4Transform.scale(eyeRadius,eyeRadius,eyeRadius), Mat4Transform.translate(0,0.5f,0));
@@ -214,7 +261,7 @@ public class Lamp {
 				m = Mat4Transform.translate((headWidth/2)+(lightWidth/2),(headHeight/2)-(lightHeight/2),0);
 				TransformNode positionLight = new TransformNode("Move light into position", m);
 
-				// TODO this transformating doesnt really do anything, maybe integrate light with SGNodes?
+				// TODO this transformation doesnt really do anything, maybe integrate light with SGNodes?
 				m = Mat4.multiply(Mat4Transform.scale(lightWidth,lightHeight,lightDepth), Mat4Transform.translate(0,0.5f,0));
 					TransformNode makeLight = new TransformNode("Make the light for the lamp", m);
 					LightNode lightShape = new LightNode("Light of lamp", headLight);
@@ -237,6 +284,10 @@ public class Lamp {
 							jointRotate.addChild(joint1);
 								joint1.addChild(makeJoint);
 									makeJoint.addChild(joint1Shape);
+								joint1.addChild(positionShell);
+									positionShell.addChild(shell);
+										shell.addChild(makeShell);
+											makeShell.addChild(shellShape);
 								joint1.addChild(positionArm2);
 									positionArm2.addChild(arm2);
 										arm2.addChild(makeArm2);
@@ -246,14 +297,26 @@ public class Lamp {
 												headRotate.addChild(head);
 													head.addChild(makeHead);
 														makeHead.addChild(headShape);
-													head.addChild(positionEye1);
-														positionEye1.addChild(eye1);
-															eye1.addChild(makeEye);
-																makeEye.addChild(eyeShape); // TODO improve reuse here (duplication)
-													head.addChild(positionEye2);
-														positionEye2.addChild(eye2);
-															eye2.addChild(makeEye2);
-																makeEye2.addChild(eyeShape2);
+													head.addChild(positionEyeStem1);
+														positionEyeStem1.addChild(eyeRotate1);
+																eyeRotate1.addChild(eyeStem1);
+																	eyeStem1.addChild(makeEyeStem1);
+																		makeEyeStem1.addChild(eyeStem1Shape);
+																	eyeStem1.addChild(positionEye1);
+																	positionEye1.addChild(eye1);
+																		eye1.addChild(makeEye);
+																			makeEye.addChild(eyeShape);
+
+													head.addChild(positionEyeStem2);
+														positionEyeStem2.addChild(eyeRotate2);
+															eyeRotate2.addChild(eyeStem2);
+																eyeStem2.addChild(makeEyeStem2);
+																	makeEyeStem2.addChild(eyeStem2Shape);
+																eyeStem2.addChild(positionEye2);
+																	positionEye2.addChild(eye2);
+																		eye2.addChild(makeEye2);
+																			makeEye2.addChild(eyeShape2);
+
 													head.addChild(positionLight);
 														positionLight.addChild(lampLight);
 															lampLight.addChild(makeLight);
@@ -270,8 +333,13 @@ public class Lamp {
 
 	public void move(double elapsedTime){
 		float rotateAngle = -(float)(Math.sin(elapsedTime)*25);
+		float eyeRotate = -(float)(Math.cos(elapsedTime)*15);
+
 		jointRotate.setTransform(Mat4Transform.rotateAroundZ(rotateAngle));
 		headRotate.setTransform(Mat4Transform.rotateAroundZ(-rotateAngle));
+		eyeRotate1.setTransform(Mat4Transform.rotateAroundZ(-eyeRotate));
+		eyeRotate2.setTransform(Mat4Transform.rotateAroundZ(eyeRotate));
+
 		lampRoot.update();
 	}
 
@@ -279,5 +347,8 @@ public class Lamp {
 		baseCube.dispose(gl);
 		jointSphere.dispose(gl);
 		armSphere.dispose(gl);
+		eyeSphere.dispose(gl);
+		eyeStemSphere.dispose(gl);
+		shellSphere.dispose(gl);
 	}
 }

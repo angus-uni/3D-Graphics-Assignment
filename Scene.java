@@ -31,7 +31,8 @@ public class Scene {
 		startTime = getSeconds();
 
 		// Create the lights for our scene
-		Light roomLight = new Light(gl);
+		Vec3 roomColour = new Vec3(0.3f,  0.3f,  0.3f);
+		Light roomLight = new Light(gl, roomColour, roomColour, roomColour); // TODO update individual parts
 		Vec3 sunColour = new Vec3(0.6f,  0.54f,  0.43f);
 		Light sun = new Light(gl,sunColour,sunColour,sunColour);
 

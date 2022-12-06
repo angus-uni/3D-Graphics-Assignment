@@ -98,7 +98,6 @@ void main() {
         result += CalcWorldLight(worldLights[i], norm, aPos, viewDir);
     }
 
-
     // Go though our spot lights
     for(int i = 0; i < NR_POINT_LIGHTS; i++){
         result += CalcPointLight(pointLights[i], norm, aPos, viewDir);

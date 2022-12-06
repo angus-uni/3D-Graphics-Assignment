@@ -43,30 +43,15 @@ public class Hatch extends JFrame implements ActionListener {
     menuBar.add(fileMenu);
     
     JPanel p = new JPanel();
-      JButton b = new JButton("camera X");
+      // Add the buttons to toggle the lights
+      JButton b = new JButton("Toggle room light");
       b.addActionListener(this);
       p.add(b);
-      b = new JButton("camera Z");
+
+      b = new JButton("Toggle sun");
       b.addActionListener(this);
       p.add(b);
-      b = new JButton("start");
-      b.addActionListener(this);
-      p.add(b);
-      b = new JButton("stop");
-      b.addActionListener(this);
-      p.add(b);
-      b = new JButton("increase X position");
-      b.addActionListener(this);
-      p.add(b);
-      b = new JButton("decrease X position");
-      b.addActionListener(this);
-      p.add(b);
-      b = new JButton("lowered arms");
-      b.addActionListener(this);
-      p.add(b);
-      b = new JButton("raised arms");
-      b.addActionListener(this);
-      p.add(b);
+
     this.add(p, BorderLayout.SOUTH);
     
     addWindowListener(new WindowAdapter() {
@@ -82,22 +67,12 @@ public class Hatch extends JFrame implements ActionListener {
   }
   
   public void actionPerformed(ActionEvent e) {
-    if (e.getActionCommand().equalsIgnoreCase("camera X")) {
-      camera.setCamera(Camera.CameraType.X);
-      canvas.requestFocusInWindow();
+    if (e.getActionCommand().equalsIgnoreCase("toggle room light")) {
+      glEventListener.getRoom().toggleLight();
     }
-    else if (e.getActionCommand().equalsIgnoreCase("camera Z")) {
-      camera.setCamera(Camera.CameraType.Z);
-      canvas.requestFocusInWindow();
+    else if (e.getActionCommand().equalsIgnoreCase("toggle sun")) {
+      glEventListener.getGarden().toggleSun();
     }
-    else if (e.getActionCommand().equalsIgnoreCase("start")) {
-      glEventListener.startAnimation();
-    }
-    else if (e.getActionCommand().equalsIgnoreCase("stop")) {
-      glEventListener.stopAnimation();
-    }
-    else if(e.getActionCommand().equalsIgnoreCase("quit"))
-      System.exit(0);
   }
   
 }

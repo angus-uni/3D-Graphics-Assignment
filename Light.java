@@ -10,29 +10,69 @@ public class Light {
   private Mat4 model;
   private Shader shader;
   private Camera camera;
+  private Vec3[] lightValues;
+  private boolean on;
+
     
   public Light(GL3 gl) {
+    // Set default lighting values
+    lightValues = new Vec3[3];
+    lightValues[0] = new Vec3(0.5f, 0.5f, 0.5f);
+    lightValues[1] = new Vec3(0.8f, 0.8f, 0.8f);
+    lightValues[2] = new Vec3(0.8f, 0.8f, 0.8f);
+
+    initialise(gl);
+  }
+
+  public Light(GL3 gl,Vec3 ambient, Vec3 diffuse, Vec3 specular ) {
+    lightValues = new Vec3[3];
+    lightValues[0] = ambient;
+    lightValues[1] = diffuse;
+    lightValues[2] = specular;
+
+    initialise(gl);
+  }
+
+  private void initialise(GL3 gl)
+  {
+    // Turn the light on
+    on = true;
+
+    // Use stored lighting values
     material = new Material();
-    material.setAmbient(0.5f, 0.5f, 0.5f);
-    material.setDiffuse(0.8f, 0.8f, 0.8f);
-    material.setSpecular(0.8f, 0.8f, 0.8f);
+    setMaterials();
+
+    // Setup shaders etc
     position = new Vec3(3f,2f,1f);
     model = new Mat4(1);
     shader = new Shader(gl, "vs_light_01.txt", "fs_light_01.txt");
     fillBuffers(gl);
   }
 
-  public Light(GL3 gl,Vec3 ambient, Vec3 diffuse, Vec3 specular ) {
-    material = new Material();
-    material.setAmbient(ambient);
-    material.setDiffuse(diffuse);
-    material.setSpecular(specular);
-    position = new Vec3(3f,2f,1f);
-    model = new Mat4(1);
-    shader = new Shader(gl, "vs_light_01.txt", "fs_light_01.txt");
-    fillBuffers(gl);
+  private void setMaterials()
+  {
+    if (on){
+      material.setAmbient(lightValues[0]);
+      material.setDiffuse(lightValues[1]);
+      material.setSpecular(lightValues[2]);
+    }else{
+      // Scale down the lights
+      float factor = 0.2f;
+      material.setAmbient(Vec3.multiply(lightValues[0], factor));
+      material.setDiffuse(Vec3.multiply(lightValues[1], factor));
+      material.setSpecular(Vec3.multiply(lightValues[2], factor));
+    }
+
   }
-  
+
+  public void toggle()
+  {
+    // Turn off
+    on = !on;
+    setMaterials();
+
+  }
+
   public void setPosition(Vec3 v) {
     position.x = v.x;
     position.y = v.y;

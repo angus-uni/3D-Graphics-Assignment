@@ -146,6 +146,12 @@ class Garden {
         }
     }
 
+    public void toggleSun()
+    {
+        System.out.println("Gonna toggle sun");
+        sun.toggle();
+    }
+
     public void render(GL3 gl) {
 
         dynamicShader.use(gl);

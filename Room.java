@@ -136,6 +136,11 @@ public class Room {
         roomRoot.update();
     }
 
+    public void toggleLight(){
+        System.out.println("Gonna turn light off");
+        light.toggle();
+    }
+
     public void render(GL3 gl) {
         double elapsedTime = getSeconds()-startTime;
         table.makeEggJump(elapsedTime);

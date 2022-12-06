@@ -99,6 +99,15 @@ public class Hatch_GLEventListener implements GLEventListener {
     garden = new Garden(gl, camera);
 
   }
+
+  public Room getRoom(){
+    return room;
+  }
+
+  public Garden getGarden()
+  {
+    return garden;
+  }
  
   private void render(GL3 gl) {
     gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);

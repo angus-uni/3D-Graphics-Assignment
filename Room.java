@@ -54,11 +54,11 @@ public class Room {
         Material glass = new Material(new Vec3(0.5f, 0.5f, 0.5f), new Vec3(0.84f,  0.71f,  0.59f), new Vec3(0.5f, 0.5f, 0.5f), 2.0f);
 
         //Create a table object
-        table  = new Table(gl, camera, worldLights[0]); // TODO update these classes to support array
+        table  = new Table(gl, camera, worldLights, multiShader); // TODO update these classes to support array
 
         lamp1 = new Lamp(gl, camera, worldLights[0], Lamp.Size.SMALL);
         lampLights[0] = lamp1.getPointLight();
-        //TODO remove
+        //TODO remove when added 2 lamps
         lampLights[1] = lamp1.getPointLight();
 
 
@@ -137,8 +137,6 @@ public class Room {
 
         table.makeEggJump(elapsedTime);
         lamp1.move(elapsedTime);
-
-        table.setPointLights(gl,lampLights);
         roomRoot.draw(gl);
 
     }

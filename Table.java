@@ -22,8 +22,6 @@ public class Table {
 	private float eggJumpHeightFactor = 2.5f;
 	private float tableHeight, eggHeight;
 	private TransformNode eggJumpTransform;
-	private Shader eggShader;
-
 
 	private void loadTextures(GL3 gl) {
 		textures = new Texture[4];
@@ -35,7 +33,7 @@ public class Table {
 
 	}
 
-	public Table(GL3 gl, Camera camera, Light light) {
+	public Table(GL3 gl, Camera camera, Light[] worldLights, Shader multiShader) {
 
 		loadTextures(gl);
 
@@ -56,18 +54,16 @@ public class Table {
 
 		// Define our table info
 		Mesh cubeMesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
-		Shader tableShader = new Shader(gl, "shaders/table_vs.glsl", "shaders/table_fs.glsl");
 		Material tableMaterial = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
 
 		// Egg info
 		Mesh sphereMesh = new Mesh(gl, Sphere.vertices.clone(), Sphere.indices.clone());
-		eggShader = new Shader(gl, "shaders/egg_vs.glsl", "shaders/egg_fs.glsl");
 		Material eggMaterial = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
 
 		// Create our models
-		tableCube = new Model(gl, camera, light, tableShader, tableMaterial, new Mat4(1), cubeMesh, textures[0]);
-		legCube = new Model(gl, camera, light, tableShader, tableMaterial, new Mat4(1), cubeMesh, textures[1]);
-		eggSphere = new Model(gl, camera, light, eggShader, eggMaterial, new Mat4(1), sphereMesh, textures[2], textures[3]);
+		tableCube = new Model(gl, camera, worldLights, multiShader, tableMaterial, new Mat4(1), cubeMesh, textures[0]);
+		legCube = new Model(gl, camera, worldLights, multiShader, tableMaterial, new Mat4(1), cubeMesh, textures[1]);
+		eggSphere = new Model(gl, camera, worldLights, multiShader, eggMaterial, new Mat4(1), sphereMesh, textures[2], textures[3]);
 
 		// ================== Transformations ====================
 
@@ -182,17 +178,6 @@ public class Table {
 		return tableRoot;
 	}
 
-	public void setPointLights(GL3 gl, PointLight[] pointLights){
-		eggShader.use(gl);
-		for (int i = 0; i < pointLights.length; i++) {
-			PointLight p = pointLights[i];
-			Vec3 equation = p.equation();
-			eggShader.setFloat(gl,String.format("pointLights[%s].quadratic", i), equation.x);
-			eggShader.setFloat(gl,String.format("pointLights[%s].linear", i), equation.y);
-			eggShader.setFloat(gl,String.format("pointLights[%s].constant", i), equation.z);
-		}
-
-	}
 
 	public void makeEggJump(double elapsedTime) {
 

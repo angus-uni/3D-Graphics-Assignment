@@ -49,13 +49,13 @@ public class Scene {
 		// Store the new shaders to handle multiple world lights
 		multiShader = new Shader(gl, "shaders/tt_vs.glsl", "shaders/new_fs.glsl");
 
-		// Create the room for the scene
+		// Create the room for the scene (this should be illuminated by the room and the sun
 		room = new Room(gl,camera, worldLights, multiShader);
 		lampLights = room.getLamps();
 
 
-		// Create the garden
-		garden = new Garden(gl, camera);
+		// Create the garden (the garden should not be illuminated by the room light)
+		garden = new Garden(gl, camera, sun);
 
 
 	}
@@ -63,7 +63,6 @@ public class Scene {
 	private double getSeconds() {
 		return System.currentTimeMillis()/1000.0;
 	}
-
 
 
 	public void render(GL3 gl) {
@@ -82,6 +81,15 @@ public class Scene {
 
 
 	public void dispose(GL3 gl) {
+		// Dispose the world lights
+		for (Light worldLight : worldLights) {
+			worldLight.dispose(gl);
+		}
+
+		// Dispose the lamp lights
+		for (PointLight lampLight : lampLights) {
+			lampLight.dispose(gl);
+		}
 		room.dispose(gl);
 		garden.dispose(gl);
 	}

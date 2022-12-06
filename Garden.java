@@ -14,7 +14,6 @@ class Garden {
     public static float wallSize = 25f;
     public static float nudegeDown = 6;
     private float nudgeBack = (wallSize/2)-(Room.wallSize/2);
-    private Vec2 cloudPos;
 
     private Texture skybox, cloudTexture;
     private Texture[] textures;
@@ -37,8 +36,9 @@ class Garden {
         //skybox = Cubemap.loadFromStreams(gl, getClass().getClassLoader(),"park_", "jpg", true);
     }
 
-    public Garden(GL3 gl, Camera c) {
-        camera = c;
+    public Garden(GL3 gl, Camera c, Light sun) {
+        this.camera = c;
+        this.sun = sun;
 
         // Load our textures
         loadTextures(gl);
@@ -47,12 +47,6 @@ class Garden {
         Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
         Shader shader = new Shader(gl, "shaders/tt_vs.glsl", "shaders/tt_fs.glsl");
         Material wallMaterial = new Material(new Vec3(0.76f, 0.62f, 0.51f), new Vec3(0.84f,  0.71f,  0.59f), new Vec3(0.3f, 0.3f, 0.3f), 1.0f);
-
-        // Create a sun at the top of the garden, (this should have a yellow tinge)
-        Vec3 sunColour = new Vec3(0.99216f,  0.98039f,  0.84314f);
-        sun = new Light(gl, sunColour, sunColour, sunColour);
-        sun.setCamera(camera);
-        sun.setPosition(0,wallSize-(wallSize/nudegeDown),-(Room.wallSize/2));
 
         dynamicShader = new Shader(gl, "shaders/dynamic_background_vs.glsl", "shaders/dynamic_background_fs.glsl");
 
@@ -159,11 +153,6 @@ class Garden {
         float offsetX = (float)(t - Math.floor(t));
         float offsetY = 0.0f;
         return new Vec2(offsetX, offsetY);
-    }
-
-
-    public void setClouds(Vec2 pos){
-        cloudPos = pos;
     }
 
 

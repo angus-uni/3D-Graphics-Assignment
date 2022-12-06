@@ -36,7 +36,6 @@ public class Lamp {
 	private Model baseCube, armSphere, jointSphere, headCube;
 	private SGNode lampRoot;
 	private Texture[] textures;
-	private double startTime;
 	private PointLight headLight;
 	private TransformNode jointRotate, headRotate;
 
@@ -52,15 +51,12 @@ public class Lamp {
 		return headLight;
 	}
 
-	public Lamp(GL3 gl, Camera camera, Light light, Size size) {
+	public Lamp(GL3 gl, Camera camera, Light[] worldLights, Shader multiShader, Size size) {
 
 		loadTextures(gl);
-		startTime = getSeconds();
-
 
 		// Define our base & head info
 		Mesh cubeMesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
-		Shader shader = new Shader(gl, "shaders/table_vs.glsl", "shaders/table_fs.glsl");
 		Material baseMaterial = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
 
 		// Create the light
@@ -72,10 +68,10 @@ public class Lamp {
 		Material armMaterial = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
 
 		// Create our models
-		baseCube = new Model(gl, camera, light, shader, baseMaterial, new Mat4(1), cubeMesh, textures[1]);
-		headCube = new Model(gl, camera, light, shader, baseMaterial, new Mat4(1), cubeMesh, textures[1]);
-		armSphere = new Model(gl, camera, light, shader, armMaterial, new Mat4(1), sphereMesh, textures[0]);
-		jointSphere = new Model(gl, camera, light, shader, armMaterial, new Mat4(1), sphereMesh, textures[2]);
+		baseCube = new Model(gl, camera, worldLights, multiShader, baseMaterial, new Mat4(1), cubeMesh, textures[1]);
+		headCube = new Model(gl, camera, worldLights, multiShader, baseMaterial, new Mat4(1), cubeMesh, textures[1]);
+		armSphere = new Model(gl, camera, worldLights, multiShader, armMaterial, new Mat4(1), sphereMesh, textures[0]);
+		jointSphere = new Model(gl, camera, worldLights, multiShader, armMaterial, new Mat4(1), sphereMesh, textures[2]);
 
 		// ================== Transformations ====================
 
@@ -246,10 +242,6 @@ public class Lamp {
 		jointRotate.setTransform(Mat4Transform.rotateAroundZ(rotateAngle));
 		headRotate.setTransform(Mat4Transform.rotateAroundZ(-rotateAngle));
 		lampRoot.update();
-	}
-
-	private double getSeconds() {
-		return System.currentTimeMillis()/1000.0;
 	}
 
 	public void dispose(GL3 gl) {

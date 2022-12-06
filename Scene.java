@@ -32,7 +32,7 @@ public class Scene {
 
 		// Create the lights for our scene
 		Light roomLight = new Light(gl);
-		Vec3 sunColour = new Vec3(0.99216f,  0.98039f,  0.84314f);
+		Vec3 sunColour = new Vec3(0.6f,  0.54f,  0.43f);
 		Light sun = new Light(gl,sunColour,sunColour,sunColour);
 
 		// Position & setup lights

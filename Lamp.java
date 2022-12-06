@@ -41,10 +41,9 @@ public class Lamp {
 
 
 	private void loadTextures(GL3 gl) {
-		textures = new Texture[3];
-		textures[0] = TextureLibrary.loadTexture(gl, "textures/tabletop.jpg");
+		textures = new Texture[2];
+		textures[0] = TextureLibrary.loadTexture(gl, "textures/scales.jpg");
 		textures[1] = TextureLibrary.loadTexture(gl, "textures/table_legs.jpg");
-		textures[2] = TextureLibrary.loadTexture(gl, "textures/soil.jpg");
 	}
 
 	public PointLight getPointLight() {
@@ -61,17 +60,17 @@ public class Lamp {
 
 		// Define our base & head info
 		Mesh cubeMesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
-		Material baseMaterial = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
+		Material baseMaterial = new MagicMaterial(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
 
 		// Define the arms & joints
 		Mesh sphereMesh = new Mesh(gl, Sphere.vertices.clone(), Sphere.indices.clone());
-		Material armMaterial = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
+		Material armMaterial = new MagicMaterial(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
 
 		// Create our models
 		baseCube = new Model(gl, camera, worldLights, multiShader, baseMaterial, new Mat4(1), cubeMesh, textures[1]);
 		headCube = new Model(gl, camera, worldLights, multiShader, baseMaterial, new Mat4(1), cubeMesh, textures[1]);
 		armSphere = new Model(gl, camera, worldLights, multiShader, armMaterial, new Mat4(1), sphereMesh, textures[0]);
-		jointSphere = new Model(gl, camera, worldLights, multiShader, armMaterial, new Mat4(1), sphereMesh, textures[2]);
+		jointSphere = new Model(gl, camera, worldLights, multiShader, armMaterial, new Mat4(1), sphereMesh, textures[0]);
 
 		// ================== Transformations ====================
 

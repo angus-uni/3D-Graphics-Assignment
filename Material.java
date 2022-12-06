@@ -15,11 +15,12 @@ public class Material {
   public static final Vec3 DEFAULT_EMISSION = new Vec3(0.0f, 0.0f, 0.0f);
   public static final float DEFAULT_SHININESS = 32;
   
-  private Vec3 ambient;
-  private Vec3 diffuse;
-  private Vec3 specular;
+  protected Vec3 ambient;
+  protected Vec3 diffuse;
+  protected Vec3 specular;
+
   private Vec3 emission;
-  private float shininess;
+  protected float shininess;
   
   /**
    * Constructor. Sets attributes to default initial values.

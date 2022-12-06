@@ -36,7 +36,7 @@ public class Lamp {
 	private Model baseCube, armSphere, jointSphere, headCube, eyeSphere, eyeStemSphere, shellSphere;
 	private SGNode lampRoot;
 	private Texture[] textures;
-	private PointLight headLight;
+	private SpotLight headLight;
 	private TransformNode jointRotate, headRotate;
 	private TransformNode[] eyeRotateNodes;
 	private TransformNode[] positionEyeStems;
@@ -49,7 +49,7 @@ public class Lamp {
 		textures[2] = TextureLibrary.loadTexture(gl, "textures/shell.jpg");
 	}
 
-	public PointLight getPointLight() {
+	public SpotLight getSpotLight() {
 		return headLight;
 	}
 
@@ -268,7 +268,7 @@ public class Lamp {
 			NameNode lampLight = new NameNode("Lamp light");
 
 				// Create the light
-				headLight = new PointLight(gl, new Vec3(1));
+				headLight = new SpotLight(gl, new Vec3(1));
 				headLight.setCamera(camera);
 
 				// Move light into position

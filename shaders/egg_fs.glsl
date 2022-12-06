@@ -18,7 +18,7 @@ struct Light {
     vec3 specular;
 };
 
-struct PointLight {
+struct SpotLight {
     vec3 position;
 
     float constant;
@@ -41,7 +41,7 @@ struct Material {
 int NR_WORLD_LIGHTS = 2;
 uniform Light worldLights[2];
 int NR_POINT_LIGHTS = 2;
-uniform PointLight pointLights[2];
+uniform SpotLight SpotLights[2];
 
 uniform Material material;
 
@@ -67,7 +67,7 @@ vec3 CalcWorldLight(Light worldLight, vec3 normal, vec3 fragPos, vec3 viewDir)
     return (ambient + diffuse + specular);
 }
 
-vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
+vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
     /*
      * Calculate the affect of a point light on this particular fragment
@@ -109,7 +109,7 @@ void main() {
 
     // Go though our spot lights
     for(int i = 0; i < NR_POINT_LIGHTS; i++){
-        result += CalcPointLight(pointLights[i], norm, aPos, viewDir);
+        result += CalcSpotLight(SpotLights[i], norm, aPos, viewDir);
     }
 
     fragColor = vec4(result, 1.0);

@@ -7,8 +7,6 @@ import com.jogamp.opengl.util.awt.*;
 import com.jogamp.opengl.util.glsl.*;
 import com.jogamp.opengl.util.texture.*;
 
-import java.util.Arrays;
-
 /**
  * Room class to represent the room
  * of the scene, i.e. the floor and the walls
@@ -37,7 +35,7 @@ public class Room {
     public Room(GL3 gl, Camera camera, Light[] worldLights ,Shader multiShader) {
 
         loadTextures(gl);
-        PointLight[] lampLights = new PointLight[2];
+        SpotLight[] lampLights = new SpotLight[2];
 
         Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
         Shader windowShader = new Shader(gl, "shaders/window_vs.glsl", "shaders/window_fs.glsl");
@@ -58,13 +56,13 @@ public class Room {
         // Lamp 1 (left hand side)
         Mat4 initialPosition = Mat4Transform.translate(-3,0,0);
         Lamp lamp1 = new Lamp(gl, camera, worldLights, multiShader, Lamp.Size.SMALL, initialPosition);
-        lampLights[0] = lamp1.getPointLight();
+        lampLights[0] = lamp1.getSpotLight();
         lamps[0] = lamp1;
 
         // Lamp 2 (right hand side)
         initialPosition = Mat4.multiply(Mat4Transform.translate(4,0,0), Mat4Transform.rotateAroundY(180));
         Lamp lamp2 = new Lamp(gl, camera, worldLights, multiShader, Lamp.Size.MEDIUM, initialPosition);
-        lampLights[1] = lamp2.getPointLight();
+        lampLights[1] = lamp2.getSpotLight();
         lamps[1] = lamp2;
 
         //Create a table object
@@ -153,7 +151,7 @@ public class Room {
 
         // Render the lamp lights
         for (Lamp lamp : lamps) {
-            lamp.getPointLight().render(gl);
+            lamp.getSpotLight().render(gl);
         }
 
         // Draw the root

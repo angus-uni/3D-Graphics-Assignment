@@ -3,9 +3,9 @@ import gmaths.Vec3;
 
 public class LightNode extends SGNode {
 
-	protected PointLight light;
+	protected SpotLight light;
 
-	public LightNode(String name, PointLight l) {
+	public LightNode(String name, SpotLight l) {
 		super(name);
 		light = l;
 	}

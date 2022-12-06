@@ -34,7 +34,7 @@ public class Table {
 
 	}
 
-	public Table(GL3 gl, Camera camera, Light[] worldLights, PointLight[] pointLights, Shader multiShader) {
+	public Table(GL3 gl, Camera camera, Light[] worldLights, SpotLight[] spotLights, Shader multiShader) {
 
 		loadTextures(gl);
 
@@ -64,9 +64,9 @@ public class Table {
 
 
 		// Create our models
-		tableCube = new Model(gl, camera, worldLights,pointLights, multiShader, tableMaterial, new Mat4(1), cubeMesh, textures[0]);
-		legCube = new Model(gl, camera, worldLights,pointLights, multiShader, tableMaterial, new Mat4(1), cubeMesh, textures[1]);
-		eggSphere = new Model(gl, camera, worldLights,pointLights, eggShader, eggMaterial, new Mat4(1), sphereMesh, textures[2], textures[3]);
+		tableCube = new Model(gl, camera, worldLights, spotLights, multiShader, tableMaterial, new Mat4(1), cubeMesh, textures[0]);
+		legCube = new Model(gl, camera, worldLights, spotLights, multiShader, tableMaterial, new Mat4(1), cubeMesh, textures[1]);
+		eggSphere = new Model(gl, camera, worldLights, spotLights, eggShader, eggMaterial, new Mat4(1), sphereMesh, textures[2], textures[3]);
 
 		// ================== Transformations ====================
 

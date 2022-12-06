@@ -37,8 +37,9 @@ public class Lamp {
 	private SGNode lampRoot;
 	private Texture[] textures;
 	private PointLight headLight;
-	private TransformNode jointRotate, headRotate, eyeRotate1, eyeRotate2;
+	private TransformNode jointRotate, headRotate;
 	private TransformNode[] eyeRotateNodes;
+	private TransformNode[] positionEyeStems;
 
 
 	private void loadTextures(GL3 gl) {
@@ -206,49 +207,53 @@ public class Lamp {
 				TransformNode makeHead = new TransformNode("Make the head", m);
 				ModelNode headShape = new ModelNode("Head of lamp", headCube);
 
-			// Create two snail eyes attatched to the head
-//			for (int i = 0; i < 2; i++) {
-//				TransformNode eyeRotate new TransformNode("Rotate the eyes of the lamp",Mat4Transform.rotateAroundZ(15));
-//			}
+			// Create two snail eyes attached to the head
+			eyeRotateNodes = new TransformNode[2];
+			positionEyeStems = new TransformNode[2];
+			for (int i = 0; i < 2; i++) {
 
-			eyeRotate1 = new TransformNode("Rotate the eyes of the lamp",Mat4Transform.rotateAroundZ(15));
+				// Store a new rotation node
+				 TransformNode eyeRotateNode = new TransformNode("Rotate eye of the lamp",Mat4Transform.rotateAroundZ(15));
 
-			NameNode eyeStem1 = new NameNode("Eye stem 1");
-				m = Mat4Transform.translate(-headWidth/2+(eyeRadius/2),headHeight,headDepth/2-(eyeStemDepth/2));
-				TransformNode positionEyeStem1 = new TransformNode("Move stem for eye 1 into position", m);
+				// Different z direction depending on which eye
+				int zFactor = (i == 0)
+						? 1
+						: -1;
 
-				m = Mat4.multiply(Mat4Transform.scale(eyeStemWidth,eyeStemHeight,eyeStemDepth), Mat4Transform.translate(0,0.5f,0));
-				TransformNode makeEyeStem1 = new TransformNode("Make the stem for eye 1", m);
-				ModelNode eyeStem1Shape = new ModelNode("Stem for eye 1 of lamp", eyeStemSphere);
+				// Create a stem for the eye
+				NameNode eyeStem = new NameNode("Eye stem");
+					m = Mat4Transform.translate(-headWidth/2+(eyeRadius/2),headHeight,zFactor*(headDepth/2-(eyeStemDepth/2)));
+					TransformNode positionEyeStem = new TransformNode("Move stem for eye into position", m);
 
-			NameNode eye1 = new NameNode("Eyeball 1");
-				m = Mat4Transform.translate(0, eyeStemHeight,0);
-				TransformNode positionEye1 = new TransformNode("Move eyeball 1 into position", m);
+					m = Mat4.multiply(Mat4Transform.scale(eyeStemWidth,eyeStemHeight,eyeStemDepth), Mat4Transform.translate(0,0.5f,0));
+						TransformNode makeEyeStem = new TransformNode("Make the stem for eye", m);
+						ModelNode eyeStemShape = new ModelNode("Stem for eye 1",eyeStemSphere);
 
-				m = Mat4.multiply(Mat4Transform.scale(eyeRadius,eyeRadius,eyeRadius), Mat4Transform.translate(0,0.5f,0));
-				TransformNode makeEye = new TransformNode("Make the eyeball", m);
-				ModelNode eyeShape = new ModelNode("Eye of lamp", eyeSphere);
+				// Create the eye itself
+				NameNode eye = new NameNode("Eyeball");
+					m = Mat4Transform.translate(0, eyeStemHeight,0);
+						TransformNode positionEye = new TransformNode("Move eyeball into position", m);
 
-			eyeRotate2 = new TransformNode("Rotate the eye 2 of the lamp",Mat4Transform.rotateAroundZ(15));
-
-
-			NameNode eyeStem2 = new NameNode("Eye stem 2");
-				m = Mat4Transform.translate(-headWidth/2+(eyeRadius/2),headHeight,-(headDepth/2-(eyeStemDepth/2)));
-				TransformNode positionEyeStem2 = new TransformNode("Move stem for eye 2 into position", m);
-
-				m = Mat4.multiply(Mat4Transform.scale(eyeStemWidth,eyeStemHeight,eyeStemDepth), Mat4Transform.translate(0,0.5f,0));
-				TransformNode makeEyeStem2 = new TransformNode("Make the stem for eye 2", m);
-				ModelNode eyeStem2Shape = new ModelNode("Stem for eye 2 of lamp", eyeStemSphere);
+					m = Mat4.multiply(Mat4Transform.scale(eyeRadius,eyeRadius,eyeRadius), Mat4Transform.translate(0,0.5f,0));
+						TransformNode makeEye = new TransformNode("Make the eyeball", m);
+						ModelNode eyeShape = new ModelNode("Eye of lamp", eyeSphere);
 
 
-			NameNode eye2 = new NameNode("Eyeball 2");
-				m = Mat4Transform.translate(0, eyeStemHeight,0);
-				TransformNode positionEye2 = new TransformNode("Move eyeball 2 into position", m);
+				// Create a mini hierarchy
+				positionEyeStem.addChild(eyeRotateNode);
+					eyeRotateNode.addChild(eyeStem);
+						eyeStem.addChild(makeEyeStem);
+							makeEyeStem.addChild(eyeStemShape);
+						eyeStem.addChild(positionEye);
+							positionEye.addChild(eye);
+								eye.addChild(makeEye);
+									makeEye.addChild(eyeShape);
 
-				m = Mat4.multiply(Mat4Transform.scale(eyeRadius,eyeRadius,eyeRadius), Mat4Transform.translate(0,0.5f,0));
-					TransformNode makeEye2 = new TransformNode("Make the eyeball", m);
-					ModelNode eyeShape2 = new ModelNode("Eye of lamp", eyeSphere);
+				eyeRotateNodes[i] = eyeRotateNode;
+				positionEyeStems[i] = positionEyeStem;
 
+
+			}
 
 			// Create the light for the lamp
 			NameNode lampLight = new NameNode("Lamp light");
@@ -297,26 +302,10 @@ public class Lamp {
 												headRotate.addChild(head);
 													head.addChild(makeHead);
 														makeHead.addChild(headShape);
-													head.addChild(positionEyeStem1);
-														positionEyeStem1.addChild(eyeRotate1);
-																eyeRotate1.addChild(eyeStem1);
-																	eyeStem1.addChild(makeEyeStem1);
-																		makeEyeStem1.addChild(eyeStem1Shape);
-																	eyeStem1.addChild(positionEye1);
-																	positionEye1.addChild(eye1);
-																		eye1.addChild(makeEye);
-																			makeEye.addChild(eyeShape);
-
-													head.addChild(positionEyeStem2);
-														positionEyeStem2.addChild(eyeRotate2);
-															eyeRotate2.addChild(eyeStem2);
-																eyeStem2.addChild(makeEyeStem2);
-																	makeEyeStem2.addChild(eyeStem2Shape);
-																eyeStem2.addChild(positionEye2);
-																	positionEye2.addChild(eye2);
-																		eye2.addChild(makeEye2);
-																			makeEye2.addChild(eyeShape2);
-
+													// Add the eyes
+													for (TransformNode positionEyeStem : positionEyeStems) {
+														head.addChild(positionEyeStem);
+													}
 													head.addChild(positionLight);
 														positionLight.addChild(lampLight);
 															lampLight.addChild(makeLight);
@@ -337,8 +326,12 @@ public class Lamp {
 
 		jointRotate.setTransform(Mat4Transform.rotateAroundZ(rotateAngle));
 		headRotate.setTransform(Mat4Transform.rotateAroundZ(-rotateAngle));
-		eyeRotate1.setTransform(Mat4Transform.rotateAroundZ(-eyeRotate));
-		eyeRotate2.setTransform(Mat4Transform.rotateAroundZ(eyeRotate));
+
+		// Move the eyes on the lamp
+		for (int i = 0; i < eyeRotateNodes.length; i++){
+			int zFactor = (i == 0) ? 1 : -1;
+			eyeRotateNodes[i].setTransform(Mat4Transform.rotateAroundZ(zFactor*eyeRotate));
+		}
 
 		lampRoot.update();
 	}

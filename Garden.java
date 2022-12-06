@@ -172,4 +172,8 @@ class Garden {
         sun.dispose(gl);
 
     }
+
+    public Light getLight() {
+        return sun;
+    }
 }

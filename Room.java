@@ -12,7 +12,6 @@ import com.jogamp.opengl.util.texture.*;
  * of the scene, i.e. the floor and the walls
  */
 
-// TODO add point lights in here
 
 public class Room {
 
@@ -165,4 +164,11 @@ public class Room {
         lamp1.dispose(gl);
     }
 
+    public Light getLight() {
+        return light;
+    }
+
+    public PointLight[] getLamps() {
+        return lampLights;
+    }
 }

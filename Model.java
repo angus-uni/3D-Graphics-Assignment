@@ -113,7 +113,11 @@ public class Model {
         shader.setVec3(gl, String.format("SpotLights[%s].specular", i), currentLight.getMaterial().getSpecular());
 
         // Set the point light attributes
-        Vec3 equation = currentLight.equation();
+        shader.setVec3(gl, String.format("SpotLights[%s].direction", i), currentLight.getDirection());
+        shader.setFloat(gl, String.format("SpotLights[%s].cutOff", i), currentLight.getCutoff());
+        shader.setFloat(gl, String.format("SpotLights[%s].outerCutOff", i), currentLight.getOuterCutoff());
+
+        Vec3 equation = currentLight.getEquation();
         shader.setFloat(gl, String.format("SpotLights[%s].quadratic", i), equation.x);
         shader.setFloat(gl, String.format("SpotLights[%s].linear", i), equation.y);
         shader.setFloat(gl, String.format("SpotLights[%s].constant", i), equation.z);

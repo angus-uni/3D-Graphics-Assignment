@@ -85,6 +85,13 @@ public class Lamp {
 		eyeStemSphere = new Model(gl, camera, worldLights, multiShader, armMaterial, new Mat4(1), sphereMesh, textures[0]); // TODO change this
 		shellSphere = new Model(gl, camera, worldLights, multiShader, armMaterial, new Mat4(1), sphereMesh, textures[2]); // TODO change this
 
+
+		// Create the light
+		Vec3 direction = new Vec3(1,0,0);
+		Vec3 equation = new Vec3(1.8f, 0.7f, 1);
+		headLight = new SpotLight(gl, direction, 12.5f, 16f, equation);
+		headLight.setCamera(camera);
+
 		// ================== Transformations ====================
 
 		int height = size.getHeight();
@@ -267,9 +274,6 @@ public class Lamp {
 			// Create the light for the lamp
 			NameNode lampLight = new NameNode("Lamp light");
 
-				// Create the light
-				headLight = new SpotLight(gl, new Vec3(1));
-				headLight.setCamera(camera);
 
 				// Move light into position
 				m = Mat4Transform.translate((headWidth/2)+(lightWidth/2),(headHeight/2)-(lightHeight/2),0);

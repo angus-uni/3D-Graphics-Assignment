@@ -4,6 +4,7 @@ import javax.swing.*;
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.FPSAnimator;
+import gmaths.Vec3;
 
 public class Hatch extends JFrame implements ActionListener {
   
@@ -27,7 +28,7 @@ public class Hatch extends JFrame implements ActionListener {
     super(textForTitleBar);
     GLCapabilities glcapabilities = new GLCapabilities(GLProfile.get(GLProfile.GL3));
     canvas = new GLCanvas(glcapabilities);
-    camera = new Camera(Camera.DEFAULT_POSITION, Camera.DEFAULT_TARGET, Camera.DEFAULT_UP);
+    camera = new Camera(Camera.DEFAULT_POSITION, new Vec3(0,5,0), Camera.DEFAULT_UP);
     glEventListener = new Hatch_GLEventListener(camera);
     canvas.addGLEventListener(glEventListener);
     canvas.addMouseMotionListener(new MyMouseInput(camera));

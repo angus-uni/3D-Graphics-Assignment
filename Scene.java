@@ -35,12 +35,14 @@ public class Scene {
 		Light roomLight = new Light(gl, Vec3.multiply(whiteLight, 0.2f),Vec3.multiply(whiteLight, 0.3f),whiteLight);
 		Vec3 sunColour = new Vec3(1,  0.98f,  0.78f);
 		Light sun = new Light(gl,Vec3.multiply(sunColour, 0.3f),Vec3.multiply(sunColour, 0.6f),whiteLight);
+		
 
 		// Position & setup lights
 		roomLight.setCamera(camera);
 		roomLight.setPosition(0,Room.wallSize,0);
 		sun.setCamera(camera);
 		sun.setPosition(0,Garden.wallSize-(Garden.wallSize/Garden.nudegeDown),-(Room.wallSize/2));
+
 
 		// Store our world lights
 		worldLights = new Light[2];
@@ -78,6 +80,8 @@ public class Scene {
 		}
 		room.render(gl, getSeconds());
 		garden.render(gl, getSeconds());
+
+
 	}
 
 

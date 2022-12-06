@@ -12,17 +12,32 @@ public class Light {
   private Camera camera;
   private Vec3[] lightValues;
   private boolean on;
+  private Vec3 size;
 
-  public Light(GL3 gl,Vec3 ambient, Vec3 diffuse, Vec3 specular) {
+  public Light(GL3 gl,Vec3 ambient, Vec3 diffuse, Vec3 specular, Vec3 size) {
     lightValues = new Vec3[3];
     lightValues[0] = ambient;
     lightValues[1] = diffuse;
     lightValues[2] = specular;
+    this.size = size;
     initialise(gl);
   }
 
+
   public Light(GL3 gl) {
-    this(gl,new Vec3(0.5f,0.5f,0.5f),new Vec3(0.8f,0.8f,0.8f),new Vec3(0.8f,0.8f,0.8f));
+    this(gl,new Vec3(0.5f,0.5f,0.5f),new Vec3(0.8f,0.8f,0.8f),new Vec3(0.8f,0.8f,0.8f),
+            null);
+  }
+  public Light(GL3 gl, Vec3 size) {
+    this(gl,new Vec3(0.5f,0.5f,0.5f),new Vec3(0.8f,0.8f,0.8f),new Vec3(0.8f,0.8f,0.8f),size);
+  }
+
+  public Light(GL3 gl, Vec3 ambient, Vec3 diffuse, Vec3 specular) {
+    this(gl,ambient, diffuse, specular, null);
+  }
+
+  public void setSize(Vec3 size){
+    this.size = size;
   }
 
   private void initialise(GL3 gl)
@@ -95,7 +110,10 @@ public class Light {
   
   public void render(GL3 gl) {
     Mat4 model = new Mat4(1);
-    model = Mat4.multiply(Mat4Transform.scale(0.3f,0.3f,0.3f), model);
+    //model = Mat4.multiply(Mat4Transform.scale(0.3f,0.3f,0.3f), model);
+    if (size != null){
+      model = Mat4.multiply(Mat4Transform.scale(size), model);
+    }
     model = Mat4.multiply(Mat4Transform.translate(position), model);
     
     Mat4 mvpMatrix = Mat4.multiply(camera.getPerspectiveMatrix(), Mat4.multiply(camera.getViewMatrix(), model));

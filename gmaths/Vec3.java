@@ -8,6 +8,8 @@ public final class Vec3 {
   public Vec3() {
     this(0,0,0);
   }
+
+  public Vec3(float num){ this(num,num,num);}
   
   public Vec3(float x, float y, float z) {
     this.x = x;

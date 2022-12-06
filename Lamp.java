@@ -54,10 +54,6 @@ public class Lamp {
 
 		loadTextures(gl);
 
-		// Create the light
-		headLight = new PointLight(gl);
-		headLight.setCamera(camera);
-
 		// Define our base & head info
 		Mesh cubeMesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
 		Material baseMaterial = new MagicMaterial(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
@@ -95,7 +91,7 @@ public class Lamp {
 		float lightHeight = 0.033f*height;
 		float lightDepth = 0.033f*height;
 
-		float eyeRadius = headDepth/1.5f;
+		float eyeRadius = headDepth;
 
 
 		// Create root
@@ -207,17 +203,24 @@ public class Lamp {
 					ModelNode eyeShape2 = new ModelNode("Eye of lamp", eyeSphere);
 
 
+			// Create the light for the lamp
+			NameNode lampLight = new NameNode("Lamp light");
 
-		// Create the light for the lamp
-		NameNode lampLight = new NameNode("Lamp light");
+				// Create the light
+				headLight = new PointLight(gl);
+				headLight.setCamera(camera);
 
-			// Move light into position
-			m = Mat4Transform.translate((headWidth/2)+(lightWidth/2),(headHeight/2)-(lightHeight/2),0);
-			TransformNode positionLight = new TransformNode("Move light into position", m);
+				// Move light into position
+				m = Mat4Transform.translate((headWidth/2)+(lightWidth/2),(headHeight/2)-(lightHeight/2),0);
+				TransformNode positionLight = new TransformNode("Move light into position", m);
 
-			m = Mat4.multiply(Mat4Transform.scale(lightWidth,lightHeight,lightDepth), Mat4Transform.translate(0,0.5f,0));
-				TransformNode makeLight = new TransformNode("Make the light for the lamp", m);
-				LightNode lightShape = new LightNode("Light of lamp", headLight);
+				// TODO this transformating doesnt really do anything, maybe integrate light with SGNodes?
+				m = Mat4.multiply(Mat4Transform.scale(lightWidth,lightHeight,lightDepth), Mat4Transform.translate(0,0.5f,0));
+					TransformNode makeLight = new TransformNode("Make the light for the lamp", m);
+					LightNode lightShape = new LightNode("Light of lamp", headLight);
+					lightShape.setSize(new Vec3(lightWidth,lightHeight,lightDepth));
+
+
 
 
 		// Add nodes hierarchy

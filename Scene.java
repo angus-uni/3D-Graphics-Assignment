@@ -32,9 +32,11 @@ public class Scene {
 
 		// Create the lights for our scene
 		Vec3 whiteLight = new Vec3(1,1,1);
-		Light roomLight = new Light(gl, Vec3.multiply(whiteLight, 0.2f),Vec3.multiply(whiteLight, 0.3f),whiteLight);
+		Light roomLight = new Light(gl, Vec3.multiply(whiteLight, 0.2f),Vec3.multiply(whiteLight, 0.3f),whiteLight,
+				new Vec3(0.3f));
 		Vec3 sunColour = new Vec3(1,  0.98f,  0.78f);
-		Light sun = new Light(gl,Vec3.multiply(sunColour, 0.3f),Vec3.multiply(sunColour, 0.6f),whiteLight);
+		Light sun = new Light(gl,Vec3.multiply(sunColour, 0.3f),Vec3.multiply(sunColour, 0.6f),whiteLight,
+				new Vec3(0.8f));
 
 
 		// Position & setup lights

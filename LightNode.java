@@ -1,4 +1,5 @@
 import com.jogamp.opengl.*;
+import gmaths.Vec3;
 
 public class LightNode extends SGNode {
 
@@ -7,6 +8,10 @@ public class LightNode extends SGNode {
 	public LightNode(String name, PointLight l) {
 		super(name);
 		light = l;
+	}
+
+	public void setSize(Vec3 size){
+		light.setSize(size);
 	}
 
 	public void draw(GL3 gl) {

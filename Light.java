@@ -21,6 +21,17 @@ public class Light {
     shader = new Shader(gl, "vs_light_01.txt", "fs_light_01.txt");
     fillBuffers(gl);
   }
+
+  public Light(GL3 gl,Vec3 ambient, Vec3 diffuse, Vec3 specular ) {
+    material = new Material();
+    material.setAmbient(ambient);
+    material.setDiffuse(diffuse);
+    material.setSpecular(specular);
+    position = new Vec3(3f,2f,1f);
+    model = new Mat4(1);
+    shader = new Shader(gl, "vs_light_01.txt", "fs_light_01.txt");
+    fillBuffers(gl);
+  }
   
   public void setPosition(Vec3 v) {
     position.x = v.x;

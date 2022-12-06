@@ -15,6 +15,7 @@ import gmaths.Vec3;
 
 public class Lamp {
 
+
 	enum Size {
 		SMALL(6),
 		MEDIUM(9),
@@ -36,6 +37,7 @@ public class Lamp {
 	private SGNode lampRoot;
 	private Texture[] textures;
 	private double startTime;
+	private PointLight headLight;
 	private TransformNode jointRotate, headRotate;
 
 
@@ -44,6 +46,10 @@ public class Lamp {
 		textures[0] = TextureLibrary.loadTexture(gl, "textures/tabletop.jpg");
 		textures[1] = TextureLibrary.loadTexture(gl, "textures/table_legs.jpg");
 		textures[2] = TextureLibrary.loadTexture(gl, "textures/soil.jpg");
+	}
+
+	public PointLight getPointLight() {
+		return headLight;
 	}
 
 	public Lamp(GL3 gl, Camera camera, Light light, Size size) {
@@ -58,7 +64,7 @@ public class Lamp {
 		Material baseMaterial = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
 
 		// Create the light
-		Light headLight = new Light(gl);
+		headLight = new PointLight(gl);
 		headLight.setCamera(camera);
 
 		// Define the arms & joints

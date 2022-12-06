@@ -12,14 +12,17 @@ import com.jogamp.opengl.util.texture.*;
  * of the scene, i.e. the floor and the walls
  */
 
+// TODO add point lights in here
+
 public class Room {
 
     private Model floor, wall, window;
     public static Float wallSize = 16f;
     private SGNode roomRoot;
     private Light light;
+    private PointLight[] lampLights;
     private Table table;
-            private Lamp lamp1;
+    private Lamp lamp1;
 
     private double startTime;
 
@@ -38,6 +41,7 @@ public class Room {
 
         loadTextures(gl);
         startTime = getSeconds();
+        lampLights = new PointLight[2];
 
 
         Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
@@ -62,6 +66,10 @@ public class Room {
         table  = new Table(gl, camera, light);
 
         lamp1 = new Lamp(gl, camera, light, Lamp.Size.SMALL);
+        lampLights[0] = lamp1.getPointLight();
+        //TODO remove
+        lampLights[1] = lamp1.getPointLight();
+
 
         // Create models for the floor & wall
         floor = new Model(gl, camera, light, shader, floorMaterial, new Mat4(), mesh, textures[0]);
@@ -132,6 +140,8 @@ public class Room {
         double elapsedTime = getSeconds()-startTime;
         table.makeEggJump(elapsedTime);
         lamp1.move(elapsedTime);
+
+        table.setPointLights(gl,lampLights);
         roomRoot.draw(gl);
         light.render(gl);
 

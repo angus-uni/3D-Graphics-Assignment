@@ -2,9 +2,9 @@ import com.jogamp.opengl.*;
 
 public class LightNode extends SGNode {
 
-	protected Light light;
+	protected PointLight light;
 
-	public LightNode(String name, Light l) {
+	public LightNode(String name, PointLight l) {
 		super(name);
 		light = l;
 	}

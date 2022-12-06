@@ -48,8 +48,9 @@ class Garden {
         Shader shader = new Shader(gl, "shaders/tt_vs.glsl", "shaders/tt_fs.glsl");
         Material wallMaterial = new Material(new Vec3(0.76f, 0.62f, 0.51f), new Vec3(0.84f,  0.71f,  0.59f), new Vec3(0.3f, 0.3f, 0.3f), 1.0f);
 
-        // Create a light in the top left
-        sun = new Light(gl);
+        // Create a sun at the top of the garden, (this should have a yellow tinge)
+        Vec3 sunColour = new Vec3(0.99216f,  0.98039f,  0.84314f);
+        sun = new Light(gl, sunColour, sunColour, sunColour);
         sun.setCamera(camera);
         sun.setPosition(0,wallSize-(wallSize/nudegeDown),-(Room.wallSize/2));
 

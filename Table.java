@@ -182,10 +182,16 @@ public class Table {
 		return tableRoot;
 	}
 
-	public void setLights(GL3 gl){
+	public void setPointLights(GL3 gl, PointLight[] pointLights){
 		eggShader.use(gl);
-		eggShader.setFloat(gl, "offset", cloudPos.x, cloudPos.y);
-		eggShader.setFloat(gl, "pointLights[0].constant", 1.0f);
+		for (int i = 0; i < pointLights.length; i++) {
+			PointLight p = pointLights[i];
+			Vec3 equation = p.equation();
+			eggShader.setFloat(gl,String.format("pointLights[%s].quadratic", i), equation.x);
+			eggShader.setFloat(gl,String.format("pointLights[%s].linear", i), equation.y);
+			eggShader.setFloat(gl,String.format("pointLights[%s].constant", i), equation.z);
+		}
+
 	}
 
 	public void makeEggJump(double elapsedTime) {

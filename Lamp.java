@@ -33,7 +33,7 @@ public class Lamp {
 	}
 
 
-	private Model baseCube, armSphere, jointSphere, headCube;
+	private Model baseCube, armSphere, jointSphere, headCube, eyeSphere;
 	private SGNode lampRoot;
 	private Texture[] textures;
 	private PointLight headLight;
@@ -71,6 +71,7 @@ public class Lamp {
 		headCube = new Model(gl, camera, worldLights, multiShader, baseMaterial, new Mat4(1), cubeMesh, textures[1]);
 		armSphere = new Model(gl, camera, worldLights, multiShader, armMaterial, new Mat4(1), sphereMesh, textures[0]);
 		jointSphere = new Model(gl, camera, worldLights, multiShader, armMaterial, new Mat4(1), sphereMesh, textures[0]);
+		eyeSphere = new Model(gl, camera, worldLights, multiShader, armMaterial, new Mat4(1), sphereMesh, textures[0]); // TODO change this
 
 		// ================== Transformations ====================
 
@@ -93,6 +94,8 @@ public class Lamp {
 		float lightWidth = 0.033f*height;
 		float lightHeight = 0.033f*height;
 		float lightDepth = 0.033f*height;
+
+		float eyeRadius = headDepth/1.5f;
 
 
 		// Create root
@@ -186,6 +189,25 @@ public class Lamp {
 				TransformNode makeHead = new TransformNode("Make the head", m);
 				ModelNode headShape = new ModelNode("Head of lamp", headCube);
 
+
+			NameNode eye1 = new NameNode("Eyeball 1");
+				m = Mat4Transform.translate(-headWidth/2+(eyeRadius/2),headHeight,headDepth/2);
+				TransformNode positionEye1 = new TransformNode("Move eyeball 1 into position", m);
+
+				m = Mat4.multiply(Mat4Transform.scale(eyeRadius,eyeRadius,eyeRadius), Mat4Transform.translate(0,0.5f,0));
+				TransformNode makeEye = new TransformNode("Make the eyeball", m);
+				ModelNode eyeShape = new ModelNode("Eye of lamp", eyeSphere);
+
+			NameNode eye2 = new NameNode("Eyeball 1");
+				m = Mat4Transform.translate(-headWidth/2+(eyeRadius/2),headHeight,-headDepth/2);
+				TransformNode positionEye2 = new TransformNode("Move eyeball 2 into position", m);
+
+				m = Mat4.multiply(Mat4Transform.scale(eyeRadius,eyeRadius,eyeRadius), Mat4Transform.translate(0,0.5f,0));
+					TransformNode makeEye2 = new TransformNode("Make the eyeball", m);
+					ModelNode eyeShape2 = new ModelNode("Eye of lamp", eyeSphere);
+
+
+
 		// Create the light for the lamp
 		NameNode lampLight = new NameNode("Lamp light");
 
@@ -221,10 +243,19 @@ public class Lamp {
 												headRotate.addChild(head);
 													head.addChild(makeHead);
 														makeHead.addChild(headShape);
+													head.addChild(positionEye1);
+														positionEye1.addChild(eye1);
+															eye1.addChild(makeEye);
+																makeEye.addChild(eyeShape); // TODO improve reuse here (duplication)
+													head.addChild(positionEye2);
+														positionEye2.addChild(eye2);
+															eye2.addChild(makeEye2);
+																makeEye2.addChild(eyeShape2);
 													head.addChild(positionLight);
 														positionLight.addChild(lampLight);
 															lampLight.addChild(makeLight);
 																makeLight.addChild(lightShape);
+
 
 		lampRoot.update();  // IMPORTANT - don't forget this
 

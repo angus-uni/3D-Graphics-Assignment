@@ -54,13 +54,13 @@ public class Room {
 
         // Lamp 1 (left hand side)
         Mat4 initialPosition = Mat4Transform.translate(-3,0,0);
-        Lamp lamp1 = new Lamp(gl, camera, worldLights, multiShader, Lamp.Size.SMALL, initialPosition);
+        Lamp lamp1 = new Lamp(gl, camera, worldLights, multiShader, Lamp.Size.SMALL, initialPosition, getLamp1Poses());
         lampLights[0] = lamp1.getSpotLight();
         lamps[0] = lamp1;
 
         // Lamp 2 (right hand side)
         initialPosition = Mat4.multiply(Mat4Transform.translate(4,0,0), Mat4Transform.rotateAroundY(180));
-        Lamp lamp2 = new Lamp(gl, camera, worldLights, multiShader, Lamp.Size.MEDIUM, initialPosition);
+        Lamp lamp2 = new Lamp(gl, camera, worldLights, multiShader, Lamp.Size.MEDIUM, initialPosition, getLamp2Poses());
         lampLights[1] = lamp2.getSpotLight();
         lamps[1] = lamp2;
 
@@ -147,6 +147,32 @@ public class Room {
                 rightWall.addChild(rightWallTransform);
                     rightWallTransform.addChild(rightWallShape);
         roomRoot.update();
+    }
+
+    private Poses getLamp2Poses() {
+
+        LampPose pose1 = new LampPose(Mat4Transform.rotateAroundZ(30), Mat4Transform.rotateAroundZ(-65),
+                LampPose.noTransform);
+
+        LampPose pose2 = new LampPose(Mat4Transform.rotateAroundY(45), Mat4Transform.rotateAroundZ(-30),
+                Mat4Transform.rotateAroundZ(-30));
+
+        LampPose pose3 = new LampPose(LampPose.noTransform, Mat4Transform.rotateAroundY(80),
+                Mat4Transform.rotateAroundX(45));
+        return new Poses(pose1, pose2, pose3);
+    }
+
+    private Poses getLamp1Poses() {
+        // TODO change these
+        LampPose pose1 = new LampPose(Mat4Transform.rotateAroundZ(30), Mat4Transform.rotateAroundZ(-65),
+                LampPose.noTransform);
+
+        LampPose pose2 = new LampPose(Mat4Transform.rotateAroundY(45), Mat4Transform.rotateAroundZ(-30),
+                Mat4Transform.rotateAroundZ(-30));
+
+        LampPose pose3 = new LampPose(LampPose.noTransform, Mat4Transform.rotateAroundY(80),
+                Mat4Transform.rotateAroundX(45));
+        return new Poses(pose1, pose2, pose3);
     }
 
     public void render(GL3 gl, double elapsedTime) {

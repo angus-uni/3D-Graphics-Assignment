@@ -104,8 +104,28 @@ public class Hatch extends JFrame implements ActionListener {
       glEventListener.getScene().toggleLamp(1);
     }
 
+    else if (e.getActionCommand().equalsIgnoreCase("A1")) {
+      glEventListener.getScene().animateLamp(0, 0);
+    }
+
+    else if (e.getActionCommand().equalsIgnoreCase("A2")) {
+      glEventListener.getScene().animateLamp(0, 1);
+    }
+
+    else if (e.getActionCommand().equalsIgnoreCase("A3")) {
+      glEventListener.getScene().animateLamp(0, 2);
+    }
+
     else if (e.getActionCommand().equalsIgnoreCase("B1")) {
-      glEventListener.getScene().animateLamp(1,1);
+      glEventListener.getScene().animateLamp(1, 0);
+    }
+
+    else if (e.getActionCommand().equalsIgnoreCase("B2")) {
+      glEventListener.getScene().animateLamp(1, 1);
+    }
+
+    else if (e.getActionCommand().equalsIgnoreCase("B3")) {
+      glEventListener.getScene().animateLamp(1, 2);
     }
 
 

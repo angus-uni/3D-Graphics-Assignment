@@ -47,6 +47,7 @@ public class Lamp {
 	private SpotLight headLight;
 	private TransformNode jointRotate, headRotate, baseRotate;
 	private TransformNode[] eyeRotateNodes, positionEyeStems;
+	private Poses poses;
 
 
 	/**
@@ -74,9 +75,10 @@ public class Lamp {
 	 * @param size - Enum representing the size this lamp should be
 	 * @param initialPosition - A matrix that defines the initial position of the lamp
 	 */
-	public Lamp(GL3 gl, Camera camera, Light[] worldLights, Shader multiShader, Size size, Mat4 initialPosition) {
+	public Lamp(GL3 gl, Camera camera, Light[] worldLights, Shader multiShader, Size size, Mat4 initialPosition, Poses poses) {
 
 		loadTextures(gl);
+		this.poses = poses;
 
 		// Define our base & head info
 		Mesh cubeMesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
@@ -349,28 +351,14 @@ public class Lamp {
 	}
 
 	public void animate(int pose){
-		// TODO convert pose to enum?
 
-		Mat4 empty = new Mat4(1);
-		switch(pose){
+		LampPose currentPose = poses.getPose(pose);
 
-			// Inspection pose
-			case 1:
-				// Rotate forward 20 degrees
-				baseRotate.setTransform(Mat4Transform.rotateAroundZ(30));
-				// Rotate back -15 degrees
-				jointRotate.setTransform(Mat4Transform.rotateAroundZ(-65));
-				// Leave head level
-				headRotate.setTransform(empty);
-				break;
-
-			// Set to original no transformations
-			default:
-				baseRotate.setTransform(empty);
-				jointRotate.setTransform(empty);
-				headRotate.setTransform(empty);
-				lampRoot.update();
-		}
+		// Update the transforms
+		baseRotate.setTransform(currentPose.getBaseTransform());
+		jointRotate.setTransform(currentPose.getArmTransform());
+		headRotate.setTransform(currentPose.getHeadTransform());
+		lampRoot.update();
 
 	}
 

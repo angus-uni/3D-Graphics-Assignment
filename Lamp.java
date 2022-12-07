@@ -340,12 +340,7 @@ public class Lamp {
 	}
 
 	public void move(double elapsedTime){
-		float rotateAngle = -(float)(Math.sin(elapsedTime)*25);
 		float eyeRotate = -(float)(Math.cos(elapsedTime)*15);
-
-//		jointRotate.setTransform(Mat4Transform.rotateAroundZ(rotateAngle));
-//		headRotate.setTransform(Mat4Transform.rotateAroundX(-rotateAngle));
-//		baseRotate.setTransform(Mat4Transform.rotateAroundY(rotateAngle));
 
 		// Move the eyes on the lamp
 		for (int i = 0; i < eyeRotateNodes.length; i++){
@@ -358,9 +353,9 @@ public class Lamp {
 
 	public void animate(int pose, double elapsedTime){
 
-		LampPose currentPose = poses.getPose(pose);
+		// TODO use elapsedTime to animate transformations
 
-		float factor = (float) Math.sin(elapsedTime);
+		LampPose currentPose = poses.getPose(pose);
 
 		// Update the transforms
 		baseRotate.setTransform(currentPose.getBaseTransform());

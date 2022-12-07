@@ -26,8 +26,6 @@ public class SpotLight extends Light {
   }
 
 
-
-
   public Vec3 getEquation()
   {
     return equation;

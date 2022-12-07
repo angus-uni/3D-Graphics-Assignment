@@ -127,7 +127,8 @@ public class Light {
 
   public void render(GL3 gl, Mat4 worldTransform) {
 
-    // We can get the x vector direction here
+    this.position = worldTransform.getPosition();
+
     Mat4 mvpMatrix = Mat4.multiply(camera.getPerspectiveMatrix(), Mat4.multiply(camera.getViewMatrix(), worldTransform));
     
     shader.use(gl);

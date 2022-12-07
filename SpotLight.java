@@ -1,5 +1,6 @@
 import com.jogamp.common.nio.*;
 import com.jogamp.opengl.*;
+import gmaths.Mat4;
 import gmaths.Vec3;
 
 public class SpotLight extends Light {
@@ -21,6 +22,11 @@ public class SpotLight extends Light {
     return equation;
   }
 
+  @Override
+  public void render(GL3 gl, Mat4 worldTransform) {
+    super.render(gl, worldTransform);
+    this.direction = worldTransform.getXDirection();
+  }
 
   public float getCutoff()
   {

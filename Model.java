@@ -107,6 +107,8 @@ public class Model {
       for (int i = 0; i < spotLights.length; i++) {
         SpotLight currentLight = spotLights[i];
 
+        System.out.println(currentLight.getDirection());
+
         shader.setVec3(gl, String.format("SpotLights[%s].position", i), currentLight.getPosition());
         shader.setVec3(gl, String.format("SpotLights[%s].ambient", i), currentLight.getMaterial().getAmbient());
         shader.setVec3(gl, String.format("SpotLights[%s].diffuse", i), currentLight.getMaterial().getDiffuse());

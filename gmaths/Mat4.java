@@ -16,10 +16,14 @@ public class Mat4 {   // row column formulation
     }
   }
 
-  public Vec3 getPosition(){
+  public Vec3 getXDirection(){
+    return new Vec3(values[0][0], values[1][0], values[2][0]);
+  }
+
+  public Vec3 getPosition() {
     return new Vec3(values[0][3], values[1][3], values[2][3]);
   }
-  
+
   public Mat4(Mat4 m) {
     this.values = new float[4][4];
     for (int i=0; i<4; ++i) {

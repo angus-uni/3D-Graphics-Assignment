@@ -131,7 +131,7 @@ public class Lamp {
 		// Create the base of the lamp
 		NameNode base = new NameNode("base");
 
-			baseRotate = new TransformNode("Rotate the arm at the base",Mat4Transform.rotateAroundY(90));
+			baseRotate = new TransformNode("Rotate the arm at the base",Mat4Transform.rotateAroundY(0));
 
 
 			Mat4 m = Mat4.multiply(Mat4Transform.scale(baseWidth,baseHeight,baseDepth), Mat4Transform.translate(0,0.5f,0));
@@ -167,7 +167,7 @@ public class Lamp {
 			TransformNode positionJoint = new TransformNode("Move joint 1 into position", m);
 
 			// Rotate transform
-			jointRotate = new TransformNode("Rotate the joint",Mat4Transform.rotateAroundZ(90));
+			jointRotate = new TransformNode("Rotate the joint",Mat4Transform.rotateAroundZ(0));
 
 			m = Mat4.multiply(Mat4Transform.scale(jointRadius,jointRadius,jointRadius), Mat4Transform.translate(0,0.5f,0));
 				TransformNode makeJoint = new TransformNode("Create joint 1", m);
@@ -215,7 +215,7 @@ public class Lamp {
 			m = Mat4Transform.translate(0,armHeight,0);
 			TransformNode positionHead = new TransformNode("Move head into position", m);
 
-			headRotate = new TransformNode("Tilt the head of the lamp",Mat4Transform.rotateAroundZ(15));
+			headRotate = new TransformNode("Tilt the head of the lamp",Mat4Transform.rotateAroundZ(0));
 
 			m = Mat4.multiply(Mat4Transform.scale(headWidth,headHeight,headDepth), Mat4Transform.translate(0,0.5f,0));
 				TransformNode makeHead = new TransformNode("Make the head", m);

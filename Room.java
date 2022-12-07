@@ -9,9 +9,9 @@ import com.jogamp.opengl.util.texture.*;
 
 /**
  * Room class to represent the room
- * of the scene, i.e. the floor and the walls
+ * of the scene, the room contains
+ * the table and egg etc
  */
-
 
 public class Room {
 
@@ -40,7 +40,6 @@ public class Room {
         Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
         Shader windowShader = new Shader(gl, "shaders/window_vs.glsl", "shaders/window_fs.glsl");
 
-
         // The floor is going to be wood, this should be pretty matte
         Material floorMaterial = new Material();
 
@@ -67,7 +66,6 @@ public class Room {
 
         //Create a table object
         table  = new Table(gl, camera, worldLights, lampLights, multiShader);
-
 
 
         // Create models for the floor & wall
@@ -118,12 +116,24 @@ public class Room {
                 TransformNode rightWallTransform = new TransformNode("Right wall transform", m);
                 ModelNode rightWallShape = new ModelNode("Right wall shape", wall);
 
+        float lightSize = 0.9f;
+            LightNode roomLightNode = new LightNode("Light", worldLights[0]);
+                m = Mat4Transform.translate(0,Room.wallSize,0);
+                TransformNode positionLight = new TransformNode("Position light",m);
+
+                m = Mat4Transform.scale(new Vec3(lightSize));
+                TransformNode scaleLight = new TransformNode("Scale light",m);
+
 
         // Create Hierarchy
         roomRoot.addChild(roomMoveTransform);
             roomMoveTransform.addChild(table.getRoot());
             roomMoveTransform.addChild(lamp1.getRoot());
             roomMoveTransform.addChild(lamp2.getRoot());
+            roomMoveTransform.addChild(positionLight);
+                positionLight.addChild(scaleLight);
+                    scaleLight.addChild(roomLightNode);
+
             roomMoveTransform.addChild(floorNode);
                 floorNode.addChild(floorTransform);
                     floorTransform.addChild(floorShape);
@@ -139,8 +149,8 @@ public class Room {
         roomRoot.update();
     }
 
-
     public void render(GL3 gl, double elapsedTime) {
+
         // Activate egg animation
         table.makeEggJump(elapsedTime);
 

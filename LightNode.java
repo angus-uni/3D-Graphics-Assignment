@@ -3,15 +3,11 @@ import gmaths.Vec3;
 
 public class LightNode extends SGNode {
 
-	protected SpotLight light;
+	protected Light light;
 
-	public LightNode(String name, SpotLight l) {
+	public LightNode(String name, Light l) {
 		super(name);
 		light = l;
-	}
-
-	public void setSize(Vec3 size){
-		light.setSize(size);
 	}
 
 	public void draw(GL3 gl) {

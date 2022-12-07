@@ -18,7 +18,7 @@ public class MagicMaterial extends Material{
 		double seconds = getSeconds();
 		float rScalar = (float) Math.abs(Math.sin(seconds));
 		float gScalar = (float) Math.abs(Math.cos(seconds));
-		float bScalar = rScalar > gScalar ? rScalar/gScalar : gScalar/rScalar;
+		float bScalar = (float) Math.abs(Math.sin(seconds));
 		bScalar = (float) Math.abs(Math.sin(bScalar));
 
 		return new Vec3(colourVector.x*rScalar,colourVector.y*gScalar,colourVector.z*bScalar);

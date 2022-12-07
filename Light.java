@@ -12,17 +12,28 @@ public class Light {
   private Camera camera;
   private Vec3[] lightValues;
   protected boolean on;
-  private Vec3 size;
+  private Vec3 size, lightOnColour, lightOffColour;
 
-  public Light(GL3 gl,Vec3 ambient, Vec3 diffuse, Vec3 specular, Vec3 size) {
+
+  public Light(GL3 gl,Vec3 ambient, Vec3 diffuse, Vec3 specular, Vec3 size, Vec3 lightOnColour, Vec3 lightOffColour) {
     lightValues = new Vec3[3];
     lightValues[0] = ambient;
     lightValues[1] = diffuse;
     lightValues[2] = specular;
     this.size = size;
+    this.lightOnColour = lightOnColour;
+    this.lightOffColour = lightOffColour;
     initialise(gl);
   }
+  public Light(GL3 gl,Vec3 ambient, Vec3 diffuse, Vec3 specular, Vec3 size)
+  {
+    this(gl, ambient, diffuse, specular, size, new Vec3(1), new Vec3(0));
+  }
 
+  public Light(GL3 gl,Vec3 ambient, Vec3 diffuse, Vec3 specular, Vec3 size, Vec3 lightOnColour)
+  {
+    this(gl, ambient, diffuse, specular, size, lightOnColour, new Vec3(0));
+  }
 
   public Light(GL3 gl) {
     this(gl,new Vec3(0.5f,0.5f,0.5f),new Vec3(0.8f,0.8f,0.8f),new Vec3(0.8f,0.8f,0.8f),
@@ -133,7 +144,7 @@ public class Light {
     
     shader.use(gl);
     shader.setFloatArray(gl, "mvpMatrix", mvpMatrix.toFloatArrayForGLSL());
-    shader.setVec3(gl, "lightColour", on ? new Vec3(1) : new Vec3(0));
+    shader.setVec3(gl, "lightColour", on ? lightOnColour: lightOffColour);
 
 
     gl.glBindVertexArray(vertexArrayId[0]);

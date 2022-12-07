@@ -80,7 +80,7 @@ public class Model {
 
     // ============ Set the lighting for each world light =================
 
-    // Only render a uniform array if we need to so we can reuse this with other shaders
+    // Only render a uniform array if we need so we can reuse this with other shaders
 
     // TODO maybe extend shader class to handle more lights?
     if (worldLights.length > 1) {
@@ -106,8 +106,6 @@ public class Model {
     {
       for (int i = 0; i < spotLights.length; i++) {
         SpotLight currentLight = spotLights[i];
-
-        System.out.println(currentLight.getDirection());
 
         shader.setVec3(gl, String.format("SpotLights[%s].position", i), currentLight.getPosition());
         shader.setVec3(gl, String.format("SpotLights[%s].ambient", i), currentLight.getMaterial().getAmbient());

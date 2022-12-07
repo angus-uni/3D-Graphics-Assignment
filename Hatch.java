@@ -42,27 +42,38 @@ public class Hatch extends JFrame implements ActionListener {
         quitItem.addActionListener(this);
         fileMenu.add(quitItem);
     menuBar.add(fileMenu);
-    
+
+    // Top
+    JPanel f = new JPanel();
+
+    this.add(f, BorderLayout.SOUTH);
+
+    // Top Panel
     JPanel p = new JPanel();
 
-      // Add the buttons to toggle the lights
-      JButton b = new JButton("Toggle room light");
-      b.addActionListener(this);
-      p.add(b);
+      String[] buttonNames = new String[]{"Toggle room light", "Toggle sun", "Toggle lamp 1","Toggle lamp 2"};
+      JButton b;
 
-      b = new JButton("Toggle sun");
-      b.addActionListener(this);
-      p.add(b);
+      for (String buttonName: buttonNames) {
+        b = new JButton(buttonName);
+        b.addActionListener(this);
+        p.add(b);
+      }
 
-    b = new JButton("Toggle lamp 1");
-    b.addActionListener(this);
-    p.add(b);
+    f.add(p, BorderLayout.NORTH);
 
-    b = new JButton("Toggle Lamp 2");
-    b.addActionListener(this);
-    p.add(b);
+    // Second Panel
+    JPanel p2 = new JPanel();
 
-    this.add(p, BorderLayout.SOUTH);
+    buttonNames = new String[]{"Change lamp 1 pos"};
+
+      for (String buttonName: buttonNames) {
+        b = new JButton(buttonName);
+        b.addActionListener(this);
+        p.add(b);
+      }
+
+    f.add(p2, BorderLayout.SOUTH);
     
     addWindowListener(new WindowAdapter() {
       public void windowClosing(WindowEvent e) {

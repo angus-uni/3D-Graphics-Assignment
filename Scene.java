@@ -10,8 +10,8 @@ import com.jogamp.opengl.util.texture.*;
 
 /**
  * The Scene class represents
- * the whole scene and stores global
- * data such as lights
+ * the whole scene and manages
+ * global objects such as world lights
  */
 
 public class Scene {
@@ -29,20 +29,22 @@ public class Scene {
 		// Time
 		startTime = getSeconds();
 
-		// Create the lights for our scene
+		// Create the lights for our scene (sun should be slightly yellow)
 		Vec3 whiteLight = new Vec3(1,1,1);
 		Light roomLight = new Light(gl, Vec3.multiply(whiteLight, 0.2f),Vec3.multiply(whiteLight, 0.3f),whiteLight,
 				new Vec3(0.3f));
+
+		// Colour the user see's when they look at the sun
+		Vec3 sunActualColour = new Vec3(1, 0.92f, 0.07f);
+		// Colour of the light rays
 		Vec3 sunColour = new Vec3(1,  0.98f,  0.78f);
 		Light sun = new Light(gl,Vec3.multiply(sunColour, 0.3f),Vec3.multiply(sunColour, 0.6f),whiteLight,
-				new Vec3(0.8f));
+				new Vec3(0.8f), sunActualColour);
 
 
-		// Position & setup lights
+		// Setup lights
 		roomLight.setCamera(camera);
-		roomLight.setPosition(0,Room.wallSize,0);
 		sun.setCamera(camera);
-		sun.setPosition(0,Garden.wallSize-(Garden.wallSize/Garden.nudegeDown),-(Room.wallSize/2));
 
 
 		// Store our world lights

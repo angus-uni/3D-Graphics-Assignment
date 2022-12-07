@@ -15,7 +15,7 @@ class Garden {
     public static float nudegeDown = 6;
     private float nudgeBack = (wallSize/2)-(Room.wallSize/2);
 
-    private Texture skybox, cloudTexture;
+    private Texture cloudTexture;
     private Texture[] textures;
     private Model[] walls;
 
@@ -32,8 +32,6 @@ class Garden {
         textures[4] = TextureLibrary.loadTexture(gl, "textures/skybox/right.jpg");
 
         cloudTexture = TextureLibrary.loadTexture(gl, "textures/cloud.png");
-        // TODO
-        //skybox = Cubemap.loadFromStreams(gl, getClass().getClassLoader(),"park_", "jpg", true);
     }
 
     public Garden(GL3 gl, Camera c, Light sun) {
@@ -100,11 +98,21 @@ class Garden {
             TransformNode rightWallTransform = new TransformNode("Right wall transform", m);
                     ModelNode rightWallShape = new ModelNode("Right wall shape", walls[4]);
 
+        float sunSize = 1.5f;
+        // Attach the sun to this scene
+        LightNode sunNode = new LightNode("Light", sun);
+            m = Mat4Transform.translate(0,Garden.wallSize-(sunSize/2),-(Room.wallSize/2));
+            TransformNode positionSun = new TransformNode("Position light",m);
 
+            m = Mat4Transform.scale(new Vec3(sunSize));
+            TransformNode scaleSun = new TransformNode("Scale light",m);
 
 
         // Create Hierarchy
         roomRoot.addChild(roomMoveTransform);
+            roomMoveTransform.addChild(positionSun);
+                positionSun.addChild(scaleSun);
+                    scaleSun.addChild(sunNode);
             roomMoveTransform.addChild(floorNode);
                 floorNode.addChild(floorTransform);
                     floorTransform.addChild(floorShape);

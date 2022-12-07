@@ -10,12 +10,19 @@ import gmaths.Vec3;
 
 /**
  * Class represents a lamp
- * in the scene
+ * in the scene, the lamps
+ * in my scene are supposed
+ * to be snails with two moving eyes
+ * and a big shell on it's back
  */
 
 public class Lamp {
 
-
+	/**
+	 * An enum to store
+	 * the sizes of available
+	 * lamps
+	 */
 	enum Size {
 		SMALL(6),
 		MEDIUM(9),
@@ -42,6 +49,11 @@ public class Lamp {
 	private TransformNode[] positionEyeStems;
 
 
+	/**
+	 * Load the textures for the lamp, we reuse
+	 * some textures from the table
+	 * @param gl
+	 */
 	private void loadTextures(GL3 gl) {
 		textures = new Texture[3];
 		textures[0] = TextureLibrary.loadTexture(gl, "textures/scales.jpg");
@@ -54,12 +66,12 @@ public class Lamp {
 	}
 
 	/**
-	 * The Lamp class
+	 * The Lamp class, (A snail)
 	 * @param gl
-	 * @param camera
-	 * @param worldLights
-	 * @param multiShader
-	 * @param size
+	 * @param camera - Camera
+	 * @param worldLights - world lights for our scene
+	 * @param multiShader - The multi light shader
+	 * @param size - Enum representing the size this lamp should be
 	 * @param initialPosition - A matrix that defines the initial position of the lamp
 	 */
 	public Lamp(GL3 gl, Camera camera, Light[] worldLights, Shader multiShader, Size size, Mat4 initialPosition) {
@@ -94,6 +106,7 @@ public class Lamp {
 
 		// ================== Transformations ====================
 
+		// All measurements are based on the enum size
 		int height = size.getHeight();
 
 		float baseWidth = 0.2f*height;
@@ -141,15 +154,11 @@ public class Lamp {
 		// Create the arm of the lamp
 		NameNode arm1 = new NameNode("arm 1");
 
-			/*
-			 - Translate our sphere to the surface
-			 - Scale it into an arm
-			 - move into position
-			 */
-
+			// Move into position
 			m = Mat4Transform.translate(0,baseHeight/2,0);
 			TransformNode positionArm1 = new TransformNode("Move arm 1 into position", m);
 
+			// Construct the arm
 			m = Mat4.multiply(Mat4Transform.scale(armWidth,armHeight,armDepth), Mat4Transform.translate(0,0.5f,0));
 				TransformNode makeArm1 = new TransformNode("Make arm 1", m);
 					ModelNode arm1Shape = new ModelNode("Arm 1 of lamp", armSphere);
@@ -157,18 +166,14 @@ public class Lamp {
 		// Create the joint of the lamp
 		NameNode joint1 = new NameNode("Joint 1");
 
-			/*
-			 - Translate our sphere to the surface
-			 - Scale it into an arm
-			 - move into position
-			 */
-
+			// Move into position
 			m = Mat4Transform.translate(0,armHeight-(jointRadius/2),0);
 			TransformNode positionJoint = new TransformNode("Move joint 1 into position", m);
 
-			// Rotate transform
+			// Create a rotation node so we can rotate the joint
 			jointRotate = new TransformNode("Rotate the joint",Mat4Transform.rotateAroundZ(0));
 
+			// Build the actual joint sphere
 			m = Mat4.multiply(Mat4Transform.scale(jointRadius,jointRadius,jointRadius), Mat4Transform.translate(0,0.5f,0));
 				TransformNode makeJoint = new TransformNode("Create joint 1", m);
 					ModelNode joint1Shape = new ModelNode("Joint 1 of lamp", jointSphere);
@@ -176,9 +181,11 @@ public class Lamp {
 		// Create the shell of the snail
 		NameNode shell = new NameNode("Shell");
 
+			// Move the shell into position (It should merge around the second arm)
 			m = Mat4Transform.translate(-shellRadius/2,0,0);
 			TransformNode positionShell = new TransformNode("Move shell into position", m);
 
+			// Build the shell
 			m = Mat4.multiply(Mat4Transform.scale(shellRadius, shellRadius, shellRadius), Mat4Transform.translate(0,0.5f,0));
 				TransformNode makeShell = new TransformNode("Make the shell", m);
 				ModelNode shellShape = new ModelNode("Shell of the lamp", shellSphere);
@@ -187,36 +194,29 @@ public class Lamp {
 		// Create the arm of the lamp
 		NameNode arm2 = new NameNode("arm 2");
 
-			/*
-			 - Translate our sphere to the surface
-			 - Scale it into an arm
-			 - move into position
-			 */
+			// Move the second arm of the lamp into position
+			m = Mat4Transform.translate(0,0,0);
+			TransformNode positionArm2 = new TransformNode("Move arm into position", m);
 
-		m = Mat4Transform.translate(0,0,0);
-		TransformNode positionArm2 = new TransformNode("Move arm into position", m);
-
-		m = Mat4.multiply(Mat4Transform.scale(armWidth,armHeight,armDepth), Mat4Transform.translate(0,0.5f,0));
-			TransformNode makeArm2 = new TransformNode("Make arm 2", m);
-				ModelNode arm2Shape = new ModelNode("Arm 2 of lamp", armSphere);
-
+			// Build the arm
+			m = Mat4.multiply(Mat4Transform.scale(armWidth,armHeight,armDepth), Mat4Transform.translate(0,0.5f,0));
+				TransformNode makeArm2 = new TransformNode("Make arm 2", m);
+					ModelNode arm2Shape = new ModelNode("Arm 2 of lamp", armSphere);
 
 
 
 		// Create the head of the lamp
 		NameNode head = new NameNode("Head");
 
-			/*
-			 - Translate our cube to the surface
-			 - Scale it into an arm
-			 - move into position
-			 */
 
+			// Position the head of the lamp
 			m = Mat4Transform.translate(0,armHeight,0);
 			TransformNode positionHead = new TransformNode("Move head into position", m);
 
+			// Create a node to allow us to tilt the head of the lamp
 			headRotate = new TransformNode("Tilt the head of the lamp",Mat4Transform.rotateAroundZ(0));
 
+			// Build the head
 			m = Mat4.multiply(Mat4Transform.scale(headWidth,headHeight,headDepth), Mat4Transform.translate(0,0.5f,0));
 				TransformNode makeHead = new TransformNode("Make the head", m);
 				ModelNode headShape = new ModelNode("Head of lamp", headCube);
@@ -263,6 +263,7 @@ public class Lamp {
 								eye.addChild(makeEye);
 									makeEye.addChild(eyeShape);
 
+				// Store the nodes in arrays
 				eyeRotateNodes[i] = eyeRotateNode;
 				positionEyeStems[i] = positionEyeStem;
 
@@ -277,11 +278,9 @@ public class Lamp {
 				m = Mat4Transform.translate((headWidth/2)+(lightWidth/2),(headHeight/2)-(lightHeight/2),0);
 				TransformNode positionLight = new TransformNode("Move light into position", m);
 
-				// TODO this transformation doesnt really do anything, maybe integrate light with SGNodes?
 				m = Mat4.multiply(Mat4Transform.scale(lightWidth,lightHeight,lightDepth), Mat4Transform.translate(0,0.5f,0));
 					TransformNode makeLight = new TransformNode("Make the light for the lamp", m);
 					LightNode lightShape = new LightNode("Light of lamp", headLight);
-					lightShape.setSize(new Vec3(lightWidth,lightHeight,lightDepth));
 
 
 

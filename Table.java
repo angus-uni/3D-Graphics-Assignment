@@ -7,11 +7,11 @@ import com.jogamp.opengl.util.texture.*;
 
 import gmaths.Mat4;
 import gmaths.Mat4Transform;
-import gmaths.Vec3;
 
 /**
  * Class represents the table
- * in the scene
+ * in the scene, the table contains
+ * the egg
  */
 
 public class Table {
@@ -19,7 +19,9 @@ public class Table {
 	private Model tableCube, legCube, eggSphere;
 	private SGNode tableRoot;
 	private Texture[] textures;
-	private float eggJumpHeightFactor = 2.5f;
+	private float eggJumpHeightFactor = 0.3f;
+	private float eggJumpSpeedFactor = 2.2f;
+	private float eggRotateSpeedFactor = 0.4f;
 	private float tableHeight, eggHeight;
 	private TransformNode eggJumpTransform;
 	private Shader eggShader;
@@ -76,11 +78,7 @@ public class Table {
 		// Create the top of our table & move it to the top
 		NameNode top = new NameNode("top");
 
-			/*
-			 - Translate our cube to the surface
-			 - Scale it into a table-top
-			 - Translate it to above the table legs
-			 */
+			// Make the surface of the table and move it above the leg heights
 			Mat4 m = Mat4.multiply(Mat4Transform.scale(topWidth,topHeight,topDepth), Mat4Transform.translate(0,0.5f,0));
 			m = Mat4.multiply(Mat4Transform.translate(0,legHeight,0), m);
 				TransformNode topTransform = new TransformNode("top transform", m);
@@ -89,11 +87,8 @@ public class Table {
 
 		// Create the base for the egg (on top of the table)
 		NameNode eggBase = new NameNode("egg base");
-			/*
-			 - Translate the cube to the surface
-			 - Scale it to be right size (1/3 of the table-top surface)
-			 - Move it on top of table (leg height + table width)
-			 */
+
+			// Make the base the right size and then move it into position
 			m = Mat4.multiply(Mat4Transform.scale(topWidth/3,topHeight,topDepth/3), Mat4Transform.translate(0,0.5f,0));
 			m = Mat4.multiply(Mat4Transform.translate(0,legHeight+topHeight,0), m);
 				TransformNode baseTransform = new TransformNode("egg transform", m);
@@ -140,11 +135,8 @@ public class Table {
 
 		// Add egg to top of table
 		NameNode eggNode = new NameNode("egg");
-			/*
-			 - Translate the sphere to surface & scale
-			 - Move the egg to the top of our table
-			 */
 
+			// A transform node so we can spin and move our egg
 			eggJumpTransform = new TransformNode("Egg jump", new Mat4(1));
 			TransformNode eggMoveToTable = new TransformNode("Move egg onto table", Mat4Transform.translate(0,tableHeight,0));
 				TransformNode setupEgg = new TransformNode("Setup egg", Mat4.multiply(Mat4Transform.scale(eggHeight/1.4f,eggHeight,eggHeight/1.4f), Mat4Transform.translate(0,0.5f,0)));
@@ -184,12 +176,13 @@ public class Table {
 
 	public void makeEggJump(double elapsedTime) {
 
-		// The egg should jump twice it's height
-		float jumpHeight = (float) ((eggHeight*0.75)*Math.abs(Math.sin(elapsedTime)));
+		// Calculate the translation & rotation of the egg
+		float jumpHeight = (float) ((eggHeight* eggJumpHeightFactor)*Math.abs(Math.sin(elapsedTime*eggJumpSpeedFactor)));
+		float rotateAngle = 360*(float)Math.sin(elapsedTime*eggRotateSpeedFactor);
 
-		//float rotateAngle = 180f+90f*(float)Math.sin(elapsedTime);
-		//eggJumpTransform.setTransform(Mat4Transform.rotateAroundX(rotateAngle));
-		eggJumpTransform.setTransform(Mat4Transform.translate(0, jumpHeight,0));
+		// Apply the transformation
+		Mat4 transform = Mat4.multiply(Mat4Transform.rotateAroundY(rotateAngle), Mat4Transform.translate(0, jumpHeight,0));
+		eggJumpTransform.setTransform(transform);
 		eggJumpTransform.update();
 
 	}

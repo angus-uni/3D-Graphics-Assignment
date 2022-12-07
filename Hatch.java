@@ -65,7 +65,7 @@ public class Hatch extends JFrame implements ActionListener {
     // Second Panel
     JPanel p2 = new JPanel();
 
-    buttonNames = new String[]{"Change lamp 1 pos"};
+    buttonNames = new String[]{"Reset Lamp 1"};
 
       for (String buttonName: buttonNames) {
         b = new JButton(buttonName);
@@ -102,6 +102,12 @@ public class Hatch extends JFrame implements ActionListener {
     else if (e.getActionCommand().equalsIgnoreCase("toggle lamp 2")) {
       glEventListener.getScene().toggleLamp(1);
     }
+
+    else if (e.getActionCommand().equalsIgnoreCase("reset lamp 1")) {
+      glEventListener.getScene().animateLamp(1,5);
+    }
+
+
   }
   
 }

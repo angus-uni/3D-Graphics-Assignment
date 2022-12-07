@@ -40,13 +40,13 @@ public class Lamp {
 	}
 
 
+
 	private Model baseCube, armSphere, jointSphere, headCube, eyeSphere, eyeStemSphere, shellSphere;
 	private SGNode lampRoot;
 	private Texture[] textures;
 	private SpotLight headLight;
 	private TransformNode jointRotate, headRotate, baseRotate;
-	private TransformNode[] eyeRotateNodes;
-	private TransformNode[] positionEyeStems;
+	private TransformNode[] eyeRotateNodes, positionEyeStems;
 
 
 	/**
@@ -171,7 +171,7 @@ public class Lamp {
 			TransformNode positionJoint = new TransformNode("Move joint 1 into position", m);
 
 			// Create a rotation node so we can rotate the joint
-			jointRotate = new TransformNode("Rotate the joint",Mat4Transform.rotateAroundZ(0));
+			jointRotate = new TransformNode("Rotate the joint",Mat4Transform.rotateAroundZ(25));
 
 			// Build the actual joint sphere
 			m = Mat4.multiply(Mat4Transform.scale(jointRadius,jointRadius,jointRadius), Mat4Transform.translate(0,0.5f,0));
@@ -335,9 +335,9 @@ public class Lamp {
 		float rotateAngle = -(float)(Math.sin(elapsedTime)*25);
 		float eyeRotate = -(float)(Math.cos(elapsedTime)*15);
 
-		jointRotate.setTransform(Mat4Transform.rotateAroundZ(rotateAngle));
-		headRotate.setTransform(Mat4Transform.rotateAroundX(-rotateAngle));
-		baseRotate.setTransform(Mat4Transform.rotateAroundY(rotateAngle));
+//		jointRotate.setTransform(Mat4Transform.rotateAroundZ(rotateAngle));
+//		headRotate.setTransform(Mat4Transform.rotateAroundX(-rotateAngle));
+//		baseRotate.setTransform(Mat4Transform.rotateAroundY(rotateAngle));
 
 		// Move the eyes on the lamp
 		for (int i = 0; i < eyeRotateNodes.length; i++){
@@ -346,6 +346,22 @@ public class Lamp {
 		}
 
 		lampRoot.update();
+	}
+
+	public void animate(int pose){
+		// TODO convert pose to enum?
+
+		Mat4 empty = new Mat4(1);
+		switch(pose){
+			case 1:
+				break;
+			default:
+				baseRotate.setTransform(empty);
+				jointRotate.setTransform(empty);
+				headRotate.setTransform(empty);
+				lampRoot.update();
+		}
+
 	}
 
 	public void dispose(GL3 gl) {

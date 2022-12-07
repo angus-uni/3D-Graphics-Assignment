@@ -108,4 +108,8 @@ public class Scene {
 	public void toggleLamp(int i) {
 		room.toggleLamp(i);
 	}
+
+	public void animateLamp(int lampNumber, int pose) {
+		room.animateLamp(lampNumber, pose);
+	}
 }

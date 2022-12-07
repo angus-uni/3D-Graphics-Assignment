@@ -178,4 +178,8 @@ public class Room {
     public void toggleLamp(int i) {
         lamps[i].getSpotLight().toggle();
     }
+
+    public void animateLamp(int lampNumber, int pose) {
+        lamps[lampNumber].animate(pose);
+    }
 }

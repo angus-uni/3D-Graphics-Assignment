@@ -55,16 +55,6 @@ public class Hatch_GLEventListener implements GLEventListener {
     GL3 gl = drawable.getGL().getGL3();
     scene.dispose(gl);
   }
-  
-  
-  // ***************************************************
-  /* INTERACTION
-   *
-   *
-   */
-   
-  private boolean animation = false;
-  private double savedTime = 0;
 
 
   // ***************************************************
@@ -74,13 +64,9 @@ public class Hatch_GLEventListener implements GLEventListener {
    */
 
   private Camera camera;
-  private Mat4 perspective;
-
   private Scene scene;
 
   private void initialise(GL3 gl) {
-    createRandomNumbers();
-
     scene = new Scene(gl, camera);
 
   }
@@ -96,26 +82,4 @@ public class Hatch_GLEventListener implements GLEventListener {
     return scene;
   }
 
-
-
-  // ***************************************************
-  /* TIME
-   */ 
-  
-
-
-  // ***************************************************
-  /* An array of random numbers
-   */ 
-  
-  private int NUM_RANDOMS = 1000;
-  private float[] randoms;
-  
-  private void createRandomNumbers() {
-    randoms = new float[NUM_RANDOMS];
-    for (int i=0; i<NUM_RANDOMS; ++i) {
-      randoms[i] = (float)Math.random();
-    }
-  }
-  
 }

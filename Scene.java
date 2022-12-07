@@ -82,7 +82,6 @@ public class Scene {
 
 	}
 
-
 	public void dispose(GL3 gl) {
 		// Dispose the world lights
 		for (Light worldLight : worldLights) {
@@ -93,16 +92,9 @@ public class Scene {
 		garden.dispose(gl);
 	}
 
-	public void toggleLight()
+	public void toggleLight(int index)
 	{
-		System.out.println("Toggle room light");
-		worldLights[0].toggle();
-	}
-
-	public void toggleSun()
-	{
-		System.out.println("Toggle sun");
-		worldLights[1].toggle();
+		worldLights[index].toggle();
 	}
 
 	public void toggleLamp(int i) {

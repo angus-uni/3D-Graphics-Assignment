@@ -90,10 +90,10 @@ public class Hatch extends JFrame implements ActionListener {
   
   public void actionPerformed(ActionEvent e) {
     if (e.getActionCommand().equalsIgnoreCase("toggle room light")) {
-      glEventListener.getScene().toggleLight();
+      glEventListener.getScene().toggleLight(0);
     }
     else if (e.getActionCommand().equalsIgnoreCase("toggle sun")) {
-      glEventListener.getScene().toggleSun();
+      glEventListener.getScene().toggleLight(1);
     }
 
     else if (e.getActionCommand().equalsIgnoreCase("toggle lamp 1")) {

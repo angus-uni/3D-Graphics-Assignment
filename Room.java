@@ -11,6 +11,7 @@ import com.jogamp.opengl.util.texture.*;
  * Room class to represent the room
  * of the scene, the room contains
  * the table and egg etc
+ * @author Angus Goody
  */
 
 public class Room {

@@ -1,6 +1,11 @@
 import com.jogamp.opengl.*;
 import gmaths.Vec3;
 
+/**
+ * A class to allow lights
+ * to be added to a scene graph
+ * @author Angus Goody
+ */
 public class LightNode extends SGNode {
 
 	protected Light light;

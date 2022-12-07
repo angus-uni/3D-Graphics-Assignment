@@ -14,6 +14,7 @@ import gmaths.Vec3;
  * in my scene are supposed
  * to be snails with two moving eyes
  * and a big shell on it's back
+ * @author Angus Goody
  */
 
 public class Lamp {

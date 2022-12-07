@@ -12,6 +12,7 @@ import com.jogamp.opengl.util.texture.*;
  * to store all the poses
  * an object, currently it only
  * supports lamp poses
+ * @author Angus Goody
  */
 
 public class Poses {

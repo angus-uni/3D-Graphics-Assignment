@@ -13,6 +13,7 @@ import gmaths.Vec3;
  * Class represents the table
  * in the scene, the table contains
  * the egg
+ * @author Angus Goody
  */
 
 public class Table {

@@ -2,7 +2,8 @@ import gmaths.Vec3;
 
 /**
  * A material that changes
- * colour
+ * colour through time
+ * @author Angus Goody
  */
 public class MagicMaterial extends Material{
 

@@ -7,6 +7,12 @@ import com.jogamp.opengl.util.awt.*;
 import com.jogamp.opengl.util.glsl.*;
 import com.jogamp.opengl.util.texture.*;
 
+/**
+ * A class that represents
+ * the outside of the scene, the garden
+ * has four walls and moving clouds
+ * @author Angus Goody 
+ */
 class Garden {
 
     private Camera camera;

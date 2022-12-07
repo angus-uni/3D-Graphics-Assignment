@@ -12,6 +12,7 @@ import com.jogamp.opengl.util.texture.*;
  * The Scene class represents
  * the whole scene and manages
  * global objects such as world lights
+ * @author Angus Goody
  */
 
 public class Scene {

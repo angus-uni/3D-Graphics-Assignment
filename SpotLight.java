@@ -3,6 +3,12 @@ import com.jogamp.opengl.*;
 import gmaths.Mat4;
 import gmaths.Vec3;
 
+/**
+ * A class that extends a light,
+ * and will have a directional beam
+ * of light
+ * @author Angus Goody
+ */
 public class SpotLight extends Light {
 
   private Vec3 equation, direction;
@@ -25,6 +31,7 @@ public class SpotLight extends Light {
   @Override
   public void render(GL3 gl, Mat4 worldTransform) {
     super.render(gl, worldTransform);
+    // Fetch the direction from the world matrix
     this.direction = worldTransform.getXDirection();
   }
 

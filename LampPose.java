@@ -3,8 +3,9 @@ import com.jogamp.common.nio.*;
 import com.jogamp.opengl.*;
 
 /**
- * The class to handle the different
- * poses a lamp can take
+ * The class to handle a single
+ * pose for a lamp, this is made
+ * from 3 transforms of the base, arm and head
  */
 public class LampPose {
 

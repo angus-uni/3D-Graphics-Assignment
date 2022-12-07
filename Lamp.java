@@ -350,9 +350,11 @@ public class Lamp {
 		lampRoot.update();
 	}
 
-	public void animate(int pose){
+	public void animate(int pose, double elapsedTime){
 
 		LampPose currentPose = poses.getPose(pose);
+
+		float factor = (float) Math.sin(elapsedTime);
 
 		// Update the transforms
 		baseRotate.setTransform(currentPose.getBaseTransform());

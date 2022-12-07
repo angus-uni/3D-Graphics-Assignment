@@ -110,6 +110,6 @@ public class Scene {
 	}
 
 	public void animateLamp(int lampNumber, int pose) {
-		room.animateLamp(lampNumber, pose);
+		room.animateLamp(lampNumber, pose,startTime - getSeconds());
 	}
 }

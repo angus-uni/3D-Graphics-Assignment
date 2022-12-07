@@ -151,27 +151,34 @@ public class Room {
 
     private Poses getLamp2Poses() {
 
+        // Look at egg
         LampPose pose1 = new LampPose(Mat4Transform.rotateAroundZ(30), Mat4Transform.rotateAroundZ(-65),
                 LampPose.noTransform);
 
+        // Look at the ceiling
         LampPose pose2 = new LampPose(Mat4Transform.rotateAroundY(45), Mat4Transform.rotateAroundZ(-30),
-                Mat4Transform.rotateAroundZ(-30));
+                Mat4Transform.rotateAroundZ(75));
 
+        // Look towards user
         LampPose pose3 = new LampPose(LampPose.noTransform, Mat4Transform.rotateAroundY(80),
                 Mat4Transform.rotateAroundX(45));
         return new Poses(pose1, pose2, pose3);
     }
 
     private Poses getLamp1Poses() {
-        // TODO change these
-        LampPose pose1 = new LampPose(Mat4Transform.rotateAroundZ(30), Mat4Transform.rotateAroundZ(-65),
-                LampPose.noTransform);
 
-        LampPose pose2 = new LampPose(Mat4Transform.rotateAroundY(45), Mat4Transform.rotateAroundZ(-30),
+        // Look at the egg close up
+        LampPose pose1 = new LampPose(LampPose.noTransform, Mat4Transform.rotateAroundZ(-30),
+                Mat4Transform.rotateAroundZ(45));
+
+        // Look out of the window
+        LampPose pose2 = new LampPose(Mat4Transform.rotateAroundY(80), LampPose.noTransform,
+                Mat4Transform.rotateAroundX(45));
+
+        // Look at floor
+        LampPose pose3 = new LampPose(Mat4Transform.rotateAroundY(45), Mat4Transform.rotateAroundZ(-30),
                 Mat4Transform.rotateAroundZ(-30));
 
-        LampPose pose3 = new LampPose(LampPose.noTransform, Mat4Transform.rotateAroundY(80),
-                Mat4Transform.rotateAroundX(45));
         return new Poses(pose1, pose2, pose3);
     }
 
@@ -205,7 +212,7 @@ public class Room {
         lamps[i].getSpotLight().toggle();
     }
 
-    public void animateLamp(int lampNumber, int pose) {
-        lamps[lampNumber].animate(pose);
+    public void animateLamp(int lampNumber, int pose, double elapsedTime) {
+        lamps[lampNumber].animate(pose, elapsedTime);
     }
 }

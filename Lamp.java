@@ -337,7 +337,7 @@ public class Lamp {
 		float eyeRotate = -(float)(Math.cos(elapsedTime)*15);
 
 		jointRotate.setTransform(Mat4Transform.rotateAroundZ(rotateAngle));
-		headRotate.setTransform(Mat4Transform.rotateAroundZ(-rotateAngle));
+		headRotate.setTransform(Mat4Transform.rotateAroundX(-rotateAngle));
 		baseRotate.setTransform(Mat4Transform.rotateAroundY(rotateAngle));
 
 		// Move the eyes on the lamp

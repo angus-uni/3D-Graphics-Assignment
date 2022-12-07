@@ -112,15 +112,23 @@ public class Light {
   public void setCamera(Camera camera) {
     this.camera = camera;
   }
-  
+
   public void render(GL3 gl) {
-    Mat4 model = new Mat4(1);
+
+    model = new Mat4(1);
+
     if (size != null){
       model = Mat4.multiply(Mat4Transform.scale(size), model);
     }
     model = Mat4.multiply(Mat4Transform.translate(position), model);
-    
-    Mat4 mvpMatrix = Mat4.multiply(camera.getPerspectiveMatrix(), Mat4.multiply(camera.getViewMatrix(), model));
+
+    render(gl, model);
+  }
+
+  public void render(GL3 gl, Mat4 worldTransform) {
+
+    // We can get the x vector direction here
+    Mat4 mvpMatrix = Mat4.multiply(camera.getPerspectiveMatrix(), Mat4.multiply(camera.getViewMatrix(), worldTransform));
     
     shader.use(gl);
     shader.setFloatArray(gl, "mvpMatrix", mvpMatrix.toFloatArrayForGLSL());

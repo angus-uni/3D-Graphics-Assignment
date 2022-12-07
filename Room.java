@@ -149,11 +149,6 @@ public class Room {
             lamp.move(elapsedTime);
         }
 
-        // Render the lamp lights
-        for (Lamp lamp : lamps) {
-            lamp.getSpotLight().render(gl);
-        }
-
         // Draw the root
         roomRoot.draw(gl);
 

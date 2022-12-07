@@ -68,11 +68,11 @@ public class Lamp {
 
 		// Define our base & head info
 		Mesh cubeMesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
-		Material baseMaterial = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
+		Material baseMaterial = new Material();
 
 		// Define the arms & joints
 		Mesh sphereMesh = new Mesh(gl, Sphere.vertices.clone(), Sphere.indices.clone());
-		Material armMaterial = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
+		Material armMaterial = new Material();
 		Material eyeMaterial = new MagicMaterial(new Vec3(0.2f), new Vec3(1), new Vec3(1), 1);
 
 		// Create our models

@@ -55,11 +55,11 @@ public class Table {
 
 		// Define our table info
 		Mesh cubeMesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
-		Material tableMaterial = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
+		Material tableMaterial = new Material();
 
 		// Egg info
 		Mesh sphereMesh = new Mesh(gl, Sphere.vertices.clone(), Sphere.indices.clone());
-		Material eggMaterial = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
+		Material eggMaterial = new Material();
 		eggShader = new Shader(gl, "shaders/tt_vs.glsl", "shaders/egg_fs.glsl");
 
 

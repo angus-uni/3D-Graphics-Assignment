@@ -42,13 +42,13 @@ public class Room {
 
 
         // The floor is going to be wood, this should be pretty matte
-        Material floorMaterial = new Material(new Vec3(0.76f, 0.62f, 0.51f), new Vec3(0.84f,  0.71f,  0.59f), new Vec3(0.3f, 0.3f, 0.3f), 1.0f);
+        Material floorMaterial = new Material();
 
         // For now the wallMaterial can be the same as the floor
-        Material wallMaterial = new Material(new Vec3(0.76f, 0.62f, 0.51f), new Vec3(0.84f,  0.71f,  0.59f), new Vec3(0.3f, 0.3f, 0.3f), 1.0f);
+        Material wallMaterial = new Material();
 
         // The window is glass so it should be shiny
-        Material glass = new Material(new Vec3(0.5f, 0.5f, 0.5f), new Vec3(0.84f,  0.71f,  0.59f), new Vec3(0.5f, 0.5f, 0.5f), 2.0f);
+        Material glass = new Material();
 
         // Create an array to store our lamps
         lamps = new Lamp[2];

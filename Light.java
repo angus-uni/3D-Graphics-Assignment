@@ -11,7 +11,7 @@ public class Light {
   private Shader shader;
   private Camera camera;
   private Vec3[] lightValues;
-  private boolean on;
+  protected boolean on;
   private Vec3 size;
 
   public Light(GL3 gl,Vec3 ambient, Vec3 diffuse, Vec3 specular, Vec3 size) {
@@ -52,11 +52,11 @@ public class Light {
     // Setup shaders etc
     position = new Vec3(3f,2f,1f);
     model = new Mat4(1);
-    shader = new Shader(gl, "vs_light_01.txt", "fs_light_01.txt");
+    shader = new Shader(gl, "shaders/light_vs.glsl", "shaders/light_fs.glsl");
     fillBuffers(gl);
   }
 
-  private void setMaterials()
+  protected void setMaterials(float factor)
   {
     if (on){
       material.setAmbient(lightValues[0]);
@@ -64,12 +64,17 @@ public class Light {
       material.setSpecular(lightValues[2]);
     }else{
       // Scale down the lights
-      float factor = 0.2f;
       material.setAmbient(Vec3.multiply(lightValues[0], factor));
       material.setDiffuse(Vec3.multiply(lightValues[1], factor));
       material.setSpecular(Vec3.multiply(lightValues[2], factor));
     }
 
+  }
+
+  protected void setMaterials()
+  {
+    // Complete darkness
+    setMaterials(0);
   }
 
   public void toggle()
@@ -110,7 +115,6 @@ public class Light {
   
   public void render(GL3 gl) {
     Mat4 model = new Mat4(1);
-    //model = Mat4.multiply(Mat4Transform.scale(0.3f,0.3f,0.3f), model);
     if (size != null){
       model = Mat4.multiply(Mat4Transform.scale(size), model);
     }
@@ -120,7 +124,9 @@ public class Light {
     
     shader.use(gl);
     shader.setFloatArray(gl, "mvpMatrix", mvpMatrix.toFloatArrayForGLSL());
-  
+    shader.setVec3(gl, "lightColour", on ? new Vec3(1) : new Vec3(0));
+
+
     gl.glBindVertexArray(vertexArrayId[0]);
     gl.glDrawElements(GL.GL_TRIANGLES, indices.length, GL.GL_UNSIGNED_INT, 0);
     gl.glBindVertexArray(0);

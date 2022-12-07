@@ -75,7 +75,7 @@ public class Room {
         wall = new Model(gl, camera, worldLights, lampLights, multiShader, wallMaterial, new Mat4(), mesh, textures[1]);
 
         // Only render the window with the room light
-        window = new Model(gl, camera, worldLights[0], windowShader, glass, new Mat4(), mesh, textures[2]);
+        window = new Model(gl, camera, worldLights, lampLights, windowShader, glass, new Mat4(), mesh, textures[2]);
 
 
 
@@ -168,5 +168,9 @@ public class Room {
         for (Lamp lamp:lamps) {
             lamp.dispose(gl);
         }
+    }
+
+    public void toggleLamp(int i) {
+        lamps[i].getSpotLight().toggle();
     }
 }

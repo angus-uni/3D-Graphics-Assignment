@@ -44,6 +44,7 @@ public class Hatch extends JFrame implements ActionListener {
     menuBar.add(fileMenu);
     
     JPanel p = new JPanel();
+
       // Add the buttons to toggle the lights
       JButton b = new JButton("Toggle room light");
       b.addActionListener(this);
@@ -52,6 +53,14 @@ public class Hatch extends JFrame implements ActionListener {
       b = new JButton("Toggle sun");
       b.addActionListener(this);
       p.add(b);
+
+    b = new JButton("Toggle lamp 1");
+    b.addActionListener(this);
+    p.add(b);
+
+    b = new JButton("Toggle Lamp 2");
+    b.addActionListener(this);
+    p.add(b);
 
     this.add(p, BorderLayout.SOUTH);
     
@@ -73,6 +82,14 @@ public class Hatch extends JFrame implements ActionListener {
     }
     else if (e.getActionCommand().equalsIgnoreCase("toggle sun")) {
       glEventListener.getScene().toggleSun();
+    }
+
+    else if (e.getActionCommand().equalsIgnoreCase("toggle lamp 1")) {
+      glEventListener.getScene().toggleLamp(0);
+    }
+
+    else if (e.getActionCommand().equalsIgnoreCase("toggle lamp 2")) {
+      glEventListener.getScene().toggleLamp(1);
     }
   }
   

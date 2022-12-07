@@ -36,4 +36,5 @@ public class SpotLight extends Light {
   {
     return direction;
   }
+
 }

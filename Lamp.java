@@ -37,7 +37,7 @@ public class Lamp {
 	private SGNode lampRoot;
 	private Texture[] textures;
 	private SpotLight headLight;
-	private TransformNode jointRotate, headRotate;
+	private TransformNode jointRotate, headRotate, baseRotate;
 	private TransformNode[] eyeRotateNodes;
 	private TransformNode[] positionEyeStems;
 
@@ -88,7 +88,7 @@ public class Lamp {
 
 		// Create the light
 		Vec3 direction = new Vec3(1,0,0);
-		Vec3 equation = new Vec3(1.8f, 0.7f, 1);
+		Vec3 equation = new Vec3(0.44f, 0.35f, 1);
 		headLight = new SpotLight(gl, direction, 12.5f, 16f, equation);
 		headLight.setCamera(camera);
 
@@ -131,11 +131,9 @@ public class Lamp {
 		// Create the base of the lamp
 		NameNode base = new NameNode("base");
 
-			/*
-			 - Translate our cube to the surface
-			 - Scale it into a base
-			 - move into position
-			 */
+			baseRotate = new TransformNode("Rotate the arm at the base",Mat4Transform.rotateAroundY(90));
+
+
 			Mat4 m = Mat4.multiply(Mat4Transform.scale(baseWidth,baseHeight,baseDepth), Mat4Transform.translate(0,0.5f,0));
 				TransformNode makeBase = new TransformNode("make the base for the lamp", m);
 					ModelNode baseShape = new ModelNode("Base of lamp", baseCube);
@@ -294,35 +292,36 @@ public class Lamp {
 				base.addChild(makeBase);
 					makeBase.addChild(baseShape);
 				base.addChild(positionArm1);
-					positionArm1.addChild(arm1);
-						arm1.addChild(makeArm1);
-							makeArm1.addChild(arm1Shape);
-						arm1.addChild(positionJoint);
-							positionJoint.addChild(jointRotate);
-							jointRotate.addChild(joint1);
-								joint1.addChild(makeJoint);
-									makeJoint.addChild(joint1Shape);
-								joint1.addChild(positionShell);
-									positionShell.addChild(shell);
-										shell.addChild(makeShell);
-											makeShell.addChild(shellShape);
-								joint1.addChild(positionArm2);
-									positionArm2.addChild(arm2);
-										arm2.addChild(makeArm2);
-											makeArm2.addChild(arm2Shape);
-										arm2.addChild(positionHead);
-											positionHead.addChild(headRotate);
-												headRotate.addChild(head);
-													head.addChild(makeHead);
-														makeHead.addChild(headShape);
-													// Add the eyes
-													for (TransformNode positionEyeStem : positionEyeStems) {
-														head.addChild(positionEyeStem);
-													}
-													head.addChild(positionLight);
-														positionLight.addChild(lampLight);
-															lampLight.addChild(makeLight);
-																makeLight.addChild(lightShape);
+					positionArm1.addChild(baseRotate);
+						baseRotate.addChild(arm1);
+							arm1.addChild(makeArm1);
+								makeArm1.addChild(arm1Shape);
+							arm1.addChild(positionJoint);
+								positionJoint.addChild(jointRotate);
+								jointRotate.addChild(joint1);
+									joint1.addChild(makeJoint);
+										makeJoint.addChild(joint1Shape);
+									joint1.addChild(positionShell);
+										positionShell.addChild(shell);
+											shell.addChild(makeShell);
+												makeShell.addChild(shellShape);
+									joint1.addChild(positionArm2);
+										positionArm2.addChild(arm2);
+											arm2.addChild(makeArm2);
+												makeArm2.addChild(arm2Shape);
+											arm2.addChild(positionHead);
+												positionHead.addChild(headRotate);
+													headRotate.addChild(head);
+														head.addChild(makeHead);
+															makeHead.addChild(headShape);
+														// Add the eyes
+														for (TransformNode positionEyeStem : positionEyeStems) {
+															head.addChild(positionEyeStem);
+														}
+														head.addChild(positionLight);
+															positionLight.addChild(lampLight);
+																lampLight.addChild(makeLight);
+																	makeLight.addChild(lightShape);
 
 
 		lampRoot.update();  // IMPORTANT - don't forget this
@@ -339,6 +338,7 @@ public class Lamp {
 
 		jointRotate.setTransform(Mat4Transform.rotateAroundZ(rotateAngle));
 		headRotate.setTransform(Mat4Transform.rotateAroundZ(-rotateAngle));
+		baseRotate.setTransform(Mat4Transform.rotateAroundY(rotateAngle));
 
 		// Move the eyes on the lamp
 		for (int i = 0; i < eyeRotateNodes.length; i++){

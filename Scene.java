@@ -102,4 +102,8 @@ public class Scene {
 		System.out.println("Toggle sun");
 		worldLights[1].toggle();
 	}
+
+	public void toggleLamp(int i) {
+		room.toggleLamp(i);
+	}
 }

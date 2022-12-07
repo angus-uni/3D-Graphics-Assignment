@@ -171,7 +171,7 @@ public class Lamp {
 			TransformNode positionJoint = new TransformNode("Move joint 1 into position", m);
 
 			// Create a rotation node so we can rotate the joint
-			jointRotate = new TransformNode("Rotate the joint",Mat4Transform.rotateAroundZ(25));
+			jointRotate = new TransformNode("Rotate the joint",Mat4Transform.rotateAroundZ(0));
 
 			// Build the actual joint sphere
 			m = Mat4.multiply(Mat4Transform.scale(jointRadius,jointRadius,jointRadius), Mat4Transform.translate(0,0.5f,0));
@@ -353,8 +353,18 @@ public class Lamp {
 
 		Mat4 empty = new Mat4(1);
 		switch(pose){
+
+			// Inspection pose
 			case 1:
+				// Rotate forward 20 degrees
+				baseRotate.setTransform(Mat4Transform.rotateAroundZ(30));
+				// Rotate back -15 degrees
+				jointRotate.setTransform(Mat4Transform.rotateAroundZ(-65));
+				// Leave head level
+				headRotate.setTransform(empty);
 				break;
+
+			// Set to original no transformations
 			default:
 				baseRotate.setTransform(empty);
 				jointRotate.setTransform(empty);

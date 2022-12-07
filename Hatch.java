@@ -65,7 +65,8 @@ public class Hatch extends JFrame implements ActionListener {
     // Second Panel
     JPanel p2 = new JPanel();
 
-    buttonNames = new String[]{"Reset Lamp 1"};
+    // I named them A1 etc to save space because I can't figure out Swing
+    buttonNames = new String[]{"A1","A2","A3","B1","B2","B3"};
 
       for (String buttonName: buttonNames) {
         b = new JButton(buttonName);
@@ -103,8 +104,8 @@ public class Hatch extends JFrame implements ActionListener {
       glEventListener.getScene().toggleLamp(1);
     }
 
-    else if (e.getActionCommand().equalsIgnoreCase("reset lamp 1")) {
-      glEventListener.getScene().animateLamp(1,5);
+    else if (e.getActionCommand().equalsIgnoreCase("B1")) {
+      glEventListener.getScene().animateLamp(1,1);
     }
 
 

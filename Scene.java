@@ -71,23 +71,13 @@ public class Scene {
 
 
 	public void render(GL3 gl) {
-		// Render the world lights
-		for (Light worldLight : worldLights) {
-			worldLight.render(gl);
-		}
-
 		double elapsedTime = startTime - getSeconds();
 		room.render(gl, elapsedTime);
 		garden.render(gl, elapsedTime);
 
-
 	}
 
 	public void dispose(GL3 gl) {
-		// Dispose the world lights
-		for (Light worldLight : worldLights) {
-			worldLight.dispose(gl);
-		}
 
 		room.dispose(gl);
 		garden.dispose(gl);

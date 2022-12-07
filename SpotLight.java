@@ -15,13 +15,18 @@ public class SpotLight extends Light {
   private float cutoff, outerCutoff;
 
 
-  public SpotLight(GL3 gl, Vec3 direction, float cutoff, float outerCutoff, Vec3 equation) {
+  public SpotLight(GL3 gl,float cutoff, float outerCutoff, Vec3 equation) {
     super(gl);
     this.equation = equation;
-    this.direction = direction;
     this.cutoff = cutoff;
     this.outerCutoff = outerCutoff;
+
+    // Set an initial direction
+    this.direction = new Vec3(1,0,0);
   }
+
+
+
 
   public Vec3 getEquation()
   {

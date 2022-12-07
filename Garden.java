@@ -158,7 +158,6 @@ class Garden {
         Vec2 cloudPos = getCloudsPosition(elapsedTime);
         dynamicShader.use(gl);
         dynamicShader.setFloat(gl, "offset", cloudPos.x, cloudPos.y);
-        sun.render(gl);
         roomRoot.draw(gl);
     }
 
@@ -174,8 +173,6 @@ class Garden {
         for (int i = 0; i < walls.length; i++) {
             walls[i].dispose(gl);
         }
-        sun.dispose(gl);
-
     }
 
     public Light getLight() {

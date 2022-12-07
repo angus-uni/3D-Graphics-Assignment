@@ -98,8 +98,8 @@ public class Shader {
     program.add(vertexShaderCode);
     program.add(fragmentShaderCode);
     program.link(gl, System.out);
-    if (!program.validateProgram(gl, System.out))
-      System.err.println("[error] Unable to link program "+vertexPath+ " "+fragmentPath);
+//    if (!program.validateProgram(gl, System.out))
+//      System.err.println("[error] Unable to link program PATHS: "+vertexPath+ " "+fragmentPath);
     return program.program();
   }
 

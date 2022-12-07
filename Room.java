@@ -55,7 +55,8 @@ public class Room {
 
         // Lamp 1 (left hand side)
         Mat4 initialPosition = Mat4Transform.translate(-3,0,0);
-        Lamp lamp1 = new Lamp(gl, camera, worldLights, multiShader, Lamp.Size.SMALL, initialPosition, getLamp1Poses());
+        Vec3 beam = new Vec3(1.5f, 0.7f, 1); // Weaker beam for the small lamp
+        Lamp lamp1 = new Lamp(gl, camera, worldLights, multiShader, Lamp.Size.SMALL, initialPosition, getLamp1Poses(),beam);
         lampLights[0] = lamp1.getSpotLight();
         lamps[0] = lamp1;
 

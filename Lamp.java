@@ -75,8 +75,15 @@ public class Lamp {
 	 * @param multiShader - The multi light shader
 	 * @param size - Enum representing the size this lamp should be
 	 * @param initialPosition - A matrix that defines the initial position of the lamp
+	 * @param beamEquation - The equation for the spotlight
 	 */
+
 	public Lamp(GL3 gl, Camera camera, Light[] worldLights, Shader multiShader, Size size, Mat4 initialPosition, Poses poses) {
+		this(gl,camera,worldLights,multiShader,size,initialPosition,poses,new Vec3(0.22f, 0.25f, 1));
+	}
+
+	public Lamp(GL3 gl, Camera camera, Light[] worldLights, Shader multiShader, Size size, Mat4 initialPosition, Poses poses,
+	            Vec3 beamEquation) {
 
 		loadTextures(gl);
 		this.poses = poses;
@@ -102,9 +109,7 @@ public class Lamp {
 
 
 		// Create the light
-		Vec3 direction = new Vec3(1,0,0);
-		Vec3 equation = new Vec3(0.44f, 0.35f, 1);
-		headLight = new SpotLight(gl, direction, 12.5f, 16f, equation);
+		headLight = new SpotLight(gl, 12.5f, 16f, beamEquation);
 		headLight.setCamera(camera);
 
 		// ================== Transformations ====================

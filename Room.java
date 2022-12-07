@@ -38,7 +38,7 @@ public class Room {
         SpotLight[] lampLights = new SpotLight[2];
 
         Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
-        Shader windowShader = new Shader(gl, "shaders/window_vs.glsl", "shaders/window_fs.glsl");
+        Shader windowShader = new Shader(gl, "shaders/tt_vs.glsl", "shaders/window_fs.glsl");
 
         // The floor is going to be wood, this should be pretty matte
         Material floorMaterial = new Material();

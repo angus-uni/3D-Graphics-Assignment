@@ -13,9 +13,13 @@ public class Shader {
   private int ID;
   private String vertexShaderSource;
   private String fragmentShaderSource;
-  
+
+  private String vertexPath, fragmentPath;
   /* The constructor */
   public Shader(GL3 gl, String vertexPath, String fragmentPath) {
+
+    this.vertexPath = vertexPath;
+    this.fragmentPath = fragmentPath;
     try {
       vertexShaderSource = new String(Files.readAllBytes(Paths.get(vertexPath)), Charset.defaultCharset());
       fragmentShaderSource = new String(Files.readAllBytes(Paths.get(fragmentPath)), Charset.defaultCharset());
@@ -95,7 +99,7 @@ public class Shader {
     program.add(fragmentShaderCode);
     program.link(gl, System.out);
     if (!program.validateProgram(gl, System.out))
-      System.err.println("[error] Unable to link program");
+      System.err.println("[error] Unable to link program "+vertexPath+ " "+fragmentPath);
     return program.program();
   }
 

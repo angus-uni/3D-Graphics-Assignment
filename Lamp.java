@@ -95,9 +95,9 @@ public class Lamp {
 		armSphere = new Model(gl, camera, worldLights, multiShader, armMaterial, new Mat4(1), sphereMesh, textures[0]);
 		jointSphere = new Model(gl, camera, worldLights, multiShader, armMaterial, new Mat4(1), sphereMesh, textures[0]);
 
-		eyeSphere = new Model(gl, camera, worldLights, multiShader, eyeMaterial, new Mat4(1), sphereMesh, textures[0]); // TODO change this
-		eyeStemSphere = new Model(gl, camera, worldLights, multiShader, armMaterial, new Mat4(1), sphereMesh, textures[0]); // TODO change this
-		shellSphere = new Model(gl, camera, worldLights, multiShader, armMaterial, new Mat4(1), sphereMesh, textures[2]); // TODO change this
+		eyeSphere = new Model(gl, camera, worldLights, multiShader, eyeMaterial, new Mat4(1), sphereMesh, textures[0]);
+		eyeStemSphere = new Model(gl, camera, worldLights, multiShader, armMaterial, new Mat4(1), sphereMesh, textures[0]);
+		shellSphere = new Model(gl, camera, worldLights, multiShader, armMaterial, new Mat4(1), sphereMesh, textures[2]);
 
 
 		// Create the light

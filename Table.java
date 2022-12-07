@@ -7,6 +7,7 @@ import com.jogamp.opengl.util.texture.*;
 
 import gmaths.Mat4;
 import gmaths.Mat4Transform;
+import gmaths.Vec3;
 
 /**
  * Class represents the table
@@ -61,7 +62,7 @@ public class Table {
 
 		// Egg info
 		Mesh sphereMesh = new Mesh(gl, Sphere.vertices.clone(), Sphere.indices.clone());
-		Material eggMaterial = new Material();
+		Material eggMaterial = new Material(new Vec3(0.3f), new Vec3(0.7f), new Vec3(0.6f), 100);
 		eggShader = new Shader(gl, "shaders/tt_vs.glsl", "shaders/egg_fs.glsl");
 
 
